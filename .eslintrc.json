@@ -1,6 +1,7 @@
 {
   "extends": ["airbnb", "prettier", "prettier/react"],
   "rules": {
+    "react/prop-types": 0,
     "react/jsx-filename-extension": [
       1,
       {
@@ -15,6 +16,14 @@
         "printWidth": 100
       }
     ]
+  },
+  "settings": {
+    "import/resolver": {
+      "babel-plugin-root-import": {
+        "rootPathSuffix": "",
+        "rootPathPrefix": "~/"
+      }
+    }
   },
   "plugins": ["prettier"]
 }
