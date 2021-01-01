@@ -11,6 +11,7 @@ const Stack = createStackNavigator();
 function App() {
   return (
     <PaperProvider theme={themeing}>
+      <SplashScreen theme={themeing} />
       <NavigationContainer theme={themeing}>
         <Stack.Navigator>
           <Stack.Screen name="Splash" component={SplashScreen} />
