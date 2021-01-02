@@ -1,21 +1,22 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Title, withTheme } from 'react-native-paper';
-import Adonis from '~/src/components/Adonis.jsx';
+import Adonis from './Adonis';
 
 const styles = StyleSheet.create({
   head: {
-    fontWeight: 700,
+    fontWeight: 'bold',
     lineHeight: 75,
     fontSize: 64,
-    marginHorizontal: 'auto',
+    marginRight: 'auto',
+    marginLeft: 'auto',
   },
   img: {
     marginTop: '25%',
     marginRight: 'auto',
     marginLeft: 'auto',
-    width: '55%',
-    display: 'block',
+    height: 300,
+    width: 300,
   },
   parentView: {
     height: '100%',
@@ -23,30 +24,28 @@ const styles = StyleSheet.create({
   },
 });
 
-const SplashScreen = ({ theme }) => {
-  console.log(theme);
-  return (
+const SplashScreen = ({ theme }) => (
+  <View
+    theme={theme}
+    style={[styles.parentView, styles.container, { backgroundColor: theme.colors.background }]}
+  >
+    <Adonis style={StyleSheet.flatten([styles.img, { fill: theme.colors.primary }])} />
     <View
-      theme={theme}
-      style={[styles.parentView, styles.container, { backgroundColor: theme.colors.background }]}
-    >
-      <Adonis style={StyleSheet.flatten([styles.img, { fill: theme.colors.primary }])} />
-      <hr
-        style={{
-          marginTop: '1.5vh',
-          marginBottom: '1.5vh',
-          color: theme.colors.primary,
-          backgroundColor: theme.colors.primary,
-          borderRadius: theme.roundness,
-          height: '2px',
-          width: `24%`,
-        }}
-      />
-      <Title theme={theme} style={styles.head}>
-        REPS
-      </Title>
-    </View>
-  );
-};
+      style={{
+        marginTop: 10,
+        marginBottom: 10,
+        marginRight: 'auto',
+        marginLeft: 'auto',
+        borderColor: theme.colors.primary,
+        borderRadius: theme.roundness,
+        borderWidth: 2,
+        width: `24%`,
+      }}
+    />
+    <Title theme={theme} style={styles.head}>
+      REPS
+    </Title>
+  </View>
+);
 
 export default withTheme(SplashScreen);
