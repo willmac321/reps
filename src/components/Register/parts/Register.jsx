@@ -42,6 +42,7 @@ const Register = ({ theme, style }) => {
         <TextInput
           mode="outlined"
           theme={theme}
+          keyboardType="email-address"
           autoCompleteType="email"
           textContentType="emailAddress"
           label="Email"
@@ -50,7 +51,7 @@ const Register = ({ theme, style }) => {
           onChangeText={(val) => setEmail(val)}
           style={styles.input}
         />
-        {emailError() && (
+        {!!emailError() && (
           <HelperText type="error" visible={emailError()}>
             Email address is invalid!
           </HelperText>
@@ -59,7 +60,7 @@ const Register = ({ theme, style }) => {
           mode="outlined"
           theme={theme}
           autoCompleteType="password"
-          textContentType="newPassword"
+          textContentType="password"
           secureTextEntry
           error={isError}
           label="Password"
@@ -71,7 +72,7 @@ const Register = ({ theme, style }) => {
           mode="outlined"
           theme={theme}
           autoCompleteType="password"
-          textContentType="newPassword"
+          textContentType="password"
           secureTextEntry
           error={isError}
           label="Re-enter Password"
@@ -79,7 +80,7 @@ const Register = ({ theme, style }) => {
           onChangeText={(val) => setReenterPassword(val)}
           style={styles.input}
         />
-        {isError && (
+        {!!isError && (
           <HelperText type="error" visible={isError}>
             Passwords do not match!
           </HelperText>

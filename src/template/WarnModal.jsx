@@ -33,6 +33,7 @@ const NotifyModal = ({ title, buttonText, theme, content, onPress }) => {
               button: {
                 ...theme.button,
                 marginRight: 10,
+                width: 100,
                 backgroundColor: theme.colors.alert,
               },
             }}
@@ -42,7 +43,12 @@ const NotifyModal = ({ title, buttonText, theme, content, onPress }) => {
           </Button>
           <Button
             theme={{
-              button: { ...theme.button, marginRight: 10 },
+              button: {
+                ...theme.button,
+                width: 100,
+                marginLeft: 10,
+                marginRight: 10,
+              },
             }}
             onPress={hideDialog}
           >

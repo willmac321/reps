@@ -44,6 +44,7 @@ const Login = ({ theme, style }) => {
         <TextInput
           mode="outlined"
           theme={theme}
+          keyboardType="email-address"
           autoCompleteType="email"
           textContentType="emailAddress"
           label="Email"
@@ -52,7 +53,7 @@ const Login = ({ theme, style }) => {
           onChangeText={(val) => setEmail(val)}
           style={styles.input}
         />
-        {emailError() && (
+        {!!emailError() && (
           <HelperText type="error" visible={emailError()}>
             Email address is invalid!
           </HelperText>

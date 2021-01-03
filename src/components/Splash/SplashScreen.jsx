@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Title, ActivityIndicator, withTheme } from 'react-native-paper';
 import { StateContext } from '../../controllers/state';
-import Adonis from './parts/Adonis.jsx';
+import Adonis from './parts/Adonis';
 
 const styles = StyleSheet.create({
   head: {
