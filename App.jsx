@@ -6,11 +6,9 @@ import { Platform } from 'react-native';
 
 import themeing from './src/theme';
 
-import { StateContextProvider } from './src/controllers/state';
-import LoginScreen from './src/components/Login/LoginScreen';
-import RegisterScreen from './src/components/Register/RegisterScreen';
+import { StateContextProvider, StateContext } from './src/controllers/state';
+import NoAuthNavigator from './src/components/NoAuth/NoAuthNavigator';
 import SplashScreen from './src/components/Splash/SplashScreen';
-import WarnModal from './src/template/WarnModal';
 
 const Stack = createStackNavigator();
 
@@ -24,18 +22,34 @@ const isWeb = Platform.select({
 function App() {
   return (
     <PaperProvider theme={themeing}>
-      <WarnModal />
       <NavigationContainer theme={themeing}>
         <StateContextProvider>
-          <Stack.Navigator>
-            <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: isWeb }} />
-            <Stack.Screen
-              name="Register"
-              component={RegisterScreen}
-              options={{ headerShown: isWeb }}
-            />
-            <Stack.Screen name="Splash" component={SplashScreen} options={{ headerShown: isWeb }} />
-          </Stack.Navigator>
+          <StateContext.Consumer>
+            {({ user, isLoading }) => {
+              if (isLoading) {
+                return (
+                  <Stack.Navigator>
+                    <Stack.Screen
+                      name="Reps"
+                      component={SplashScreen}
+                      options={{ headerShown: false }}
+                    />
+                  </Stack.Navigator>
+                );
+              }
+              return user ? (
+                <Stack.Navigator>
+                  <Stack.Screen
+                    name="Splash"
+                    component={SplashScreen}
+                    options={{ headerShown: isWeb }}
+                  />
+                </Stack.Navigator>
+              ) : (
+                <NoAuthNavigator />
+              );
+            }}
+          </StateContext.Consumer>
         </StateContextProvider>
       </NavigationContainer>
     </PaperProvider>

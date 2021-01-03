@@ -1,13 +1,13 @@
 import React from 'react';
 import { Keyboard, KeyboardAvoidingView, Platform, LayoutAnimation, UIManager } from 'react-native';
 import { withTheme } from 'react-native-paper';
-import Register from './parts/Register';
+import Forgot from './parts/Forgot';
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
   UIManager.setLayoutAnimationEnabledExperimental(true);
 }
 
-const RegisterScreen = ({ theme, navigation }) => {
+const ForgotScreen = ({ theme, navigation }) => {
   const [customTopMargin, setCustomTopMargin] = React.useState(theme.card.marginTop);
 
   const keyboardEventShow = () => {
@@ -33,9 +33,9 @@ const RegisterScreen = ({ theme, navigation }) => {
 
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-      <Register style={{ marginTop: customTopMargin }} theme={theme} />
+      <Forgot style={{ marginTop: customTopMargin }} theme={theme} />
     </KeyboardAvoidingView>
   );
 };
 
-export default withTheme(RegisterScreen);
+export default withTheme(ForgotScreen);

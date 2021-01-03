@@ -26,7 +26,7 @@ const CardWithButton = ({
         <ButtonTemplate
           theme={theme}
           onPress={onPress}
-          loading={isLoading}
+          isLoading={isLoading}
           disabled={buttonDisabled}
         >
           {buttonText}
