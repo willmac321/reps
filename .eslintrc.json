@@ -17,5 +17,14 @@
       }
     ]
   },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx"],
+        "paths": ["/usr/local/share/global_modules"],
+        "moduleDirectory": ["node_modules", "bower_components"]
+      }
+    }
+  },
   "plugins": ["prettier"]
 }

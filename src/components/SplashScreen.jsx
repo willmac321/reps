@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Title, withTheme } from 'react-native-paper';
+import { Title, ActivityIndicator, withTheme } from 'react-native-paper';
 import Adonis from './Adonis';
+import { StateContext } from '../controllers/state';
 
 const styles = StyleSheet.create({
   head: {
@@ -45,6 +46,9 @@ const SplashScreen = ({ theme }) => (
     <Title theme={theme} style={styles.head}>
       REPS
     </Title>
+    <StateContext.Consumer>
+      {({ isLoading }) => isLoading && <ActivityIndicator animating color={theme.colors.primary} />}
+    </StateContext.Consumer>
   </View>
 );
 
