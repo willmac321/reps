@@ -1,4 +1,3 @@
-import React from 'react';
 import { DefaultTheme } from 'react-native-paper';
 import { Platform } from 'react-native';
 
@@ -37,6 +36,7 @@ const theme = {
     surface,
     placeholder: '#8a8cc2',
     link: '#56CCF2',
+    alert: '#eb5757',
   },
   marginHorizontal: 20,
   title: {
@@ -75,6 +75,9 @@ const theme = {
     backgroundColor: surface,
     marginTop: 10,
     marginBottom: 10,
+  },
+  paragraph: {
+    fontSize: 16,
   },
 };
 

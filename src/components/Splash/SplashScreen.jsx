@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Title, ActivityIndicator, withTheme } from 'react-native-paper';
-import Adonis from './Adonis';
-import { StateContext } from '../controllers/state';
+import { StateContext } from '../../controllers/state';
+import Adonis from './parts/Adonis.jsx';
 
 const styles = StyleSheet.create({
   head: {
@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
     marginLeft: 'auto',
   },
   img: {
-    marginTop: '25%',
+    marginTop: 100,
     marginRight: 'auto',
     marginLeft: 'auto',
     height: 300,
@@ -47,7 +47,9 @@ const SplashScreen = ({ theme }) => (
       REPS
     </Title>
     <StateContext.Consumer>
-      {({ isLoading }) => isLoading && <ActivityIndicator animating color={theme.colors.primary} />}
+      {({ isLoading }) =>
+        isLoading && <ActivityIndicator animating size="large" color={theme.colors.primary} />
+      }
     </StateContext.Consumer>
   </View>
 );

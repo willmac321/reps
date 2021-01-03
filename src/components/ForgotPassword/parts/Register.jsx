@@ -1,43 +1,41 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { withTheme, TextInput, HelperText } from 'react-native-paper';
-import { Link } from '@react-navigation/native';
 import CardWithButton from '../../../template/CardWithButton';
 
-const Login = ({ theme, style }) => {
+const Register = ({ theme, style }) => {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
+  const [reenterPassword, setReenterPassword] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(false);
+  const [isError, setIsError] = React.useState(false);
   const [isDisable, setIsDisable] = React.useState(false);
   const styles = StyleSheet.create({
     input: theme.input,
-    link: {
-      marginTop: 20,
-      marginBottom: 10,
-      fontSize: 16,
-      color: theme.colors.link,
-      marginLeft: 5,
-    },
   });
 
-  const emailError = () => email && !email.includes('@');
-
   React.useEffect(() => {
-    if (!password || !email || emailError()) {
+    if (!password || !reenterPassword || !email || password !== reenterPassword) {
+      if (password !== reenterPassword) {
+        setIsError(true);
+      }
       setIsDisable(true);
     } else {
       setIsDisable(false);
+      setIsError(false);
     }
-  }, [password, email]);
+  }, [password, reenterPassword, email]);
+
+  const emailError = () => email && !email.includes('@');
 
   return (
     <View theme={theme}>
       <CardWithButton
-        title="Please Login"
+        title="Ready to party?"
         buttonText="Submit"
+        buttonDisabled={isDisable}
         theme={theme}
         style={style}
-        buttonDisabled={isDisable}
         onPress={() => setIsLoading(!isLoading)}
         isLoading={isLoading}
       >
@@ -61,19 +59,34 @@ const Login = ({ theme, style }) => {
           mode="outlined"
           theme={theme}
           autoCompleteType="password"
-          textContentType="password"
+          textContentType="newPassword"
           secureTextEntry
+          error={isError}
           label="Password"
           value={password}
           onChangeText={(val) => setPassword(val)}
           style={styles.input}
         />
-        <Link style={styles.link} to="/Splash">
-          Forgot Password?
-        </Link>
+        <TextInput
+          mode="outlined"
+          theme={theme}
+          autoCompleteType="password"
+          textContentType="newPassword"
+          secureTextEntry
+          error={isError}
+          label="Re-enter Password"
+          value={reenterPassword}
+          onChangeText={(val) => setReenterPassword(val)}
+          style={styles.input}
+        />
+        {isError && (
+          <HelperText type="error" visible={isError}>
+            Passwords do not match!
+          </HelperText>
+        )}
       </CardWithButton>
     </View>
   );
 };
 
-export default withTheme(Login);
+export default withTheme(Register);

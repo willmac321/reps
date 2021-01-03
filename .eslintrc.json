@@ -1,6 +1,8 @@
 {
   "extends": ["airbnb", "prettier", "prettier/react"],
   "rules": {
+    "import/extensions":0,
+    "import/no-unresolved":0,
     "react/prop-types": 0,
     "react/jsx-filename-extension": [
       1,
@@ -20,9 +22,7 @@
   "settings": {
     "import/resolver": {
       "node": {
-        "extensions": [".js", ".jsx"],
-        "paths": ["/usr/local/share/global_modules"],
-        "moduleDirectory": ["node_modules", "bower_components"]
+        "extensions": [".js", ".jsx"]
       }
     }
   },

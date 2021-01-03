@@ -7,7 +7,8 @@ import CardWithButton from '../../../template/CardWithButton';
 const Register = ({ theme, navigation }) => {
   const onRegisterClick = (otherStuff) => {
     otherStuff();
-    navigation.navigate('Splash');
+  //  navigation.navigate('Splash');
+    navigation.navigate('Register');
   };
   return (
     <View theme={theme}>

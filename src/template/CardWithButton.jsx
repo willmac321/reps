@@ -1,12 +1,20 @@
 import React from 'react';
-import { withTheme, Card, Button } from 'react-native-paper';
+import { withTheme, Card } from 'react-native-paper';
 import { StyleSheet } from 'react-native';
+import ButtonTemplate from './ButtonTemplate';
 
-const CardWithButton = ({ children, title, buttonText, theme, onPress, isLoading, style }) => {
+const CardWithButton = ({
+  children,
+  title,
+  buttonText,
+  theme,
+  onPress,
+  isLoading,
+  style,
+  buttonDisabled,
+}) => {
   const styles = StyleSheet.create({
     title: theme.title,
-    button: theme.button,
-    buttonText: theme.buttonText,
     card: theme.card,
   });
 
@@ -15,18 +23,14 @@ const CardWithButton = ({ children, title, buttonText, theme, onPress, isLoading
       <Card.Title theme={theme} titleStyle={styles.title} title={title} />
       <Card.Content>{children}</Card.Content>
       <Card.Actions>
-        <Button
-          mode="contained"
-          labelStyle={styles.buttonText}
-          style={styles.button}
-          dark
-          uppercase={false}
+        <ButtonTemplate
           theme={theme}
           onPress={onPress}
           loading={isLoading}
+          disabled={buttonDisabled}
         >
           {buttonText}
-        </Button>
+        </ButtonTemplate>
       </Card.Actions>
     </Card>
   );
