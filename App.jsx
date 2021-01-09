@@ -8,16 +8,10 @@ import themeing from './src/theme';
 
 import { StateContextProvider, StateContext } from './src/controllers/state';
 import NoAuthNavigator from './src/components/NoAuth/NoAuthNavigator';
+import AuthNavigator from './src/components/Auth/AuthNavigator.jsx';
 import SplashScreen from './src/components/Splash/SplashScreen';
 
 const Stack = createStackNavigator();
-
-const isWeb = Platform.select({
-  ios: false,
-  android: false,
-  native: false,
-  default: true,
-});
 
 function App() {
   return (
@@ -37,17 +31,7 @@ function App() {
                   </Stack.Navigator>
                 );
               }
-              return user ? (
-                <Stack.Navigator>
-                  <Stack.Screen
-                    name="Splash"
-                    component={SplashScreen}
-                    options={{ headerShown: isWeb }}
-                  />
-                </Stack.Navigator>
-              ) : (
-                <NoAuthNavigator />
-              );
+              return user ? <AuthNavigator /> : <NoAuthNavigator />;
             }}
           </StateContext.Consumer>
         </StateContextProvider>

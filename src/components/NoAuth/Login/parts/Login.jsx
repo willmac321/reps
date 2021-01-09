@@ -5,7 +5,7 @@ import { Link } from '@react-navigation/native';
 import CardWithButton from '../../../../template/CardWithButton';
 import API from '../../../../controllers/AuthApi';
 
-const Login = ({ theme, style }) => {
+const Login = ({ theme, style, setShowNotify, setNotifyMessage, setNotifyTitle }) => {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(false);
@@ -31,21 +31,23 @@ const Login = ({ theme, style }) => {
     }
   }, [password, email]);
 
-  //TODO add if not verified email
-  const callbackHandlePress = (err) => {
+  const callbackHandlePress = (err, user) => {
     setIsLoading(false);
+    if (!user.emailVerified) {
+      setNotifyTitle('But really...');
+      setNotifyMessage('Please verify your email to continue using REPS.');
+      setShowNotify(true);
+    }
     if (err) {
-      setNotifyTitle('Uhoh!');
+      setNotifyTitle('Uhoh Brobro!');
       setNotifyMessage(err.message.toString());
       setShowNotify(true);
-      return;
     }
   };
 
-  const handleOnPress = (setJustRegistered) => {
-    setJustRegistered(true);
+  const handleOnPress = () => {
     setIsLoading(true);
-    API.register(email, password, callbackHandlePress);
+    API.login(email, password, callbackHandlePress);
   };
 
   return (
@@ -56,7 +58,7 @@ const Login = ({ theme, style }) => {
         theme={theme}
         style={style}
         buttonDisabled={isDisable}
-        onPress={() => setIsLoading(!isLoading)}
+        onPress={handleOnPress}
         isLoading={isLoading}
       >
         <TextInput

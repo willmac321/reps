@@ -1,6 +1,7 @@
 import React from 'react';
 import { Keyboard, KeyboardAvoidingView, Platform, LayoutAnimation, UIManager } from 'react-native';
 import { withTheme } from 'react-native-paper';
+import NotifyModal from '../../../template/NotifyModal';
 import Login from './parts/Login';
 import Register from './parts/Register';
 
@@ -11,6 +12,9 @@ if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental
 const LoginScreen = ({ theme, navigation }) => {
   const [showRegister, setShowRegister] = React.useState(true);
   const [customTopMargin, setCustomTopMargin] = React.useState(theme.card.marginTop);
+  const [showNotify, setShowNotify] = React.useState(false);
+  const [notifyMessage, setNotifyMessage] = React.useState('');
+  const [notifyTitle, setNotifyTitle] = React.useState('');
 
   const keyboardEventShow = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
@@ -38,7 +42,20 @@ const LoginScreen = ({ theme, navigation }) => {
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       {showRegister && <Register theme={theme} navigation={navigation} />}
-      <Login style={{ marginTop: customTopMargin }} theme={theme} />
+      <Login
+        setShowNotify={setShowNotify}
+        setNotifyMessage={setNotifyMessage}
+        setNotifyTitle={setNotifyTitle}
+        style={{ marginTop: customTopMargin }}
+        theme={theme}
+      />
+      <NotifyModal
+        title={notifyTitle}
+        theme={theme}
+        content={notifyMessage}
+        isVisible={showNotify}
+        setIsVisible={setShowNotify}
+      />
     </KeyboardAvoidingView>
   );
 };

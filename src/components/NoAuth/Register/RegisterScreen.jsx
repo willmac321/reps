@@ -8,7 +8,7 @@ if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental
   UIManager.setLayoutAnimationEnabledExperimental(true);
 }
 
-const RegisterScreen = ({ theme, navigation}) => {
+const RegisterScreen = ({ theme, navigation }) => {
   const [customTopMargin, setCustomTopMargin] = React.useState(theme.card.marginTop);
   const [showNotify, setShowNotify] = React.useState(false);
   const [notifyMessage, setNotifyMessage] = React.useState('');

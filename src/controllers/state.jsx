@@ -1,5 +1,6 @@
 import React from 'react';
 import { firebase } from '../firebase/config';
+import API from './AuthApi';
 
 export const StateContext = React.createContext();
 
@@ -17,6 +18,7 @@ export const StateContextProvider = ({ children }) => {
   }, []);
   React.useEffect(() => {
     if (authRes && !authRes.emailVerified && !justRegistered) {
+      API.logout(() => {});
       setUser(null);
       return;
     }
