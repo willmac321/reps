@@ -5,7 +5,7 @@ const primary = '#8a8cc2';
 const accent = '#DBE0F2';
 const surface = 'white';
 
-const dropShadow = () => {
+export const dropShadow = () => {
   switch (Platform.OS) {
     case 'ios':
       return {
@@ -31,12 +31,14 @@ const theme = {
     ...DefaultTheme.colors,
     primary,
     accent,
-    background: '#f8fcff',
+    background: '#e4ecf0',
     text: '#8a8cc2',
+    textSelected: '#4e4f73',
     surface,
     placeholder: '#8a8cc2',
     link: '#56CCF2',
     alert: '#eb5757',
+    secondary: '#c8d8de',
   },
   marginHorizontal: 20,
   title: {
