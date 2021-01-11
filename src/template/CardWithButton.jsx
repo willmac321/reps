@@ -1,6 +1,6 @@
 import React from 'react';
 import { withTheme, Card } from 'react-native-paper';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import ButtonTemplate from './ButtonTemplate';
 
 const CardWithButton = ({
