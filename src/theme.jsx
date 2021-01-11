@@ -45,6 +45,12 @@ const theme = {
     fontWeight: 'bold',
     fontSize: 20,
   },
+  item: {
+    borderStyle: 'solid',
+    borderColor: surface,
+    borderWidth: 3,
+    borderRadius: 10,
+  },
   button: {
     marginRight: 'auto',
     marginLeft: 'auto',

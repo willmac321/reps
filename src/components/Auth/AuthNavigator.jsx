@@ -9,31 +9,33 @@ import WorkoutsScreen from './Workouts/WorkoutsScreen';
 
 const Tab = createBottomTabNavigator();
 
+const screenOptions = ({ route }) => ({
+  tabBarIcon: ({ color, size }) => {
+    let iconName;
+    switch (route.name) {
+      case 'Workouts':
+        iconName = 'dumbbell';
+        break;
+      case 'Create':
+        iconName = 'plus-square';
+        break;
+      case 'Settings':
+        iconName = 'cog';
+        break;
+      case 'Account':
+        iconName = 'user';
+        break;
+      default:
+        break;
+    }
+    return <FontAwesome5 name={iconName} color={color} size={size} />;
+  },
+});
+
 function AuthNavigator({ theme }) {
   return (
     <Tab.Navigator
-      screenOptions={({ route }) => ({
-        tabBarIcon: ({ color, size }) => {
-          let iconName;
-          switch (route.name) {
-            case 'Workouts':
-              iconName = 'dumbbell';
-              break;
-            case 'Create':
-              iconName = 'plus-square';
-              break;
-            case 'Settings':
-              iconName = 'cog';
-              break;
-            case 'Account':
-              iconName = 'user';
-              break;
-            default:
-              break;
-          }
-          return <FontAwesome5 name={iconName} color={color} size={size} />;
-        },
-      })}
+      screenOptions={(ev) => screenOptions(ev)}
       tabBarOptions={{
         activeTintColor: theme.colors.textSelected,
         inactiveTintColor: theme.colors.text,
