@@ -12,6 +12,8 @@ const CardWithButton = ({
   isLoading,
   style,
   buttonDisabled,
+  showButton,
+  flex,
 }) => {
   const styles = StyleSheet.create({
     title: theme.title,
@@ -20,17 +22,19 @@ const CardWithButton = ({
 
   return (
     <Card theme={theme} style={[styles.card, style]}>
-      <Card.Title theme={theme} titleStyle={styles.title} title={title} />
-      <Card.Content>{children}</Card.Content>
+      {title && <Card.Title theme={theme} titleStyle={styles.title} title={title} />}
+      <Card.Content style={{ flex, marginTop: title ? 'auto' : 20 }}>{children}</Card.Content>
       <Card.Actions>
-        <ButtonTemplate
-          theme={theme}
-          onPress={onPress}
-          isLoading={isLoading}
-          disabled={buttonDisabled}
-        >
-          {buttonText}
-        </ButtonTemplate>
+        {showButton && (
+          <ButtonTemplate
+            theme={theme}
+            onPress={onPress}
+            isLoading={isLoading}
+            disabled={buttonDisabled}
+          >
+            {buttonText}
+          </ButtonTemplate>
+        )}
       </Card.Actions>
     </Card>
   );

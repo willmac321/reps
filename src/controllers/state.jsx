@@ -10,12 +10,13 @@ export const StateContextProvider = ({ children }) => {
   const [user, setUser] = React.useState(null);
   const [authRes, setAuthRes] = React.useState(null);
 
-  React.useEffect(() => {
-    firebase.auth().onAuthStateChanged((res) => {
-      setIsLoading(false);
-      setAuthRes(res);
-    });
-  }, []);
+  // FIXME
+  //  React.useEffect(() => {
+  //    firebase.auth().onAuthStateChanged((res) => {
+  //      setIsLoading(false);
+  //      setAuthRes(res);
+  //    });
+  //  }, []);
   React.useEffect(() => {
     if (authRes && !authRes.emailVerified && !justRegistered) {
       API.logout(() => {});

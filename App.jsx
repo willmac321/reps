@@ -2,7 +2,6 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Provider as PaperProvider } from 'react-native-paper';
-import { Platform } from 'react-native';
 
 import themeing from './src/theme';
 
@@ -20,6 +19,8 @@ function App() {
         <StateContextProvider>
           <StateContext.Consumer>
             {({ user, isLoading }) => {
+              // FIXME
+              return <AuthNavigator />;
               if (isLoading) {
                 return (
                   <Stack.Navigator>

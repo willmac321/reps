@@ -3,7 +3,7 @@ import { View, StyleSheet } from 'react-native';
 import { withTheme, List } from 'react-native-paper';
 import { FontAwesome5 } from '@expo/vector-icons';
 
-const WorkoutItem = ({ theme, isSelected, text, onPress }) => {
+const WorkoutItem = ({ theme, isSelected, text, onPress, handleEdit, handleTrash }) => {
   const styles = StyleSheet.create({
     item: isSelected
       ? {
@@ -15,11 +15,15 @@ const WorkoutItem = ({ theme, isSelected, text, onPress }) => {
         },
     icon: isSelected
       ? {
-          color: theme.colors.primary,
+          color: theme.buttonText.color,
+          marginVertical: 20,
+          paddingRight: 20,
           ...theme.title,
         }
       : {
           color: theme.colors.primary,
+          paddingRight: 20,
+          marginVertical: 20,
           ...theme.title,
         },
     text: isSelected
@@ -32,21 +36,27 @@ const WorkoutItem = ({ theme, isSelected, text, onPress }) => {
         },
   });
 
-  console.log(isSelected);
-
   return (
     <List.Item
       title={text.title}
+      titleNumberOfLines={1}
+      titleEllipsizeMode="tail"
+      descriptionEllipsizeMode="tail"
+      descriptionNumberOfLines={1}
       description={text.date}
       theme={theme}
       style={styles.item}
       onPress={onPress}
       titleStyle={styles.text}
-      descriptionStyle={[styles.text, { fontSize: 'auto', fontWeight: 'normal' }]}
+      descriptionStyle={[styles.text, { fontWeight: 'normal' }]}
       right={() => (
         <>
-          <FontAwesome5 name="pen" style={styles.icon} />
-          <FontAwesome5 name="trash-alt" style={styles.icon} />
+          <FontAwesome5 name="pen" style={styles.icon} onPress={(e) => handleEdit(e, text.id)} />
+          <FontAwesome5
+            name="trash-alt"
+            style={styles.icon}
+            onPress={(e) => handleTrash(e, text.id)}
+          />
         </>
       )}
     />
