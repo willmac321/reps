@@ -2,8 +2,7 @@ import React from 'react';
 import { withTheme, Portal, Dialog, Paragraph } from 'react-native-paper';
 import Button from './ButtonTemplate';
 
-const NotifyModal = ({ title, buttonText, theme, content, onPress }) => {
-  const [visible, setVisible] = React.useState(true);
+const NotifyModal = ({ title, buttonText, theme, content, onPress, visible, setVisible }) => {
   const hideDialog = () => {
     setVisible(false);
   };

@@ -6,34 +6,61 @@ import CardWithButton from '../../../../template/CardWithButton';
 import ScrollList from '../../../../template/ScrollList';
 import WorkoutItem from './WorkoutItem';
 
-//const Data = [];
-const Data =  [...Array(15).keys()].map((k) => ({
-  id: k.toString(),
-  title: `workout ${k}`,
-  date: Date.now().toLocaleString(),
- }));
-
-const Workouts = ({ theme, navigation }) => {
+// const Data = [];
+const Workouts = ({
+  theme,
+  navigation,
+  setMessage,
+  setNotifyTitle,
+  setShowNotify,
+  isOk,
+  setIsOk,
+}) => {
   const [isLoading, setIsLoading] = React.useState(false);
   const [isDisable, setIsDisable] = React.useState(false);
   const [selected, setSelected] = React.useState(null);
-
+  const [modalOnOkSelectedId, setModalOnOkSelected] = React.useState('');
+  // FIXME
+  const [Data, SetData] = React.useState(
+    [...Array(15).keys()].map((k) => ({
+      id: k.toString(),
+      title: `workout ${k}`,
+      date: Date.now().toLocaleString(),
+    }))
+  );
   const handleOnSubmit = () => {
     setIsLoading(!isDisable);
   };
 
   const onPress = (id) => setSelected(id);
 
-  const handleEdit = (_, id) => {
-    console.log(id);
-  };
+  const handleEdit = (_, id) => {};
+
   const handleTrash = (_, id) => {
-    console.log(id);
+    setNotifyTitle('Woah, you sure...');
+    setMessage(`Do you really want to delete ${Data.filter((d) => d.id === id)[0].title}?`);
+    setIsOk(false);
+    setModalOnOkSelected(id);
+    setShowNotify(true);
   };
 
   const handleNew = () => {
     navigation.navigate('Create');
   };
+
+  const deleteWorkout = (id) => {
+    SetData(Data.filter((d) => d.id !== id));
+    setIsOk(false);
+    setModalOnOkSelected(null);
+    // TODO API call
+  };
+
+  React.useEffect(() => {
+    if (isOk && modalOnOkSelectedId) {
+      deleteWorkout(modalOnOkSelectedId);
+    }
+    setModalOnOkSelected(null);
+  }, [isOk]);
 
   const Item = ({ item }) => (
     <WorkoutItem
