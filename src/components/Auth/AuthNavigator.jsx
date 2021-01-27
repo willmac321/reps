@@ -5,6 +5,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 
 import { dropShadow } from '../../theme';
 import SplashScreen from '../Splash/SplashScreen';
+import NewWorkoutsScreen from './NewWorkouts/NewWorkoutsScreen';
 import WorkoutsScreen from './Workouts/WorkoutsScreen';
 
 const Tab = createBottomTabNavigator();
@@ -33,6 +34,20 @@ const screenOptions = ({ route }) => ({
 });
 
 function AuthNavigator({ theme }) {
+  const [currentRoute, setCurrentRoute] = React.useState('Workouts');
+  const [lastRoute, setLastRoute] = React.useState('');
+
+  const setRoute = ({ route }) => ({
+    tabPress: () => {
+      if (currentRoute !== route.name) {
+        setLastRoute(currentRoute);
+        setCurrentRoute(route.name);
+      }
+    },
+  });
+
+  const getCreateComponent = lastRoute === 'Workouts' ? NewWorkoutsScreen : SplashScreen;
+
   return (
     <Tab.Navigator
       screenOptions={(ev) => screenOptions(ev)}
@@ -50,10 +65,10 @@ function AuthNavigator({ theme }) {
         },
       }}
     >
-      <Tab.Screen name="Workouts" component={WorkoutsScreen} />
-      <Tab.Screen name="Create" component={SplashScreen} />
-      <Tab.Screen name="Settings" component={SplashScreen} />
-      <Tab.Screen name="Account" component={SplashScreen} />
+      <Tab.Screen name="Workouts" component={WorkoutsScreen} listeners={setRoute} />
+      <Tab.Screen name="Create" component={getCreateComponent} listeners={setRoute} />
+      <Tab.Screen name="Settings" component={SplashScreen} listeners={setRoute} />
+      <Tab.Screen name="Account" component={SplashScreen} listeners={setRoute} />
     </Tab.Navigator>
   );
 }
