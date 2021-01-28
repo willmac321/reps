@@ -1,6 +1,6 @@
 import React from 'react';
 import { withTheme, List } from 'react-native-paper';
-import { FlatList, View } from 'react-native';
+import { View, Animated, Easing } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import CardWithButton from '../../../../template/CardWithButton';
 import ScrollList from '../../../../template/ScrollList';
@@ -18,6 +18,7 @@ const Workouts = ({
 }) => {
   const [isLoading, setIsLoading] = React.useState(false);
   const [isDisable, setIsDisable] = React.useState(false);
+  const [height, setHeight] = React.useState(0);
   const [selected, setSelected] = React.useState(null);
   const [modalOnOkSelectedId, setModalOnOkSelected] = React.useState('');
   // FIXME
@@ -28,15 +29,34 @@ const Workouts = ({
       date: Date.now().toLocaleString(),
     }))
   );
+
+  const springAnim = React.useRef(new Animated.Value(1)).current;
+
+  const springOut = (callback) => {
+    Animated.timing(springAnim, {
+      toValue: 0,
+      useNativeDriver: true,
+      easing: Easing.ease.out,
+    }).start(callback);
+  };
+
+  const size = springAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, height],
+  });
+
   const handleOnSubmit = () => {
     setIsLoading(!isDisable);
   };
 
   const onPress = (id) => setSelected(id);
 
-  const handleEdit = (_, id) => {};
+  const handleEdit = (_, id) => {
+    setSelected(id);
+  };
 
   const handleTrash = (_, id) => {
+    setSelected(id);
     setNotifyTitle('Woah, you sure...');
     setMessage(`Do you really want to delete ${Data.filter((d) => d.id === id)[0].title}?`);
     setIsOk(false);
@@ -49,10 +69,19 @@ const Workouts = ({
   };
 
   const deleteWorkout = (id) => {
-    SetData(Data.filter((d) => d.id !== id));
-    setIsOk(false);
-    setModalOnOkSelected(null);
+    springOut(() => {
+      setIsOk(false);
+      setModalOnOkSelected(null);
+      setSelected(null);
+      //FIXME this isn't working, next click stacks two items in list on top of each other :wa
+      springAnim.setValue(1);
+      SetData(Data.filter((d) => d.id !== id));
+    });
     // TODO API call
+  };
+
+  const setMaxHeight = (e) => {
+    setHeight(e.nativeEvent.layout.height);
   };
 
   React.useEffect(() => {
@@ -63,13 +92,18 @@ const Workouts = ({
   }, [isOk]);
 
   const Item = ({ item }) => (
-    <WorkoutItem
-      onPress={() => onPress(item.id)}
-      isSelected={item.id === selected}
-      text={item}
-      handleTrash={handleTrash}
-      handleEdit={handleEdit}
-    />
+    <Animated.View
+      onLayout={setMaxHeight}
+      style={item.id === selected ? { opacity: springAnim, height: size } : null}
+    >
+      <WorkoutItem
+        onPress={() => onPress(item.id)}
+        isSelected={item.id === selected}
+        text={item}
+        handleTrash={handleTrash}
+        handleEdit={handleEdit}
+      />
+    </Animated.View>
   );
 
   const EmptyComponent = () => (
