@@ -1,10 +1,9 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { withTheme, TextInput, HelperText } from 'react-native-paper';
-import API from '../../../../controllers/WorkoutApi';
 import CardWithButton from '../../../../template/CardWithButton';
 
-const NewWorkout = ({ navigation, user, theme, data, addWorkoutToList }) => {
+const NewWorkout = ({ navigation, theme, data }) => {
   const [isDisable, setIsDisable] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
   const [isError, setIsError] = React.useState(false);
@@ -23,19 +22,11 @@ const NewWorkout = ({ navigation, user, theme, data, addWorkoutToList }) => {
     }
   }, [workoutName, data]);
 
-  const handleOnPress = async () => {
+  const handleOnPress = () => {
     setIsLoading(true);
     // TODO insert api call here
-    const workout = { title: workoutName, date: new Date().toLocaleString() };
-    //FIXME
-    //const res = await API.newWorkout(user.uid, workout);
-    const res = await API.newWorkout('123', workout);
-
-    workout.id = res;
-
-    addWorkoutToList(workout);
-
-    navigation.navigate('Create', { screen: 'NewExercises' });
+    // API.login(email, password, callbackHandlePress);
+    // then nav to new exercise screen
   };
 
   return (

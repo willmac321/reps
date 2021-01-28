@@ -2,32 +2,23 @@ import React from 'react';
 import { withTheme } from 'react-native-paper';
 import { StateContext } from '../../../controllers/state';
 import WarnModal from '../../../template/WarnModal';
-import Workouts from './parts/Workouts';
+import NewExercise from './parts/NewExercise';
 
-const WorkoutsScreen = ({ navigation, theme }) => {
+const NewExerciseScreen = ({ navigation, theme }) => {
   const [showNotify, setShowNotify] = React.useState(false);
   const [isOk, setIsOk] = React.useState(false);
   const [notifyMessage, setNotifyMessage] = React.useState('');
   const [notifyTitle, setNotifyTitle] = React.useState('');
   return (
     <StateContext.Consumer>
-      {({
-        user = null,
-        selectedWorkout: { setSelectedWorkout },
-        workouts: { workouts = [], setWorkouts = () => {} },
-      }) => (
+      {({ selectedWorkout: { selectedWorkout }, exercises: { exercises, setExercises } }) => (
         <>
-          <Workouts
-            data={workouts}
-            setData={setWorkouts}
-            setSelectedWorkout={setSelectedWorkout}
+          <NewExercise
+            exercises={exercises}
+            setExercises={setExercises}
+            workout={selectedWorkout}
             navigation={navigation}
-            setMessage={setNotifyMessage}
-            setNotifyTitle={setNotifyTitle}
-            setShowNotify={setShowNotify}
-            isOk={isOk}
-            setIsOk={setIsOk}
-            user={user}
+            theme={theme}
           />
           <WarnModal
             title={notifyTitle}
@@ -44,4 +35,4 @@ const WorkoutsScreen = ({ navigation, theme }) => {
   );
 };
 
-export default withTheme(WorkoutsScreen);
+export default withTheme(NewExerciseScreen);

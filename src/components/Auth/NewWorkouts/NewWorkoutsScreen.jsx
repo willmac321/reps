@@ -1,5 +1,6 @@
 import React from 'react';
 import { withTheme } from 'react-native-paper';
+import { StateContext } from '../../../controllers/state';
 import WarnModal from '../../../template/WarnModal';
 import Workouts from '../Workouts/parts/Workouts';
 import NewWorkout from './parts/NewWorkout';
@@ -10,26 +11,50 @@ const NewWorkoutsScreen = ({ navigation, theme }) => {
   const [notifyMessage, setNotifyMessage] = React.useState('');
   const [notifyTitle, setNotifyTitle] = React.useState('');
   return (
-    <>
-      <NewWorkout navigation={navigation} theme={theme} />
-      <Workouts
-        navigation={navigation}
-        setMessage={setNotifyMessage}
-        setNotifyTitle={setNotifyTitle}
-        setShowNotify={setShowNotify}
-        isOk={isOk}
-        setIsOk={setIsOk}
-      />
-      <WarnModal
-        title={notifyTitle}
-        buttonText="Yes"
-        theme={theme}
-        content={notifyMessage}
-        visible={showNotify}
-        setVisible={setShowNotify}
-        onPress={() => setIsOk(true)}
-      />
-    </>
+    <StateContext.Consumer>
+      {({
+        selectedWorkout: { setSelectedWorkout },
+        workouts: { workouts = [], setWorkouts = () => {} },
+      }) => {
+        const addWorkoutToList = (w) => {
+          const unsortedWorkouts = workouts.map(a=>a);
+          setSelectedWorkout(w);
+          unsortedWorkouts.push(w);
+          setWorkouts(() => unsortedWorkouts.sort((a, b) => a.title.localeCompare(b.title)));
+        };
+        return (
+          <>
+            <NewWorkout
+              addWorkoutToList={addWorkoutToList}
+              data={workouts}
+              navigation={navigation}
+              theme={theme}
+            />
+            <Workouts
+              data={workouts}
+              setData={setWorkouts}
+              navigation={navigation}
+              setSelectedWorkout={setSelectedWorkout}
+              setSelected
+              setMessage={setNotifyMessage}
+              setNotifyTitle={setNotifyTitle}
+              setShowNotify={setShowNotify}
+              isOk={isOk}
+              setIsOk={setIsOk}
+            />
+            <WarnModal
+              title={notifyTitle}
+              buttonText="Yes"
+              theme={theme}
+              content={notifyMessage}
+              visible={showNotify}
+              setVisible={setShowNotify}
+              onPress={() => setIsOk(true)}
+            />
+          </>
+        );
+      }}
+    </StateContext.Consumer>
   );
 };
 

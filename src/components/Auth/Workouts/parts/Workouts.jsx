@@ -9,47 +9,57 @@ import WorkoutItem from './WorkoutItem';
 // const Data = [];
 const Workouts = ({
   theme,
+  user,
   navigation,
   setMessage,
   setNotifyTitle,
   setShowNotify,
   isOk,
   setIsOk,
+  data,
+  setData,
+  setSelectedWorkout
 }) => {
   const [isLoading, setIsLoading] = React.useState(false);
   const [isDisable, setIsDisable] = React.useState(false);
-  const [height, setHeight] = React.useState(0);
   const [selected, setSelected] = React.useState(null);
   const [modalOnOkSelectedId, setModalOnOkSelected] = React.useState('');
-  // FIXME
-  const [Data, SetData] = React.useState(
-    [...Array(15).keys()].map((k) => ({
-      id: k.toString(),
-      title: `workout ${k}`,
-      date: Date.now().toLocaleString(),
-    }))
-  );
-
   const springAnim = React.useRef(new Animated.Value(1)).current;
 
   const springOut = (callback) => {
     Animated.timing(springAnim, {
       toValue: 0,
       useNativeDriver: true,
+      duration: 200,
       easing: Easing.ease.out,
     }).start(callback);
   };
 
-  const size = springAnim.interpolate({
+  const panX = springAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: [0, height],
+    outputRange: [500, 0],
   });
+
+  const deleteWorkout = (id) => {
+    springOut(() => {
+      setIsOk(false);
+      setModalOnOkSelected(null);
+      springAnim.setValue(1);
+      setData(data.filter((d) => d.id !== id));
+      setSelected(null);
+    });
+    // TODO API call
+  };
 
   const handleOnSubmit = () => {
     setIsLoading(!isDisable);
+    setSelectedWorkout(selected);
+    // TODO navigate to workout screen
   };
 
-  const onPress = (id) => setSelected(id);
+  const onPress = (id) => {
+    setSelected(id);
+  };
 
   const handleEdit = (_, id) => {
     setSelected(id);
@@ -58,7 +68,7 @@ const Workouts = ({
   const handleTrash = (_, id) => {
     setSelected(id);
     setNotifyTitle('Woah, you sure...');
-    setMessage(`Do you really want to delete ${Data.filter((d) => d.id === id)[0].title}?`);
+    setMessage(`Do you really want to delete ${data.filter((d) => d.id === id)[0].title}?`);
     setIsOk(false);
     setModalOnOkSelected(id);
     setShowNotify(true);
@@ -68,21 +78,10 @@ const Workouts = ({
     navigation.navigate('Create');
   };
 
-  const deleteWorkout = (id) => {
-    springOut(() => {
-      setIsOk(false);
-      setModalOnOkSelected(null);
-      setSelected(null);
-      //FIXME this isn't working, next click stacks two items in list on top of each other :wa
-      springAnim.setValue(1);
-      SetData(Data.filter((d) => d.id !== id));
-    });
-    // TODO API call
-  };
-
-  const setMaxHeight = (e) => {
-    setHeight(e.nativeEvent.layout.height);
-  };
+  //  React.useEffect(() => {
+  //    if (springAnim === 1) {
+  //    }
+  //  }, [springAnim]);
 
   React.useEffect(() => {
     if (isOk && modalOnOkSelectedId) {
@@ -93,8 +92,9 @@ const Workouts = ({
 
   const Item = ({ item }) => (
     <Animated.View
-      onLayout={setMaxHeight}
-      style={item.id === selected ? { opacity: springAnim, height: size } : null}
+      style={
+        item.id === selected ? { opacity: springAnim, transform: [{ translateX: panX }] } : null
+      }
     >
       <WorkoutItem
         onPress={() => onPress(item.id)}
@@ -159,19 +159,19 @@ const Workouts = ({
   return (
     <CardWithButton
       buttonText="Select"
-      showButton={Data.length > 0}
+      showButton={data.length > 0}
       theme={theme}
       buttonDisabled={isDisable}
       onPress={handleOnSubmit}
       isLoading={isLoading}
       flex={1}
       style={{
-        flex: Data.length > 0 ? 1 : null,
+        flex: data.length > 0 ? 1 : null,
         marginBottom: 50,
       }}
     >
       <ScrollList
-        data={Data}
+        data={data}
         renderItem={Item}
         keyExtractor={(item) => item.id}
         extraData={selected}
