@@ -1,6 +1,6 @@
 import React from 'react';
 import { KeyboardAvoidingView, View, StyleSheet } from 'react-native';
-import { withTheme, TextInput, HelperText } from 'react-native-paper';
+import { withTheme, TextInput, HelperText, Text } from 'react-native-paper';
 import CardWithButton from '../../../../template/CardWithButton';
 
 const NewWorkout = ({ navigation, theme, exercises, setExercises, workout }) => {
@@ -17,6 +17,28 @@ const NewWorkout = ({ navigation, theme, exercises, setExercises, workout }) => 
 
   const styles = StyleSheet.create({
     input: theme.input,
+    rowInput: {
+      flex: 3,
+    },
+    rowTextHeader: {
+      alignSelf: 'flex-start',
+      textAlign: 'bottom',
+      fontWeight: 'bold',
+      marginLeft: 5,
+    },
+    rowText: {
+      flex: 1,
+      alignSelf: 'center',
+      textAlign: 'center',
+      padding: 5,
+    },
+    rowContainer: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      marginHorizontal: 10,
+      justifyContent: 'space-between',
+      marginTop: 15,
+    },
   });
 
   const isNameTaken = () => exercises.map((a) => a.title).includes(newExercise.name);
@@ -66,30 +88,108 @@ const NewWorkout = ({ navigation, theme, exercises, setExercises, workout }) => 
           error={isError}
           value={newExercise.title}
           onChangeText={(val) => setNewExercise(() => ({ ...newExercise, title: val }))}
-          style={styles.input}
+          style={[styles.input, { marginHorizontal: 10 }]}
         />
         {!!isNameTaken() && (
           <HelperText type="error" visible={isNameTaken()}>
             Name is already taken!
           </HelperText>
         )}
-        <View>
-          <TextInput
-            mode="outlined"
+        <View style={[styles.rowContainer]}>
+          <View
             theme={theme}
-            autoCompleteType="email"
-            textContentType="emailAddress"
-            label="Workout name"
-            error={isError}
-            value={newExercise.title}
-            onChangeText={(val) => setNewExercise(() => ({ ...newExercise, title: val }))}
-            style={styles.input}
-          />
-          {!!isNameTaken() && (
-            <HelperText type="error" visible={isNameTaken()}>
-              Name is already taken!
-            </HelperText>
-          )}
+            style={[
+              {
+                flex: 4,
+              },
+            ]}
+          >
+            <Text theme={theme} style={styles.rowTextHeader}>
+              Sets
+            </Text>
+            <TextInput
+              mode="outlined"
+              theme={theme}
+              textContentType="telephoneNumber"
+              error={isError}
+              value={newExercise.title}
+              onChangeText={(val) => setNewExercise(() => ({ ...newExercise, title: val }))}
+              style={[styles.input, styles.rowInput]}
+            />
+            {!!isNameTaken() && (
+              <HelperText type="error" visible={isNameTaken()}>
+                Name is already taken!
+              </HelperText>
+            )}
+          </View>
+          <View
+            theme={theme}
+            style={[
+              {
+                flex: 4,
+              },
+            ]}
+          >
+            <Text theme={theme} style={[styles.rowTextHeader, { marginLeft: 15 }]}>
+              Reps
+            </Text>
+            <View
+              style={[
+                styles.rowContainer,
+                {
+                  marginTop: 0,
+                  marginBottom: 0,
+                  justifyContent: 'space-evenly',
+                  flex: 4,
+                },
+              ]}
+            >
+              <TextInput
+                mode="outlined"
+                theme={theme}
+                textContentType="telephoneNumber"
+                label="Min"
+                error={isError}
+                value={newExercise.title}
+                onChangeText={(val) => setNewExercise(() => ({ ...newExercise, title: val }))}
+                style={[styles.input, styles.rowInput]}
+              />
+              <Text theme={theme} style={styles.rowText}>
+                to
+              </Text>
+              <TextInput
+                mode="outlined"
+                theme={theme}
+                textContentType="telephoneNumber"
+                label="Max"
+                error={isError}
+                value={newExercise.title}
+                onChangeText={(val) => setNewExercise(() => ({ ...newExercise, title: val }))}
+                style={[styles.input, styles.rowInput]}
+              />
+            </View>
+          </View>
+          <View
+            theme={theme}
+            style={[
+              {
+                flex: 4,
+              },
+            ]}
+          >
+            <Text theme={theme} style={styles.rowTextHeader}>
+              Rest (sec)
+            </Text>
+            <TextInput
+              mode="outlined"
+              theme={theme}
+              textContentType="telephoneNumber"
+              error={isError}
+              value={newExercise.title}
+              onChangeText={(val) => setNewExercise(() => ({ ...newExercise, title: val }))}
+              style={[styles.input, styles.rowInput]}
+            />
+          </View>
         </View>
       </CardWithButton>
     </KeyboardAvoidingView>
