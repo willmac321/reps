@@ -27,14 +27,14 @@ const NewWorkout = ({ navigation, user, theme, data, addWorkoutToList }) => {
     setIsLoading(true);
     // TODO insert api call here
     const workout = { title: workoutName, date: new Date().toLocaleString() };
-    //FIXME
-    //const res = await API.newWorkout(user.uid, workout);
-    const res = await API.newWorkout('123', workout);
+    console.log(user);
+    const res = await API.newWorkout(user.uid, workout);
 
     workout.id = res;
 
     addWorkoutToList(workout);
 
+    setIsLoading(false);
     navigation.navigate('Create', { screen: 'NewExercises' });
   };
 

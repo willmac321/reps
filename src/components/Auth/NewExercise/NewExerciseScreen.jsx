@@ -39,7 +39,11 @@ const NewExerciseScreen = ({ navigation, theme }) => {
 
   return (
     <StateContext.Consumer>
-      {({ selectedWorkout: { selectedWorkout }, exercises: { exercises, setExercises } }) => (
+      {({
+        user = null,
+        selectedWorkout: { selectedWorkout },
+        exercises: { exercises, setExercises },
+      }) => (
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
           <NewExercise
             exercises={exercises}
@@ -47,6 +51,7 @@ const NewExerciseScreen = ({ navigation, theme }) => {
             workout={selectedWorkout}
             navigation={navigation}
             style={{ marginTop: customTopMargin }}
+            user={user}
             theme={theme}
           />
           <WarnModal

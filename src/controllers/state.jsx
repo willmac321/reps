@@ -8,7 +8,9 @@ export const StateContextProvider = ({ children }) => {
   const [isLoading, setIsLoading] = React.useState(true);
   const [justRegistered, setJustRegistered] = React.useState(false);
   const [authRes, setAuthRes] = React.useState(null);
-  const [user, setUser] = React.useState(null);
+  // FIXME
+  // const [user, setUser] = React.useState(null);
+  const [user, setUser] = React.useState({ uid: '123' });
 
   // TODO set this on get from api
   const [workouts, setWorkouts] = React.useState(
@@ -16,6 +18,7 @@ export const StateContextProvider = ({ children }) => {
       id: k.toString(),
       title: `workout ${k}`,
       date: Date.now().toLocaleString(),
+      exercises: ['456', '234'],
     }))
   );
   const [selectedWorkout, setSelectedWorkout] = React.useState({});
@@ -23,7 +26,7 @@ export const StateContextProvider = ({ children }) => {
   // and sort it based on name or something
   const [exercises, setExercises] = React.useState(
     [...Array(15).keys()].map((k) => ({
-      parentWorkoutId: 1,
+      parentWorkoutIds: [],
       id: k.toString(),
       title: `exercise ${k}`,
       sets: 7 - Math.floor(Math.random() * 6 + 1),
@@ -43,14 +46,16 @@ export const StateContextProvider = ({ children }) => {
   React.useEffect(() => {
     if (authRes && !authRes.emailVerified && !justRegistered) {
       API.logout(() => {});
-      setUser(null);
+      // FIXME
+      // setUser(null);
       return;
     }
     if (authRes && !authRes.emailVerified && justRegistered) {
       authRes.sendEmailVerification();
       setJustRegistered(false);
     }
-    setUser(authRes);
+    // FIXME
+    // setUser(authRes);
   }, [authRes]);
 
   return (

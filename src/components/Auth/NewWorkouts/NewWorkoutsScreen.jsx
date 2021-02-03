@@ -15,9 +15,10 @@ const NewWorkoutsScreen = ({ navigation, theme }) => {
       {({
         selectedWorkout: { setSelectedWorkout },
         workouts: { workouts = [], setWorkouts = () => {} },
+        user = null,
       }) => {
         const addWorkoutToList = (w) => {
-          const unsortedWorkouts = workouts.map(a=>a);
+          const unsortedWorkouts = workouts.map((a) => a);
           setSelectedWorkout(w);
           unsortedWorkouts.push(w);
           setWorkouts(() => unsortedWorkouts.sort((a, b) => a.title.localeCompare(b.title)));
@@ -29,6 +30,7 @@ const NewWorkoutsScreen = ({ navigation, theme }) => {
               data={workouts}
               navigation={navigation}
               theme={theme}
+              user={user}
             />
             <Workouts
               data={workouts}

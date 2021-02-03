@@ -2,9 +2,10 @@ import React from 'react';
 import debounce from 'lodash/debounce';
 import { KeyboardAvoidingView, View, StyleSheet } from 'react-native';
 import { withTheme, TextInput, HelperText, Text } from 'react-native-paper';
+import API from '../../../../controllers/ExerciseApi';
 import CardWithButton from '../../../../template/CardWithButton';
 
-const NewWorkout = ({ navigation, theme, exercises, setExercises, workout }) => {
+const NewWorkout = ({ navigation, theme, user, exercises, setExercises, workout }) => {
   const [isDisable, setIsDisable] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
   const [titleChange, setTitleChange] = React.useState(null);
@@ -15,6 +16,7 @@ const NewWorkout = ({ navigation, theme, exercises, setExercises, workout }) => 
     rest: false,
   });
   const [newExercise, setNewExercise] = React.useState({
+    parentWorkoutIds: [],
     id: '',
     title: '',
     sets: 0,
@@ -55,6 +57,10 @@ const NewWorkout = ({ navigation, theme, exercises, setExercises, workout }) => 
   const isNameTaken = () => exercises.map((a) => a.title).includes(newExercise.name);
   const isEmpty = () =>
     !(newExercise.title && newExercise.sets && newExercise.rest && newExercise.repRange[1]);
+
+  React.useEffect(()=>{
+    console.log(user);
+  }, [user]);
 
   React.useEffect(() => {
     if (isEmpty() || isNameTaken()) {
@@ -110,12 +116,18 @@ const NewWorkout = ({ navigation, theme, exercises, setExercises, workout }) => 
     }
   };
 
-  const handleOnPress = () => {
+  const handleOnPress = async () => {
     if (titleChange) titleChange.flush();
     setIsLoading(true);
-    // TODO insert api call here
-    // API.login(email, password, callbackHandlePress);
-    // then nav to new exercise screen
+    setNewExercise({
+      ...newExercise,
+      parentWorkoutIds: newExercise.parentWorkoutIds.splice().push(workout.id),
+      id: await API.newExercise(user.uid, newExercise, workout.id),
+    });
+    setExercises([...exercises, newExercise]);
+    setIsLoading(false);
+    // TODO add exercise to list
+    navigation.navigate('Splash');
   };
 
   return (
