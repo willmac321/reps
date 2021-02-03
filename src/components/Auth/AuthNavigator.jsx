@@ -53,8 +53,8 @@ function AuthNavigator({ theme }) {
   // should only route to new exercises when the page is on a selected workout screen
   const NewComponents = () => (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="NewExercises" component={NewExercisesScreen} />
       <Stack.Screen name="NewWorkout" component={NewWorkoutsScreen} />
+      <Stack.Screen name="NewExercises" component={NewExercisesScreen} />
     </Stack.Navigator>
   );
 
