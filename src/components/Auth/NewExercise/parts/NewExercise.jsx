@@ -1,11 +1,10 @@
 import React from 'react';
-import debounce from 'lodash/debounce';
 import { KeyboardAvoidingView, View, StyleSheet } from 'react-native';
 import { withTheme, TextInput, HelperText, Text } from 'react-native-paper';
 import API from '../../../../controllers/ExerciseApi';
 import CardWithButton from '../../../../template/CardWithButton';
 
-const NewWorkout = ({ navigation, theme, user, exercises, setExercises, workout }) => {
+const NewWorkout = ({ navigation, theme, user, exercises, workout, addExerciseToList }) => {
   const [isDisable, setIsDisable] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
   const [titleChange, setTitleChange] = React.useState(null);
@@ -58,10 +57,6 @@ const NewWorkout = ({ navigation, theme, user, exercises, setExercises, workout 
   const isEmpty = () =>
     !(newExercise.title && newExercise.sets && newExercise.rest && newExercise.repRange[1]);
 
-  React.useEffect(()=>{
-    console.log(user);
-  }, [user]);
-
   React.useEffect(() => {
     if (isEmpty() || isNameTaken()) {
       setIsDisable(true);
@@ -81,35 +76,49 @@ const NewWorkout = ({ navigation, theme, user, exercises, setExercises, workout 
     switch (spot) {
       case 'title':
         if (isNameTaken()) setIsError({ ...isError, title: true });
-        else setNewExercise(() => ({ ...newExercise, title: val }));
+        else {
+          setNewExercise(() => ({ ...newExercise, title: val }));
+          setIsError({ ...isError, title: false });
+        }
         break;
       case 'sets':
-        if (isValidNumber(val)) setNewExercise(() => ({ ...newExercise, sets: val }));
-        else setIsError({ ...isError, sets: true });
+        if (isValidNumber(val)) {
+          setNewExercise(() => ({ ...newExercise, sets: val }));
+          setIsError({ ...isError, sets: false });
+        } else setIsError({ ...isError, sets: true });
         break;
       case 'repLow':
-        if (isValidNumber(val))
+        if (isValidNumber(val)) {
           setNewExercise(() => ({
             ...newExercise,
             repRange: [val, newExercise.repRange[1]],
           }));
-        else setIsError({ ...isError, repRange: [true, newExercise.repRange[1]] });
+          setIsError({
+            ...isError,
+            repRange: [false, isError.repRange[1]],
+          });
+        } else setIsError({ ...isError, repRange: [true, isError.repRange[1]] });
         break;
       case 'repHi':
-        if (isValidNumber(val))
+        if (isValidNumber(val)) {
           setNewExercise(() => ({
             ...newExercise,
             repRange: [newExercise.repRange[0], val],
           }));
-        else setIsError({ ...isError, repRange: [newExercise.repRange[0], true] });
+          setIsError({
+            ...isError,
+            repRange: [isError.repRange[0], false],
+          });
+        } else setIsError({ ...isError, repRange: [isError.repRange[0], true] });
         break;
       case 'rest':
-        if (isValidNumber(val))
+        if (isValidNumber(val)) {
           setNewExercise(() => ({
             ...newExercise,
             rest: val,
           }));
-        else setIsError({ ...isError, rest: true });
+          setIsError({ ...isError, rest: false });
+        } else setIsError({ ...isError, rest: true });
         break;
       default:
         break;
@@ -124,7 +133,7 @@ const NewWorkout = ({ navigation, theme, user, exercises, setExercises, workout 
       parentWorkoutIds: newExercise.parentWorkoutIds.splice().push(workout.id),
       id: await API.newExercise(user.uid, newExercise, workout.id),
     });
-    setExercises([...exercises, newExercise]);
+    addExerciseToList(newExercise);
     setIsLoading(false);
     // TODO add exercise to list
     navigation.navigate('Splash');
@@ -148,9 +157,9 @@ const NewWorkout = ({ navigation, theme, user, exercises, setExercises, workout 
             autoCompleteType="email"
             textContentType="emailAddress"
             label="Exercise name"
-            error={isError}
+            error={isError.title}
             value={newExercise.title}
-            onChangeText={(val) => setTitleChange(debounce(() => setVal(val, 'title'), 50))}
+            onChangeText={(val) => setTitleChange(setVal(val, 'title'))}
             style={[styles.input, { marginHorizontal: 10 }]}
           />
           {!!isNameTaken() && (
@@ -176,7 +185,7 @@ const NewWorkout = ({ navigation, theme, user, exercises, setExercises, workout 
                 theme={theme}
                 textContentType="telephoneNumber"
                 label="#"
-                error={isError}
+                error={isError.sets}
                 value={newExercise.sets ? newExercise.sets.toString() : ''}
                 onChangeText={(val) => setVal(val, 'sets')}
                 style={[styles.input, styles.rowInput]}
@@ -212,7 +221,7 @@ const NewWorkout = ({ navigation, theme, user, exercises, setExercises, workout 
                   theme={theme}
                   textContentType="telephoneNumber"
                   label="min"
-                  error={isError}
+                  error={isError.repRange[0]}
                   value={newExercise.repRange[0] ? newExercise.repRange[0].toString() : ''}
                   onChangeText={(val) => setVal(val, 'repLow')}
                   style={[styles.input, styles.rowInput]}
@@ -225,7 +234,7 @@ const NewWorkout = ({ navigation, theme, user, exercises, setExercises, workout 
                   theme={theme}
                   textContentType="telephoneNumber"
                   label="max"
-                  error={isError}
+                  error={isError.repRange[1]}
                   value={newExercise.repRange[1] ? newExercise.repRange[1].toString() : ''}
                   onChangeText={(val) => setVal(val, 'repHi')}
                   style={[styles.input, styles.rowInput]}
@@ -249,7 +258,7 @@ const NewWorkout = ({ navigation, theme, user, exercises, setExercises, workout 
                 theme={theme}
                 label="sec"
                 textContentType="telephoneNumber"
-                error={isError}
+                error={isError.rest}
                 value={newExercise.rest ? newExercise.rest.toString() : ''}
                 onChangeText={(val) => setVal(val, 'rest')}
                 style={[styles.input, styles.rowInput]}

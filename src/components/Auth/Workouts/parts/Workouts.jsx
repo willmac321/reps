@@ -18,7 +18,7 @@ const Workouts = ({
   setIsOk,
   data,
   setData,
-  setSelectedWorkout
+  setSelectedWorkout,
 }) => {
   const [isLoading, setIsLoading] = React.useState(false);
   const [isDisable, setIsDisable] = React.useState(false);

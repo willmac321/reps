@@ -25,9 +25,11 @@ const NewWorkout = ({ navigation, user, theme, data, addWorkoutToList }) => {
 
   const handleOnPress = async () => {
     setIsLoading(true);
-    // TODO insert api call here
-    const workout = { title: workoutName, date: new Date().toLocaleString() };
-    console.log(user);
+    const workout = {
+      title: workoutName,
+      date: new Date().toLocaleString(),
+      exercises: [],
+    };
     const res = await API.newWorkout(user.uid, workout);
 
     workout.id = res;

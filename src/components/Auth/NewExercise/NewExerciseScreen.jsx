@@ -47,7 +47,7 @@ const NewExerciseScreen = ({ navigation, theme }) => {
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
           <NewExercise
             exercises={exercises}
-            setExercises={setExercises}
+            addExerciseToList={setExercises}
             workout={selectedWorkout}
             navigation={navigation}
             style={{ marginTop: customTopMargin }}

@@ -2,7 +2,7 @@ import { db } from '../firebase/config';
 
 // auth is handled by firebase
 function updateExercise(exercise) {}
-async function newExercise(uid, exercise, workoutUid) {
+async function newExercise(uid, exercise, workout) {
   return db
     .collection('users')
     .doc(uid)
@@ -13,8 +13,8 @@ async function newExercise(uid, exercise, workoutUid) {
       db.collection('users')
         .doc(uid)
         .collection('workouts')
-        .doc(workoutUid)
-        .add(docRef.uid)
+        .doc(workout.id)
+        .update(workout.exercises)
         .catch((e) => console.error(e));
       return docRef.id;
     })

@@ -21,10 +21,9 @@ export const StateContextProvider = ({ children }) => {
       exercises: ['456', '234'],
     }))
   );
-  const [selectedWorkout, setSelectedWorkout] = React.useState({});
   // TODO set this on get from api
   // and sort it based on name or something
-  const [exercises, setExercises] = React.useState(
+  const [exercises, updateExercises] = React.useState(
     [...Array(15).keys()].map((k) => ({
       parentWorkoutIds: [],
       id: k.toString(),
@@ -34,6 +33,42 @@ export const StateContextProvider = ({ children }) => {
       rest: 45 - Math.floor(Math.random() * 15 + 1),
     }))
   );
+
+  const [selectedWorkout, updateSelectedWorkout] = React.useState({});
+
+  // update local workouts at the same time
+  const setSelectedWorkout = (w) => {
+    const unsortedWorkouts = workouts.map((a) => a);
+    updateSelectedWorkout(w);
+    unsortedWorkouts.push(w);
+    setWorkouts(() => unsortedWorkouts.sort((a, b) => a.title.localeCompare(b.title)));
+  };
+  const setExercises = (ex, id = -1) => {
+    // for local state
+    // add exercise to list
+    // add exercise uid to workout
+    updateExercises([...exercises, ex]);
+    // update selected workout exercise array
+    const currExercise = selectedWorkout.exercises.slice();
+    if (currExercise.indexOf(ex.id) > -1) {
+      currExercise.splice(currExercise.indexOf(ex.id), 1);
+    }
+    if (id > -1) {
+      currExercise.splice(id, 0, ex.id);
+    } else {
+      currExercise.push(ex.id);
+    }
+    setSelectedWorkout({ ...selectedWorkout, exercises: currExercise });
+    // update workouts array too
+    setWorkouts(() =>
+      workouts.map((w) => {
+        if (w.id === selectedWorkout.id) {
+          return selectedWorkout;
+        }
+        return w;
+      })
+    );
+  };
 
   // FIXME
   //  React.useEffect(() => {

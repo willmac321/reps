@@ -16,46 +16,38 @@ const NewWorkoutsScreen = ({ navigation, theme }) => {
         selectedWorkout: { setSelectedWorkout },
         workouts: { workouts = [], setWorkouts = () => {} },
         user = null,
-      }) => {
-        const addWorkoutToList = (w) => {
-          const unsortedWorkouts = workouts.map((a) => a);
-          setSelectedWorkout(w);
-          unsortedWorkouts.push(w);
-          setWorkouts(() => unsortedWorkouts.sort((a, b) => a.title.localeCompare(b.title)));
-        };
-        return (
-          <>
-            <NewWorkout
-              addWorkoutToList={addWorkoutToList}
-              data={workouts}
-              navigation={navigation}
-              theme={theme}
-              user={user}
-            />
-            <Workouts
-              data={workouts}
-              setData={setWorkouts}
-              navigation={navigation}
-              setSelectedWorkout={setSelectedWorkout}
-              setSelected
-              setMessage={setNotifyMessage}
-              setNotifyTitle={setNotifyTitle}
-              setShowNotify={setShowNotify}
-              isOk={isOk}
-              setIsOk={setIsOk}
-            />
-            <WarnModal
-              title={notifyTitle}
-              buttonText="Yes"
-              theme={theme}
-              content={notifyMessage}
-              visible={showNotify}
-              setVisible={setShowNotify}
-              onPress={() => setIsOk(true)}
-            />
-          </>
-        );
-      }}
+      }) => (
+        <>
+          <NewWorkout
+            addWorkoutToList={setSelectedWorkout}
+            data={workouts}
+            navigation={navigation}
+            theme={theme}
+            user={user}
+          />
+          <Workouts
+            data={workouts}
+            setData={setWorkouts}
+            navigation={navigation}
+            setSelectedWorkout={setSelectedWorkout}
+            setSelected
+            setMessage={setNotifyMessage}
+            setNotifyTitle={setNotifyTitle}
+            setShowNotify={setShowNotify}
+            isOk={isOk}
+            setIsOk={setIsOk}
+          />
+          <WarnModal
+            title={notifyTitle}
+            buttonText="Yes"
+            theme={theme}
+            content={notifyMessage}
+            visible={showNotify}
+            setVisible={setShowNotify}
+            onPress={() => setIsOk(true)}
+          />
+        </>
+      )}
     </StateContext.Consumer>
   );
 };
