@@ -7,11 +7,18 @@ const ExerciseItem = ({ theme, isSelected, text, onPress, handleEdit, handleTras
   const styles = StyleSheet.create({
     item: isSelected
       ? {
+          marginHorizontal: 10,
           backgroundColor: theme.colors.primary,
-          ...theme.item,
+          borderColor: theme.colors.primary,
+          borderWidth: 1,
+          borderRightWidth: 6,
         }
       : {
-          ...theme.item,
+          marginHorizontal: 10,
+          backgroundColor: theme.colors.background,
+          borderColor: theme.colors.primary,
+          borderWidth: 1,
+          borderRightWidth: 6,
         },
     icon: isSelected
       ? {
@@ -28,10 +35,9 @@ const ExerciseItem = ({ theme, isSelected, text, onPress, handleEdit, handleTras
         },
     text: isSelected
       ? {
-          ...theme.buttonText,
+          color: theme.buttonText.color,
         }
       : {
-          ...theme.buttonText,
           color: theme.colors.primary,
         },
     rowInput: {
@@ -43,9 +49,14 @@ const ExerciseItem = ({ theme, isSelected, text, onPress, handleEdit, handleTras
       alignSelf: 'flex-start',
       textAlign: 'left',
       fontWeight: 'bold',
-      marginLeft: 5,
     },
     rowText: {
+      flexGrow: 1,
+      flex: 0,
+      marginTop: 5,
+      paddingHorizontal: 2,
+    },
+    rowSubText: {
       flexGrow: 1,
       flex: 0,
       alignSelf: 'center',
@@ -58,47 +69,87 @@ const ExerciseItem = ({ theme, isSelected, text, onPress, handleEdit, handleTras
       flexWrap: 'wrap',
       marginHorizontal: 10,
       justifyContent: 'space-around',
-      marginTop: 15,
+      marginTop: 10,
+    },
+    rowSubContainer: {
+      alignSelf: 'flex-start',
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      justifyContent: 'space-around',
     },
   });
 
   return (
-    <Card
-      theme={theme}
-      style={[
-        styles.card,
-        {
-          backgroundColor: theme.colors.background,
-          borderColor: theme.colors.primary,
-          borderWidth: 1,
-          borderRightWidth: 6,
-        },
-      ]}
-    >
+    <Card theme={theme} style={styles.item}>
       <TouchableRipple
-        style={{ borderRadius: theme.item.borderRadius, borderWidth: 0 }}
+        style={{
+          padding: 10,
+          borderRadius: theme.item.borderRadius,
+          borderWidth: 0,
+        }}
         theme={theme}
-        onPress={() => ({
-          // this ripple on works when a funciton is in onPress
-        })}
+        onPress={() => onPress(text.id)}
       >
         <View>
           <View theme={theme}>
-            <Text theme={theme} style={[styles.rowTextHeader]}>
+            <Text theme={theme} style={[styles.rowTextHeader, theme.buttonText, styles.text]}>
               {text.title}
             </Text>
           </View>
-          <View
-            style={[
-              {
-                flex: 0,
-                flexGrow: 4,
-              },
-            ]}
-          >
-            <Text theme={theme} style={[styles.rowTextHeader]}>
-              Sets
-            </Text>
+          <View theme={theme} style={styles.rowContainer}>
+            <View
+              style={[
+                {
+                  flex: 0,
+                  flexGrow: 4,
+                },
+              ]}
+            >
+              <Text theme={theme} style={[styles.rowTextHeader, styles.text]}>
+                Sets
+              </Text>
+              <Text theme={theme} style={[styles.rowText, styles.text]}>
+                {text.sets}
+              </Text>
+            </View>
+            <View
+              style={[
+                {
+                  flex: 0,
+                  flexGrow: 4,
+                },
+              ]}
+            >
+              <Text theme={theme} style={[styles.rowTextHeader, styles.text]}>
+                Rep Range
+              </Text>
+              <View theme={theme} style={styles.rowSubContainer}>
+                <Text theme={theme} style={[styles.rowSubText, styles.text]}>
+                  {text.repRange[0]}
+                </Text>
+                <Text theme={theme} style={[styles.rowSubText, styles.text]}>
+                  to
+                </Text>
+                <Text theme={theme} style={[styles.rowSubText, styles.text]}>
+                  {text.repRange[1]}
+                </Text>
+              </View>
+            </View>
+            <View
+              style={[
+                {
+                  flex: 0,
+                  flexGrow: 4,
+                },
+              ]}
+            >
+              <Text theme={theme} style={[styles.rowTextHeader, styles.text]}>
+                Rest (mm:ss)
+              </Text>
+              <Text theme={theme} style={[styles.rowText, styles.text]}>
+                {new Date(text.rest * 1000).toISOString().substr(14, 5)}
+              </Text>
+            </View>
           </View>
         </View>
       </TouchableRipple>
