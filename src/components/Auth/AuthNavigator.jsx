@@ -8,6 +8,7 @@ import { dropShadow } from '../../theme';
 import SplashScreen from '../Splash/SplashScreen';
 import NewWorkoutsScreen from './NewWorkouts/NewWorkoutsScreen';
 import NewExercisesScreen from './NewExercise/NewExerciseScreen';
+import ExercisesScreen from './Exercises/ExercisesScreen';
 import WorkoutsScreen from './Workouts/WorkoutsScreen';
 
 const Tab = createBottomTabNavigator();
@@ -53,6 +54,7 @@ function AuthNavigator({ theme }) {
   // should only route to new exercises when the page is on a selected workout screen
   const NewComponents = () => (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="Exercises" component={ExercisesScreen} />
       <Stack.Screen name="NewExercises" component={NewExercisesScreen} />
       <Stack.Screen name="NewWorkout" component={NewWorkoutsScreen} />
     </Stack.Navigator>

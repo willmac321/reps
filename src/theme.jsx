@@ -31,6 +31,7 @@ const theme = {
     ...DefaultTheme.colors,
     primary,
     accent,
+    ripple: `${primary}ff`,
     background: '#e4ecf0',
     text: '#8a8cc2',
     textSelected: '#4e4f73',
@@ -39,6 +40,7 @@ const theme = {
     link: '#56CCF2',
     alert: '#eb5757',
     secondary: '#c8d8de',
+    backdrop: 'rgba(0,0,0,0.2)',
   },
   marginHorizontal: 20,
   title: {
