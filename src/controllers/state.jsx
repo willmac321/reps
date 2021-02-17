@@ -12,6 +12,15 @@ export const StateContextProvider = ({ children }) => {
   // const [user, setUser] = React.useState(null);
   const [user, setUser] = React.useState({ uid: '123' });
 
+  const [userDetails, setUserDetails] = React.useState({
+    uid: '123',
+    theme: 'light',
+    ackPrivacyPolicy: false,
+    splashScreenIcon: 'adonis',
+    timeout: false,
+    contactEmail: 'help@loblollysoftware.com',
+  });
+
   // TODO set this on get from api
   const [workouts, setWorkouts] = React.useState(
     [...Array(15).keys()].map((k) => ({
@@ -99,6 +108,8 @@ export const StateContextProvider = ({ children }) => {
         isLoading,
         setIsLoading: () => setIsLoading(!isLoading),
         user,
+        userDetails,
+        setUserDetails,
         setJustRegistered,
         workouts: { workouts, setWorkouts },
         exercises: { exercises, setExercises },
