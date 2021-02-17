@@ -79,7 +79,7 @@ const theme = {
     borderBottomWidth: 6,
     marginRight: 20,
     marginLeft: 20,
-    marginTop: 70,
+    marginTop: 30,
   },
   input: {
     backgroundColor: surface,

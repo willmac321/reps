@@ -9,8 +9,8 @@ export const StateContextProvider = ({ children }) => {
   const [justRegistered, setJustRegistered] = React.useState(false);
   const [authRes, setAuthRes] = React.useState(null);
   // FIXME
-  // const [user, setUser] = React.useState(null);
-  const [user, setUser] = React.useState({ uid: '123' });
+  const [user, setUser] = React.useState(null);
+  //const [user, setUser] = React.useState({ uid: '123' });
 
   // TODO set this on get from api
   const [workouts, setWorkouts] = React.useState(
@@ -24,7 +24,7 @@ export const StateContextProvider = ({ children }) => {
   // TODO set this on get from api
   // and sort it based on name or something
   const [exercises, updateExercises] = React.useState(
-    [...Array(15).keys()].map((k) => ({
+    ['456', '234'].map((k) => ({
       parentWorkoutIds: [],
       id: k.toString(),
       title: `exercise ${k}`,
@@ -38,9 +38,20 @@ export const StateContextProvider = ({ children }) => {
 
   // update local workouts at the same time
   const setSelectedWorkout = (w) => {
-    const unsortedWorkouts = workouts.map((a) => a);
+    if (!w) {
+      updateSelectedWorkout({});
+      return;
+    }
+    let isAlreadyThere = false;
+    const unsortedWorkouts = workouts.map((a) => {
+      if (a.id === w.id) {
+        isAlreadyThere = true;
+        return w;
+      }
+      return a;
+    });
     updateSelectedWorkout(w);
-    unsortedWorkouts.push(w);
+    if (!isAlreadyThere) unsortedWorkouts.push(w);
     setWorkouts(() => unsortedWorkouts.sort((a, b) => a.title.localeCompare(b.title)));
   };
   const setExercises = (ex, id = -1) => {
@@ -71,18 +82,18 @@ export const StateContextProvider = ({ children }) => {
   };
 
   // FIXME
-  //  React.useEffect(() => {
-  //    firebase.auth().onAuthStateChanged((res) => {
-  //      setIsLoading(false);
-  //      setAuthRes(res);
-  //    });
-  //  }, []);
+    React.useEffect(() => {
+      firebase.auth().onAuthStateChanged((res) => {
+        setIsLoading(false);
+        setAuthRes(res);
+      });
+    }, []);
 
   React.useEffect(() => {
     if (authRes && !authRes.emailVerified && !justRegistered) {
       API.logout(() => {});
       // FIXME
-      // setUser(null);
+      setUser(null);
       return;
     }
     if (authRes && !authRes.emailVerified && justRegistered) {
@@ -90,7 +101,7 @@ export const StateContextProvider = ({ children }) => {
       setJustRegistered(false);
     }
     // FIXME
-    // setUser(authRes);
+     setUser(authRes);
   }, [authRes]);
 
   return (

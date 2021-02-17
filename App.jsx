@@ -19,8 +19,6 @@ function App() {
         <StateContextProvider>
           <StateContext.Consumer>
             {({ user, isLoading }) => {
-              // FIXME
-              return <AuthNavigator />;
               if (isLoading) {
                 return (
                   <Stack.Navigator>

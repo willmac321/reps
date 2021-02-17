@@ -21,7 +21,7 @@ const Workouts = ({
   setSelectedWorkout,
 }) => {
   const [isLoading, setIsLoading] = React.useState(false);
-  const [isDisable, setIsDisable] = React.useState(false);
+  const [isDisable, setIsDisable] = React.useState(true);
   const [selected, setSelected] = React.useState(null);
   const [modalOnOkSelectedId, setModalOnOkSelected] = React.useState('');
   const springAnim = React.useRef(new Animated.Value(1)).current;
@@ -53,11 +53,12 @@ const Workouts = ({
 
   const handleOnSubmit = () => {
     setIsLoading(!isDisable);
-    setSelectedWorkout(selected);
-    // TODO navigate to workout screen
+    setSelectedWorkout(data[selected]);
+    navigation.navigate('Exercises');
   };
 
   const onPress = (id) => {
+    setIsDisable(false);
     setSelected(id);
   };
 
@@ -66,6 +67,7 @@ const Workouts = ({
   };
 
   const handleTrash = (_, id) => {
+    setIsDisable(true);
     setSelected(id);
     setNotifyTitle('Woah, you sure...');
     setMessage(`Do you really want to delete ${data.filter((d) => d.id === id)[0].title}?`);

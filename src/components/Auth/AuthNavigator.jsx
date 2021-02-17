@@ -39,7 +39,6 @@ const screenOptions = ({ route }) => ({
 
 function AuthNavigator({ theme }) {
   const [currentRoute, setCurrentRoute] = React.useState('Workouts');
-  // FIXME remove workouts from lastRoute
   const [lastRoute, setLastRoute] = React.useState('Workouts');
 
   const setRoute = ({ route }) => ({
@@ -54,15 +53,21 @@ function AuthNavigator({ theme }) {
   // should only route to new exercises when the page is on a selected workout screen
   const NewComponents = () => (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Exercises" component={ExercisesScreen} />
-      <Stack.Screen name="NewExercises" component={NewExercisesScreen} />
       <Stack.Screen name="NewWorkout" component={NewWorkoutsScreen} />
+      <Stack.Screen name="NewExercises" component={NewExercisesScreen} />
+    </Stack.Navigator>
+  );
+  const WorkoutComponents = () => (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="Workouts" component={WorkoutsScreen} />
+      <Stack.Screen name="Exercises" component={ExercisesScreen} />
     </Stack.Navigator>
   );
 
   return (
     <Tab.Navigator
       screenOptions={(ev) => screenOptions(ev)}
+      initialRouteName="Workouts"
       tabBarOptions={{
         activeTintColor: theme.colors.textSelected,
         inactiveTintColor: theme.colors.text,
@@ -78,7 +83,7 @@ function AuthNavigator({ theme }) {
       }}
     >
       <Tab.Screen name="Create" component={NewComponents} listeners={setRoute} />
-      <Tab.Screen name="Workouts" component={WorkoutsScreen} listeners={setRoute} />
+      <Tab.Screen name="Workouts" component={WorkoutComponents} listeners={setRoute} />
       <Tab.Screen name="Settings" component={SplashScreen} listeners={setRoute} />
       <Tab.Screen name="Account" component={SplashScreen} listeners={setRoute} />
     </Tab.Navigator>
