@@ -19,6 +19,8 @@ function App() {
             <NavigationContainer theme={theme}>
               <StateContext.Consumer>
                 {({ user, isLoading }) => {
+                  //FIXME
+                  return <AuthNavigator/>;
                   if (isLoading) {
                     return (
                       <Stack.Navigator>
