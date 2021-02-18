@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { withTheme, Switch } from 'react-native-paper';
+import { withTheme, Switch, List } from 'react-native-paper';
 import { StateContext } from '../../../controllers/state';
 import CardWithButton from '../../../template/CardWithButton';
 
@@ -39,7 +39,10 @@ const SettingsScreen = ({ navigation, theme }) => {
       }}
     >
       <View>
-        <Switch value={themeToggle} onValueChange={onToggleTheme} theme={theme} />
+        <List.Item
+          title="Dark Mode"
+          right={() => <Switch value={themeToggle} onValueChange={onToggleTheme} theme={theme} />}
+        />
       </View>
     </CardWithButton>
   );

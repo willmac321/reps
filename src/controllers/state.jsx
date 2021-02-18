@@ -1,6 +1,8 @@
 import React from 'react';
 import { firebase } from '../firebase/config';
 import API from './AuthApi';
+import themeDark from '../theme/themeDark';
+import themeLight from '../theme/themeLight';
 
 export const StateContext = React.createContext();
 
@@ -10,7 +12,7 @@ export const StateContextProvider = ({ children }) => {
   const [authRes, setAuthRes] = React.useState(null);
   // FIXME
   const [user, setUser] = React.useState(null);
-  //const [user, setUser] = React.useState({ uid: '123' });
+  // const [user, setUser] = React.useState({ uid: '123' });
 
   const [userDetails, setUserDetails] = React.useState({
     uid: '123',
@@ -20,6 +22,8 @@ export const StateContextProvider = ({ children }) => {
     timeout: false,
     contactEmail: 'help@loblollysoftware.com',
   });
+
+  const theme = userDetails.theme !== 'light' ? themeDark : themeLight;
 
   // TODO set this on get from api
   const [workouts, setWorkouts] = React.useState(
@@ -91,12 +95,12 @@ export const StateContextProvider = ({ children }) => {
   };
 
   // FIXME
-    React.useEffect(() => {
-      firebase.auth().onAuthStateChanged((res) => {
-        setIsLoading(false);
-        setAuthRes(res);
-      });
-    }, []);
+  React.useEffect(() => {
+    firebase.auth().onAuthStateChanged((res) => {
+      setIsLoading(false);
+      setAuthRes(res);
+    });
+  }, []);
 
   React.useEffect(() => {
     if (authRes && !authRes.emailVerified && !justRegistered) {
@@ -110,7 +114,7 @@ export const StateContextProvider = ({ children }) => {
       setJustRegistered(false);
     }
     // FIXME
-     setUser(authRes);
+    setUser(authRes);
   }, [authRes]);
 
   return (
@@ -125,6 +129,7 @@ export const StateContextProvider = ({ children }) => {
         workouts: { workouts, setWorkouts },
         exercises: { exercises, setExercises },
         selectedWorkout: { selectedWorkout, setSelectedWorkout },
+        theme,
       }}
     >
       {children}

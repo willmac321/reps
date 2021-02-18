@@ -4,7 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { withTheme } from 'react-native-paper';
 import { FontAwesome5 } from '@expo/vector-icons';
 
-import { dropShadow } from '../../theme';
+import { dropShadow } from '../../theme/themeLight';
 import SplashScreen from '../Splash/SplashScreen';
 import NewWorkoutsScreen from './NewWorkouts/NewWorkoutsScreen';
 import NewExercisesScreen from './NewExercise/NewExerciseScreen';
