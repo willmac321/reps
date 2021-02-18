@@ -60,6 +60,7 @@ const Login = ({ theme, style, setShowNotify, setNotifyMessage, setNotifyTitle }
         buttonDisabled={isDisable}
         onPress={handleOnPress}
         isLoading={isLoading}
+        showButton
       >
         <TextInput
           mode="outlined"

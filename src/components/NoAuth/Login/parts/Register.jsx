@@ -13,6 +13,7 @@ const Register = ({ theme, navigation }) => {
         title="New User?"
         buttonText="Register"
         theme={theme}
+        showButton
         onPress={() => onRegisterClick()}
       />
     </View>

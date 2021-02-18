@@ -64,6 +64,7 @@ const Register = ({
             title="Ready to party?"
             buttonText="Submit"
             buttonDisabled={isDisable}
+            showButton
             theme={theme}
             style={style}
             onPress={() => handleOnPress(setJustRegistered)}

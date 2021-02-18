@@ -68,7 +68,7 @@ function AuthNavigator({ theme }) {
   return (
     <Tab.Navigator
       screenOptions={(ev) => screenOptions(ev)}
-      initialRouteName="Workouts"
+      initialRouteName="Settings"
       tabBarOptions={{
         activeTintColor: theme.colors.textSelected,
         inactiveTintColor: theme.colors.text,
@@ -86,7 +86,6 @@ function AuthNavigator({ theme }) {
       <Tab.Screen name="Create" component={NewComponents} listeners={setRoute} />
       <Tab.Screen name="Workouts" component={WorkoutComponents} listeners={setRoute} />
       <Tab.Screen name="Settings" component={SettingsScreen} listeners={setRoute} />
-      <Tab.Screen name="Account" component={SplashScreen} listeners={setRoute} />
     </Tab.Navigator>
   );
 }

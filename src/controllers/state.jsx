@@ -11,14 +11,14 @@ export const StateContextProvider = ({ children }) => {
   const [justRegistered, setJustRegistered] = React.useState(false);
   const [authRes, setAuthRes] = React.useState(null);
   // FIXME
-  const [user, setUser] = React.useState(null);
-  // const [user, setUser] = React.useState({ uid: '123' });
+  //const [user, setUser] = React.useState(null);
+  const [user, setUser] = React.useState({ uid: '123' });
 
   const [userDetails, setUserDetails] = React.useState({
     uid: '123',
     theme: 'light',
     ackPrivacyPolicy: false,
-    splashScreenIcon: 'adonis',
+    splashScreenIcon: 'aphrodite',
     timeout: false,
     contactEmail: 'help@loblollysoftware.com',
   });
@@ -95,27 +95,27 @@ export const StateContextProvider = ({ children }) => {
   };
 
   // FIXME
-  React.useEffect(() => {
-    firebase.auth().onAuthStateChanged((res) => {
-      setIsLoading(false);
-      setAuthRes(res);
-    });
-  }, []);
+  //React.useEffect(() => {
+  //  firebase.auth().onAuthStateChanged((res) => {
+  //    setIsLoading(false);
+  //    setAuthRes(res);
+  //  });
+  //}, []);
 
-  React.useEffect(() => {
-    if (authRes && !authRes.emailVerified && !justRegistered) {
-      API.logout(() => {});
-      // FIXME
-      setUser(null);
-      return;
-    }
-    if (authRes && !authRes.emailVerified && justRegistered) {
-      authRes.sendEmailVerification();
-      setJustRegistered(false);
-    }
-    // FIXME
-    setUser(authRes);
-  }, [authRes]);
+  //React.useEffect(() => {
+  //  if (authRes && !authRes.emailVerified && !justRegistered) {
+  //    API.logout(() => {});
+  //    // FIXME
+  //    setUser(null);
+  //    return;
+  //  }
+  //  if (authRes && !authRes.emailVerified && justRegistered) {
+  //    authRes.sendEmailVerification();
+  //    setJustRegistered(false);
+  //  }
+  //  // FIXME
+  //  setUser(authRes);
+  //}, [authRes]);
 
   return (
     <StateContext.Provider
