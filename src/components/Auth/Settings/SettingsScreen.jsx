@@ -1,12 +1,15 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { withTheme, Switch, List, RadioButton, Text } from 'react-native-paper';
+import { Link } from '@react-navigation/native';
 import { StateContext } from '../../../controllers/state';
 import CardWithButton from '../../../template/CardWithButton';
-import { PrivacyPolicy } from './parts/Privacy';
+import ButtonTemplate from '../../../template/ButtonTemplate';
+import LegalPrivacyPolicy from '../../NoAuth/Legal/LegalPrivacy';
 
 const SettingsScreen = ({ navigation, theme }) => {
   const { userDetails, setUserDetails } = React.useContext(StateContext);
+  const [showLegal, setShowLegal] = React.useState(false);
   // Settings for app, excluding reset/change password, email, delete account
   // have privacy policy in here
   // have theme picker, gender change on splash, timeout on login, share workouts, contact email
@@ -37,8 +40,6 @@ const SettingsScreen = ({ navigation, theme }) => {
 
   const [themeToggle, setThemeToggle] = React.useState(userDetails.theme === 'light');
   const [splashToggle, setSplashToggle] = React.useState(userDetails.splashScreenIcon);
-
-  console.log(userDetails.splashScreenIcon);
 
   const onToggleTheme = () => {
     setUserDetails({
@@ -71,6 +72,9 @@ const SettingsScreen = ({ navigation, theme }) => {
     </RadioButton.Group>
   );
 
+  // Settings for app, excluding reset/change password, email, delete account
+  // have privacy policy in here
+  // have theme picker, gender change on splash, timeout on login, share workouts, contact email
   return (
     <>
       <CardWithButton
@@ -82,14 +86,63 @@ const SettingsScreen = ({ navigation, theme }) => {
         }}
       >
         <View>
-          <List.Item
-            title="Dark Mode"
-            right={() => <Switch value={themeToggle} onValueChange={onToggleTheme} theme={theme} />}
-          />
-          <List.Item title="Splash Display" right={splashSelect} />
+          <List.Section>
+            <List.Item
+              title="Dark Mode"
+              right={() => (
+                <Switch value={themeToggle} onValueChange={onToggleTheme} theme={theme} />
+              )}
+            />
+            <List.Item title="Splash Display" right={splashSelect} />
+          </List.Section>
+          <List.Section>
+            <List.Subheader> Account Settings </List.Subheader>
+            <List.Item title="Change Email" />
+            <List.Item title="Reset Password" />
+            <List.Item title="Logout" />
+          </List.Section>
+          <List.Section>
+            <List.Item
+              title="Delete Account (forever)"
+              onPress={() => setShowDeleteAccount(true)}
+              right={() => (
+                <Link
+                  style={[styles.link, { color: theme.colors.alert }]}
+                  onPress={() => setShowContact(true)}
+                >
+                  Remove it
+                </Link>
+              )}
+            />
+          </List.Section>
+          <List.Section>
+            <List.Item
+              title="Contact Us"
+              onPress={() => setShowContact(true)}
+              right={() => (
+                <Link style={styles.link} onPress={() => setShowContact(true)}>
+                  Do it
+                </Link>
+              )}
+            />
+            <List.Item
+              title="Legal & Privacy Policy"
+              onPress={() => setShowLegal(true)}
+              right={() => (
+                <Link style={styles.link} theme={theme} onPress={() => setShowLegal(true)}>
+                  View
+                </Link>
+              )}
+            />
+          </List.Section>
         </View>
       </CardWithButton>
-      <PrivacyPolicy navigation={navigation} theme={theme} />
+      <LegalPrivacyPolicy
+        navigation={navigation}
+        theme={theme}
+        isVisible={showLegal}
+        setIsVisible={setShowLegal}
+      />
     </>
   );
 };

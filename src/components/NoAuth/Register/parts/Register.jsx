@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { withTheme, TextInput, HelperText } from 'react-native-paper';
+import { withTheme, TextInput, HelperText, Text } from 'react-native-paper';
 import { StateContext } from '../../../../controllers/state';
 import CardWithButton from '../../../../template/CardWithButton';
 import API from '../../../../controllers/AuthApi';
@@ -116,6 +116,7 @@ const Register = ({
                 Passwords do not match!
               </HelperText>
             )}
+            <Text>By selecting submit I agree to the privacy policy and terms of service</Text>
           </CardWithButton>
         )}
       </StateContext.Consumer>
