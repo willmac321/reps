@@ -8,8 +8,11 @@ const NotifyModal = ({
   theme,
   content,
   onPress,
-  isVisible = false,
   setIsVisible,
+  children,
+  isVisible = false,
+  showButton = true,
+  ref
 }) => {
   const hideDialog = (e) => {
     setIsVisible(false);
@@ -23,19 +26,24 @@ const NotifyModal = ({
           {title}
         </Dialog.Title>
         <Dialog.Content>
-          <Paragraph theme={theme} style={theme.paragraph}>
-            {content || 'Prop is called content'}
-          </Paragraph>
+          {content && (
+            <Paragraph theme={theme} style={theme.paragraph}>
+              {content}
+            </Paragraph>
+          )}
+          {children}
         </Dialog.Content>
         <Dialog.Actions>
-          <Button
-            theme={{
-              button: { ...theme.button, marginRight: 10 },
-            }}
-            onPress={hideDialog}
-          >
-            {buttonText}
-          </Button>
+          {showButton && (
+            <Button
+              theme={{
+                button: { ...theme.button, marginRight: 10 },
+              }}
+              onPress={hideDialog}
+            >
+              {buttonText}
+            </Button>
+          )}
         </Dialog.Actions>
       </Dialog>
     </Portal>
