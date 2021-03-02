@@ -5,17 +5,22 @@ import WarnModal from '../../../../template/WarnModal';
 import NotifyModal from '../../../../template/NotifyModal';
 import API from '../../../../controllers/AuthApi';
 
-const { deleteAccount } = API;
+const { changeEmail } = API;
 
-const DeleteAccount = ({ theme, setIsVisible, isVisible }) => {
+const ChangeEmail = ({ theme, setIsVisible, isVisible }) => {
   const { setIsLoading } = React.useContext(StateContext);
-  const [text, setText] = React.useState('');
+  const [password, setPassword] = React.useState('');
+  const [email, setEmail] = React.useState('');
   const [showErrorModal, setShowErrorModal] = React.useState(null);
-  const deleteAccountOk = () => {
-    if (text) {
+
+  const emailError = () => email && !email.includes('@');
+
+  const changePasswordOk = () => {
+    if (password && email && !emailError()) {
       setIsLoading(true);
-      deleteAccount(text, (e) => {
-        setText('');
+      changeEmail(password, email, (e) => {
+        setPassword('');
+        setEmail('');
         if (!e) {
           setIsVisible(false);
         } else {
@@ -27,33 +32,48 @@ const DeleteAccount = ({ theme, setIsVisible, isVisible }) => {
   };
 
   React.useEffect(() => {
-    setText('');
+    setPassword('');
+    setEmail('');
   }, [isVisible]);
 
   return (
     <>
       <WarnModal
-        buttonText="Delete"
+        buttonText="Reset"
         theme={theme}
-        content="You want to delete your account?  This can not be undone."
-        onPress={deleteAccountOk}
+        content="Enter your current password followed by the new email address."
+        onPress={changePasswordOk}
         visible={isVisible}
         setVisible={setIsVisible}
       >
-        <Text style={{ margin: 10 }}>
-          Enter your password to confirm and get rid of the account forever.
-        </Text>
         <TextInput
           mode="outlined"
           autoCompleteType="password"
           textContentType="password"
           secureTextEntry
-          label="Password"
+          label="password"
           styles={theme.input}
           theme={theme}
-          value={text}
-          onChangeText={(t) => setText(t)}
+          value={password}
+          onChangeText={(t) => setPassword(t)}
         />
+        <TextInput
+          mode="outlined"
+          theme={theme}
+          keyboardType="email-address"
+          autoCompleteType="email"
+          textContentType="emailAddress"
+          label="Email"
+          value={email}
+          error={emailError()}
+          onChangeText={(val) => setEmail(val)}
+          style={styles.input}
+        />
+        {!!emailError() && (
+          <HelperText type="error" visible={emailError()}>
+            Email address is invalid!
+          </HelperText>
+        )}
       </WarnModal>
       <NotifyModal
         title="Error"
@@ -68,4 +88,4 @@ const DeleteAccount = ({ theme, setIsVisible, isVisible }) => {
   );
 };
 
-export default withTheme(DeleteAccount);
+export default withTheme(ChangeEmail);

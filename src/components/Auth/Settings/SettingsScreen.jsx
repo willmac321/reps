@@ -3,13 +3,19 @@ import { View, StyleSheet, Linking } from 'react-native';
 import { withTheme, Switch, List, RadioButton, Button, Text } from 'react-native-paper';
 import { StateContext } from '../../../controllers/state';
 import CardWithButton from '../../../template/CardWithButton';
-import ButtonTemplate from '../../../template/ButtonTemplate';
 import LegalPrivacyPolicy from '../../NoAuth/Legal/LegalPrivacy';
 import DeleteAccount from './parts/DeleteAccount';
+import ResetPassword from './parts/ResetPassword';
+import Logout from './parts/Logout';
+import ChangeEmail from './parts/ChangeEmail';
 
 const SettingsScreen = ({ navigation, theme }) => {
   const { userDetails, setUserDetails } = React.useContext(StateContext);
   const [showLegal, setShowLegal] = React.useState(false);
+  const [showDelete, setShowDelete] = React.useState(false);
+  const [showLogout, setShowLogout] = React.useState(false);
+  const [showEmail, setShowEmail] = React.useState(false);
+  const [showResetPassword, setShowResetPassword] = React.useState(false);
   // Settings for app, excluding reset/change password, email, delete account
   // have privacy policy in here
   // have theme picker, gender change on splash, timeout on login, share workouts, contact email
@@ -43,7 +49,6 @@ const SettingsScreen = ({ navigation, theme }) => {
 
   const [themeToggle, setThemeToggle] = React.useState(userDetails.theme === 'light');
   const [splashToggle, setSplashToggle] = React.useState(userDetails.splashScreenIcon);
-  const [showDelete, setShowDelete] = React.useState(false);
 
   const onToggleTheme = () => {
     setUserDetails({
@@ -104,9 +109,45 @@ const SettingsScreen = ({ navigation, theme }) => {
           </List.Section>
           <List.Section>
             <List.Subheader> Account Settings </List.Subheader>
-            <List.Item title="Change Email" />
-            <List.Item title="Reset Password" />
-            <List.Item title="Logout" />
+            <List.Item
+              title="Change Email"
+              onPress={() => setShowEmail(true)}
+              right={() => (
+                <Button
+                  style={[styles.linkButton]}
+                  labelStyle={[styles.linkText]}
+                  onPress={() => setShowEmail(true)}
+                >
+                  Change it
+                </Button>
+              )}
+            />
+            <List.Item
+              title="Reset Password"
+              onPress={() => setShowResetPassword(true)}
+              right={() => (
+                <Button
+                  style={[styles.linkButton]}
+                  labelStyle={[styles.linkText]}
+                  onPress={() => setShowResetPassword(true)}
+                >
+                  Reset it
+                </Button>
+              )}
+            />
+            <List.Item
+              title="Logout"
+              onPress={() => setShowLogout(true)}
+              right={() => (
+                <Button
+                  style={[styles.linkButton]}
+                  labelStyle={[styles.linkText]}
+                  onPress={() => setShowLogout(true)}
+                >
+                  Log out of it
+                </Button>
+              )}
+            />
           </List.Section>
           <List.Section>
             <List.Item
@@ -159,13 +200,10 @@ const SettingsScreen = ({ navigation, theme }) => {
         isVisible={showLegal}
         setIsVisible={setShowLegal}
       />
-      <DeleteAccount
-        isVisible={showDelete}
-        setIsVisible={setShowDelete}
-        theme={theme}
-        navigation={navigation}
-        confirmString="remove"
-      />
+      <DeleteAccount isVisible={showDelete} setIsVisible={setShowDelete} theme={theme} />
+      <ResetPassword isVisible={showResetPassword} setIsVisible={setShowDelete} theme={theme} />
+      <Logout isVisible={showLogout} setIsVisible={setShowLogout} theme={theme} />
+      <ChangeEmail isVisible={showEmail} setIsVisible={setShowEmail} theme={theme} />
     </>
   );
 };
