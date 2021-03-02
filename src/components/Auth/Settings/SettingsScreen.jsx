@@ -1,25 +1,32 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { withTheme, Switch, List, RadioButton, Text } from 'react-native-paper';
-import { Link } from '@react-navigation/native';
+import { View, StyleSheet, Linking } from 'react-native';
+import { withTheme, Switch, List, RadioButton, Button, Text } from 'react-native-paper';
 import { StateContext } from '../../../controllers/state';
 import CardWithButton from '../../../template/CardWithButton';
-import ButtonTemplate from '../../../template/ButtonTemplate';
 import LegalPrivacyPolicy from '../../NoAuth/Legal/LegalPrivacy';
+import DeleteAccount from './parts/DeleteAccount';
+import ResetPassword from './parts/ResetPassword';
+import Logout from './parts/Logout';
+import ChangeEmail from './parts/ChangeEmail';
 
 const SettingsScreen = ({ navigation, theme }) => {
   const { userDetails, setUserDetails } = React.useContext(StateContext);
   const [showLegal, setShowLegal] = React.useState(false);
+  const [showDelete, setShowDelete] = React.useState(false);
+  const [showLogout, setShowLogout] = React.useState(false);
+  const [showEmail, setShowEmail] = React.useState(false);
+  const [showResetPassword, setShowResetPassword] = React.useState(false);
   // Settings for app, excluding reset/change password, email, delete account
   // have privacy policy in here
   // have theme picker, gender change on splash, timeout on login, share workouts, contact email
   const styles = StyleSheet.create({
-    link: {
-      marginTop: 20,
-      marginBottom: 10,
+    linkButton: {
       fontSize: 16,
-      color: theme.colors.link,
       marginLeft: 5,
+    },
+    linkText: {
+      color: theme.colors.link,
+      textTransform: 'capitalize',
     },
     radio: {
       flexDirection: 'row',
@@ -72,6 +79,9 @@ const SettingsScreen = ({ navigation, theme }) => {
     </RadioButton.Group>
   );
 
+  const setShowContact = () =>
+    Linking.openURL('mailto:help@loblollysoftware.com?subject=RepsApp Help');
+
   // Settings for app, excluding reset/change password, email, delete account
   // have privacy policy in here
   // have theme picker, gender change on splash, timeout on login, share workouts, contact email
@@ -80,8 +90,8 @@ const SettingsScreen = ({ navigation, theme }) => {
       <CardWithButton
         theme={theme}
         showButton={false}
-        flex={1}
         style={{
+          flex: 1,
           marginBottom: 50,
         }}
       >
@@ -96,42 +106,100 @@ const SettingsScreen = ({ navigation, theme }) => {
             <List.Item title="Splash Display" right={splashSelect} />
           </List.Section>
           <List.Section>
-            <List.Subheader> Account Settings </List.Subheader>
-            <List.Item title="Change Email" />
-            <List.Item title="Reset Password" />
-            <List.Item title="Logout" />
+            <List.Subheader
+              style={{
+                borderTopWidth: 1,
+                borderColor: theme.colors.primary,
+                borderStyle: 'solid',
+              }}
+            />
+            <List.Item
+              title="Change Email"
+              onPress={() => setShowEmail(true)}
+              right={() => (
+                <Button
+                  style={[styles.linkButton]}
+                  labelStyle={[styles.linkText]}
+                  onPress={() => setShowEmail(true)}
+                >
+                  Change it
+                </Button>
+              )}
+            />
+            <List.Item
+              title="Reset Password"
+              onPress={() => setShowResetPassword(true)}
+              right={() => (
+                <Button
+                  style={[styles.linkButton]}
+                  labelStyle={[styles.linkText]}
+                  onPress={() => setShowResetPassword(true)}
+                >
+                  Reset it
+                </Button>
+              )}
+            />
+            <List.Item
+              title="Logout"
+              onPress={() => setShowLogout(true)}
+              right={() => (
+                <Button
+                  style={[styles.linkButton]}
+                  labelStyle={[styles.linkText]}
+                  onPress={() => setShowLogout(true)}
+                >
+                  Log out of it
+                </Button>
+              )}
+            />
           </List.Section>
           <List.Section>
+            <List.Subheader
+              style={{
+                borderTopWidth: 1,
+                borderColor: theme.colors.primary,
+                borderStyle: 'solid',
+              }}
+            />
             <List.Item
               title="Delete Account (forever)"
-              onPress={() => setShowDeleteAccount(true)}
+              onPress={() => setShowDelete(true)}
               right={() => (
-                <Link
-                  style={[styles.link, { color: theme.colors.alert }]}
-                  onPress={() => setShowContact(true)}
+                <Button
+                  style={[styles.linkButton]}
+                  labelStyle={[styles.linkText, { color: theme.colors.alert }]}
+                  onPress={() => setShowDelete(true)}
                 >
                   Remove it
-                </Link>
+                </Button>
               )}
             />
           </List.Section>
           <List.Section>
             <List.Item
               title="Contact Us"
-              onPress={() => setShowContact(true)}
+              onPress={setShowContact}
               right={() => (
-                <Link style={styles.link} onPress={() => setShowContact(true)}>
+                <Button
+                  style={[styles.linkButton]}
+                  labelStyle={[styles.linkText]}
+                  onPress={setShowContact}
+                >
                   Do it
-                </Link>
+                </Button>
               )}
             />
             <List.Item
               title="Legal & Privacy Policy"
               onPress={() => setShowLegal(true)}
               right={() => (
-                <Link style={styles.link} theme={theme} onPress={() => setShowLegal(true)}>
+                <Button
+                  style={[styles.linkButton]}
+                  labelStyle={[styles.linkText]}
+                  onPress={() => setShowLegal(true)}
+                >
                   View
-                </Link>
+                </Button>
               )}
             />
           </List.Section>
@@ -143,6 +211,14 @@ const SettingsScreen = ({ navigation, theme }) => {
         isVisible={showLegal}
         setIsVisible={setShowLegal}
       />
+      <DeleteAccount isVisible={showDelete} setIsVisible={setShowDelete} theme={theme} />
+      <ResetPassword
+        isVisible={showResetPassword}
+        setIsVisible={setShowResetPassword}
+        theme={theme}
+      />
+      <Logout isVisible={showLogout} setIsVisible={setShowLogout} theme={theme} />
+      <ChangeEmail isVisible={showEmail} setIsVisible={setShowEmail} theme={theme} />
     </>
   );
 };

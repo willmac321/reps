@@ -45,9 +45,61 @@ function register(email, password, callback) {
     });
 }
 
+function changeEmail(password, newEmail, callback) {
+  const user = firebase.auth().currentUser;
+  const cred = firebase.auth.EmailAuthProvider.credential(user.email, password);
+  user
+    .reauthenticateWithCredential(cred)
+    .then((e) => {
+      if (!e) {
+        user
+          .updateEmail(newEmail)
+          .sendEmailVerification()
+          .then(() => callback())
+          .catch((er) => callback(er));
+      }
+    })
+    .catch((e) => callback(e));
+}
+
+function resetPassword(oldPassword, newPassword, callback) {
+  const user = firebase.auth().currentUser;
+  const cred = firebase.auth.EmailAuthProvider.credential(user.email, oldPassword);
+  user
+    .reauthenticateWithCredential(cred)
+    .then((e) => {
+      if (!e) {
+        user
+          .updatePassword(newPassword)
+          .then(() => callback())
+          .catch((er) => callback(er));
+      }
+    })
+    .catch((e) => callback(e));
+}
+
+function deleteAccount(password, callback) {
+  const user = firebase.auth().currentUser;
+  const cred = firebase.auth.EmailAuthProvider.credential(user.email, password);
+  user
+    .reauthenticateWithCredential(cred)
+    .then((e) => {
+      if (!e) {
+        user
+          .delete()
+          .then(() => callback())
+          .catch((er) => callback(er));
+      }
+    })
+    .catch((e) => callback(e));
+}
+
 export default {
   login,
   logout,
   forgot,
+  changeEmail,
+  resetPassword,
   register,
+  deleteAccount,
 };

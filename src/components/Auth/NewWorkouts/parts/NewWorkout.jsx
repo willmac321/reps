@@ -47,11 +47,10 @@ const NewWorkout = ({ navigation, user, theme, data, addWorkoutToList }) => {
         buttonText="Ok"
         showButton
         buttonDisabled={isDisable}
-        flex={1}
         onPress={handleOnPress}
         isLoading={isLoading}
         theme={theme}
-        style={{}}
+        style={{ flex: 1 }}
       >
         <TextInput
           mode="outlined"
@@ -62,7 +61,7 @@ const NewWorkout = ({ navigation, user, theme, data, addWorkoutToList }) => {
           error={isError}
           value={workoutName}
           onChangeText={(val) => setWorkoutName(val)}
-          style={styles.input}
+          style={[styles.input, { paddingTop: 10 }]}
         />
         {!!isNameTaken() && (
           <HelperText type="error" visible={isNameTaken()}>

@@ -168,7 +168,7 @@ const Workouts = ({
       isLoading={isLoading}
       flex={1}
       style={{
-        flex: data.length > 0 ? 1 : null,
+        flex: data.length > 0 ? 2 : null,
         marginBottom: 50,
       }}
     >

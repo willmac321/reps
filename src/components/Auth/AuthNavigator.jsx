@@ -68,7 +68,7 @@ function AuthNavigator({ theme }) {
   return (
     <Tab.Navigator
       screenOptions={(ev) => screenOptions(ev)}
-      initialRouteName="Settings"
+      initialRouteName="Create"
       tabBarOptions={{
         activeTintColor: theme.colors.textSelected,
         inactiveTintColor: theme.colors.text,
