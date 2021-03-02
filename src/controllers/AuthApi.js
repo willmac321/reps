@@ -44,10 +44,21 @@ function register(email, password, callback) {
       callback(error);
     });
 }
+function deleteAccount(password, callback) {
+  const user = firebase.auth().currentUser;
+  const cred = firebase.auth.EmailAuthProvider.credential(user.email, password);
+  user
+    .reauthenticateWithCredential(cred)
+    .then(() => {
+      callback();
+    })
+    .catch((e) => callback(e));
+}
 
 export default {
   login,
   logout,
   forgot,
   register,
+  deleteAccount,
 };

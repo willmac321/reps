@@ -1,11 +1,11 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { withTheme, Switch, List, RadioButton, Text } from 'react-native-paper';
-import { Link } from '@react-navigation/native';
+import { View, StyleSheet, Linking } from 'react-native';
+import { withTheme, Switch, List, RadioButton, Button, Text } from 'react-native-paper';
 import { StateContext } from '../../../controllers/state';
 import CardWithButton from '../../../template/CardWithButton';
 import ButtonTemplate from '../../../template/ButtonTemplate';
 import LegalPrivacyPolicy from '../../NoAuth/Legal/LegalPrivacy';
+import DeleteAccount from './parts/DeleteAccount';
 
 const SettingsScreen = ({ navigation, theme }) => {
   const { userDetails, setUserDetails } = React.useContext(StateContext);
@@ -14,12 +14,15 @@ const SettingsScreen = ({ navigation, theme }) => {
   // have privacy policy in here
   // have theme picker, gender change on splash, timeout on login, share workouts, contact email
   const styles = StyleSheet.create({
-    link: {
+    linkButton: {
       marginTop: 20,
       marginBottom: 10,
       fontSize: 16,
-      color: theme.colors.link,
       marginLeft: 5,
+    },
+    linkText: {
+      color: theme.colors.link,
+      textTransform: 'Capitalize',
     },
     radio: {
       flexDirection: 'row',
@@ -40,6 +43,7 @@ const SettingsScreen = ({ navigation, theme }) => {
 
   const [themeToggle, setThemeToggle] = React.useState(userDetails.theme === 'light');
   const [splashToggle, setSplashToggle] = React.useState(userDetails.splashScreenIcon);
+  const [showDelete, setShowDelete] = React.useState(false);
 
   const onToggleTheme = () => {
     setUserDetails({
@@ -71,6 +75,9 @@ const SettingsScreen = ({ navigation, theme }) => {
       </View>
     </RadioButton.Group>
   );
+
+  const setShowContact = () =>
+    Linking.openURL('mailto:help@loblollysoftware.com?subject=RepsApp Help');
 
   // Settings for app, excluding reset/change password, email, delete account
   // have privacy policy in here
@@ -104,34 +111,43 @@ const SettingsScreen = ({ navigation, theme }) => {
           <List.Section>
             <List.Item
               title="Delete Account (forever)"
-              onPress={() => setShowDeleteAccount(true)}
+              onPress={() => setShowDelete(true)}
               right={() => (
-                <Link
-                  style={[styles.link, { color: theme.colors.alert }]}
-                  onPress={() => setShowContact(true)}
+                <Button
+                  style={[styles.linkButton]}
+                  labelStyle={[styles.linkText, { color: theme.colors.alert }]}
+                  onPress={() => setShowDelete(true)}
                 >
                   Remove it
-                </Link>
+                </Button>
               )}
             />
           </List.Section>
           <List.Section>
             <List.Item
               title="Contact Us"
-              onPress={() => setShowContact(true)}
+              onPress={setShowContact}
               right={() => (
-                <Link style={styles.link} onPress={() => setShowContact(true)}>
+                <Button
+                  style={[styles.linkButton]}
+                  labelStyle={[styles.linkText]}
+                  onPress={setShowContact}
+                >
                   Do it
-                </Link>
+                </Button>
               )}
             />
             <List.Item
               title="Legal & Privacy Policy"
               onPress={() => setShowLegal(true)}
               right={() => (
-                <Link style={styles.link} theme={theme} onPress={() => setShowLegal(true)}>
+                <Button
+                  style={[styles.linkButton]}
+                  labelStyle={[styles.linkText]}
+                  onPress={() => setShowLegal(true)}
+                >
                   View
-                </Link>
+                </Button>
               )}
             />
           </List.Section>
@@ -142,6 +158,13 @@ const SettingsScreen = ({ navigation, theme }) => {
         theme={theme}
         isVisible={showLegal}
         setIsVisible={setShowLegal}
+      />
+      <DeleteAccount
+        isVisible={showDelete}
+        setIsVisible={setShowDelete}
+        theme={theme}
+        navigation={navigation}
+        confirmString="remove"
       />
     </>
   );

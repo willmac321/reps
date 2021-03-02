@@ -2,12 +2,21 @@ import React from 'react';
 import { withTheme, Portal, Dialog, Paragraph } from 'react-native-paper';
 import Button from './ButtonTemplate';
 
-const NotifyModal = ({ title, buttonText, theme, content, onPress, visible, setVisible }) => {
+const NotifyModal = ({
+  title,
+  buttonText,
+  theme,
+  content,
+  onPress,
+  visible,
+  setVisible,
+  isLoading,
+  children,
+}) => {
   const hideDialog = () => {
     setVisible(false);
   };
   const continueForward = (e) => {
-    setVisible(false);
     onPress(e);
   };
 
@@ -19,12 +28,13 @@ const NotifyModal = ({ title, buttonText, theme, content, onPress, visible, setV
         style={{ backgroundColor: theme.colors.background }}
       >
         <Dialog.Title theme={theme} style={theme.title}>
-          {title || 'Bro, you sure?'}
+          {title || 'Friend, you sure?'}
         </Dialog.Title>
         <Dialog.Content>
           <Paragraph theme={theme} style={theme.paragraph}>
             {content || 'About to cross the point of no return.'}
           </Paragraph>
+          {children}
         </Dialog.Content>
         <Dialog.Actions>
           <Button
@@ -37,6 +47,7 @@ const NotifyModal = ({ title, buttonText, theme, content, onPress, visible, setV
               },
             }}
             onPress={continueForward}
+            isLoading={isLoading}
           >
             {buttonText}
           </Button>
@@ -50,6 +61,7 @@ const NotifyModal = ({ title, buttonText, theme, content, onPress, visible, setV
               },
             }}
             onPress={hideDialog}
+            isLoading={isLoading}
           >
             Cancel
           </Button>
