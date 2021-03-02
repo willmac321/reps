@@ -1,5 +1,5 @@
 import React from 'react';
-import { withTheme, Text, TextInput } from 'react-native-paper';
+import { withTheme, HelperText, TextInput } from 'react-native-paper';
 import { StateContext } from '../../../../controllers/state';
 import WarnModal from '../../../../template/WarnModal';
 import NotifyModal from '../../../../template/NotifyModal';
@@ -15,7 +15,7 @@ const ChangeEmail = ({ theme, setIsVisible, isVisible }) => {
 
   const emailError = () => email && !email.includes('@');
 
-  const changePasswordOk = () => {
+  const changeEmailOk = () => {
     if (password && email && !emailError()) {
       setIsLoading(true);
       changeEmail(password, email, (e) => {
@@ -42,7 +42,7 @@ const ChangeEmail = ({ theme, setIsVisible, isVisible }) => {
         buttonText="Reset"
         theme={theme}
         content="Enter your current password followed by the new email address."
-        onPress={changePasswordOk}
+        onPress={changeEmailOk}
         visible={isVisible}
         setVisible={setIsVisible}
       >
@@ -51,8 +51,8 @@ const ChangeEmail = ({ theme, setIsVisible, isVisible }) => {
           autoCompleteType="password"
           textContentType="password"
           secureTextEntry
-          label="password"
-          styles={theme.input}
+          label="Password"
+          style={theme.input}
           theme={theme}
           value={password}
           onChangeText={(t) => setPassword(t)}
@@ -67,7 +67,7 @@ const ChangeEmail = ({ theme, setIsVisible, isVisible }) => {
           value={email}
           error={emailError()}
           onChangeText={(val) => setEmail(val)}
-          style={styles.input}
+          style={theme.input}
         />
         {!!emailError() && (
           <HelperText type="error" visible={emailError()}>

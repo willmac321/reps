@@ -21,14 +21,12 @@ const SettingsScreen = ({ navigation, theme }) => {
   // have theme picker, gender change on splash, timeout on login, share workouts, contact email
   const styles = StyleSheet.create({
     linkButton: {
-      marginTop: 20,
-      marginBottom: 10,
       fontSize: 16,
       marginLeft: 5,
     },
     linkText: {
       color: theme.colors.link,
-      textTransform: 'Capitalize',
+      textTransform: 'capitalize',
     },
     radio: {
       flexDirection: 'row',
@@ -92,8 +90,8 @@ const SettingsScreen = ({ navigation, theme }) => {
       <CardWithButton
         theme={theme}
         showButton={false}
-        flex={1}
         style={{
+          flex: 1,
           marginBottom: 50,
         }}
       >
@@ -108,7 +106,13 @@ const SettingsScreen = ({ navigation, theme }) => {
             <List.Item title="Splash Display" right={splashSelect} />
           </List.Section>
           <List.Section>
-            <List.Subheader> Account Settings </List.Subheader>
+            <List.Subheader
+              style={{
+                borderTopWidth: 1,
+                borderColor: theme.colors.primary,
+                borderStyle: 'solid',
+              }}
+            />
             <List.Item
               title="Change Email"
               onPress={() => setShowEmail(true)}
@@ -150,6 +154,13 @@ const SettingsScreen = ({ navigation, theme }) => {
             />
           </List.Section>
           <List.Section>
+            <List.Subheader
+              style={{
+                borderTopWidth: 1,
+                borderColor: theme.colors.primary,
+                borderStyle: 'solid',
+              }}
+            />
             <List.Item
               title="Delete Account (forever)"
               onPress={() => setShowDelete(true)}
@@ -201,7 +212,11 @@ const SettingsScreen = ({ navigation, theme }) => {
         setIsVisible={setShowLegal}
       />
       <DeleteAccount isVisible={showDelete} setIsVisible={setShowDelete} theme={theme} />
-      <ResetPassword isVisible={showResetPassword} setIsVisible={setShowDelete} theme={theme} />
+      <ResetPassword
+        isVisible={showResetPassword}
+        setIsVisible={setShowResetPassword}
+        theme={theme}
+      />
       <Logout isVisible={showLogout} setIsVisible={setShowLogout} theme={theme} />
       <ChangeEmail isVisible={showEmail} setIsVisible={setShowEmail} theme={theme} />
     </>

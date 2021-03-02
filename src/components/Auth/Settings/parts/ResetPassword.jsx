@@ -52,7 +52,7 @@ const ResetPassword = ({ theme, setIsVisible, isVisible }) => {
           textContentType="password"
           secureTextEntry
           label="Old Password"
-          styles={theme.input}
+          style={theme.input}
           theme={theme}
           value={oldPassword}
           onChangeText={(t) => setOldPassword(t)}
@@ -63,7 +63,7 @@ const ResetPassword = ({ theme, setIsVisible, isVisible }) => {
           textContentType="password"
           secureTextEntry
           label="New Password"
-          styles={theme.input}
+          style={theme.input}
           theme={theme}
           value={newPassword}
           onChangeText={(t) => setNewPassword(t)}
@@ -73,8 +73,8 @@ const ResetPassword = ({ theme, setIsVisible, isVisible }) => {
           autoCompleteType="password"
           textContentType="password"
           secureTextEntry
-          label="ReEnter New Password"
-          styles={theme.input}
+          label="Reenter New Password"
+          style={theme.input}
           theme={theme}
           value={newConfirmPassword}
           onChangeText={(t) => setNewConfirmPassword(t)}

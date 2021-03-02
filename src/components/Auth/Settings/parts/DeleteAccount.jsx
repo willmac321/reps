@@ -49,7 +49,7 @@ const DeleteAccount = ({ theme, setIsVisible, isVisible }) => {
           textContentType="password"
           secureTextEntry
           label="Password"
-          styles={theme.input}
+          style={theme.input}
           theme={theme}
           value={text}
           onChangeText={(t) => setText(t)}

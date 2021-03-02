@@ -27,6 +27,7 @@ const Forgot = ({ theme, style }) => {
         title="Forgotten password? Try your email"
         buttonText="Submit"
         buttonDisabled={isDisable}
+        showButton
         theme={theme}
         style={style}
         onPress={() => setIsLoading(!isLoading)}
