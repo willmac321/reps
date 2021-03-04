@@ -18,9 +18,7 @@ function App() {
           <PaperProvider theme={theme}>
             <NavigationContainer theme={theme}>
               <StateContext.Consumer>
-                {({ user, isLoading }) => {
-                  // FIXME
-                  return <AuthNavigator />;
+                {({ user, isLoading, debug }) => {
                   if (isLoading) {
                     return (
                       <Stack.Navigator>
@@ -31,6 +29,10 @@ function App() {
                         />
                       </Stack.Navigator>
                     );
+                  }
+                  // NOTE debug related might take this out
+                  if (debug) {
+                    return <AuthNavigator />;
                   }
                   return user ? <AuthNavigator /> : <NoAuthNavigator />;
                 }}

@@ -3,6 +3,7 @@ import { StyleSheet } from 'react-native';
 import { withTheme, TextInput, HelperText } from 'react-native-paper';
 import API from '../../../../controllers/WorkoutApi';
 import CardWithButton from '../../../../template/CardWithButton';
+import NotifyModal from '../../../../template/NotifyModal';
 
 const NewWorkout = ({ navigation, user, theme, data, addWorkoutToList }) => {
   const [isDisable, setIsDisable] = React.useState(false);
@@ -16,6 +17,7 @@ const NewWorkout = ({ navigation, user, theme, data, addWorkoutToList }) => {
   const isNameTaken = () => data.map((a) => a.title).includes(workoutName);
 
   React.useEffect(() => {
+    setIsError(false);
     if (!workoutName || isNameTaken()) {
       setIsDisable(true);
     } else {
@@ -25,14 +27,17 @@ const NewWorkout = ({ navigation, user, theme, data, addWorkoutToList }) => {
 
   const handleOnPress = async () => {
     setIsLoading(true);
-    const workout = {
+    // workout will either be the new created one or the existing workout with the same name
+    const workout = await API.newWorkout(user.uid, {
       title: workoutName,
       date: new Date().toLocaleString(),
       exercises: [],
-    };
-    const res = await API.newWorkout(user.uid, workout);
+    });
 
-    workout.id = res;
+    if (workout instanceof Error) {
+      setIsError(true);
+      return;
+    }
 
     addWorkoutToList(workout);
 
@@ -64,8 +69,8 @@ const NewWorkout = ({ navigation, user, theme, data, addWorkoutToList }) => {
           style={[styles.input, { paddingTop: 10 }]}
         />
         {!!isNameTaken() && (
-          <HelperText type="error" visible={isNameTaken()}>
-            Name is already taken!
+          <HelperText type="error" visible={isError || isNameTaken()}>
+            Try a different name!
           </HelperText>
         )}
       </CardWithButton>

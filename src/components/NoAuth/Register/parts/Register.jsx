@@ -3,7 +3,8 @@ import { View, StyleSheet } from 'react-native';
 import { withTheme, TextInput, HelperText, Text } from 'react-native-paper';
 import { StateContext } from '../../../../controllers/state';
 import CardWithButton from '../../../../template/CardWithButton';
-import API from '../../../../controllers/AuthApi';
+import AuthAPI from '../../../../controllers/AuthApi';
+import UserSettingsAPI from '../../../../controllers/UserSettingsApi';
 
 const Register = ({
   theme,
@@ -23,6 +24,8 @@ const Register = ({
     input: theme.input,
   });
 
+  const { defaultUserDetails } = React.useContext(StateContext);
+
   React.useEffect(() => {
     if (!password || !reenterPassword || !email || password !== reenterPassword) {
       if (password !== reenterPassword) {
@@ -33,11 +36,15 @@ const Register = ({
       setIsDisable(false);
       setIsError(false);
     }
+    return () => {
+      setIsDisable(false);
+      setIsError(false);
+    };
   }, [password, reenterPassword, email]);
 
   const emailError = () => email && !email.includes('@');
 
-  const callbackHandlePress = (err) => {
+  const callbackHandlePress = (err, uid) => {
     setIsLoading(false);
     if (err) {
       setNotifyTitle('Uhoh!');
@@ -45,15 +52,13 @@ const Register = ({
       setShowNotify(true);
       return;
     }
-    setNotifyTitle('Success!');
-    setNotifyMessage('Please verify your email address.');
-    setShowNotify(true);
+    UserSettingsAPI.updateSettings(uid, defaultUserDetails);
   };
 
   const handleOnPress = (setJustRegistered) => {
     setJustRegistered(true);
     setIsLoading(true);
-    API.register(email, password, callbackHandlePress);
+    AuthAPI.register(email, password, callbackHandlePress);
   };
 
   return (
