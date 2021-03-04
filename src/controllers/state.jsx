@@ -7,13 +7,13 @@ import themeLight from '../theme/themeLight';
 export const StateContext = React.createContext();
 
 export const StateContextProvider = ({ children }) => {
+  // const [debug] = React.useState(process.env.NODE_ENV === 'development');
+  // used to spoof endpoints and user auth for dev
+  const [debug] = React.useState(true);
   const [isLoading, setIsLoading] = React.useState(true);
   const [justRegistered, setJustRegistered] = React.useState(false);
   const [authRes, setAuthRes] = React.useState(null);
-  // FIXME
-  // const [user, setUser] = React.useState(null);
-  const [user, setUser] = React.useState({ uid: '123' });
-
+  const [user, setUser] = React.useState(null);
   const [userDetails, setUserDetails] = React.useState({
     uid: '123',
     theme: 'light',
@@ -94,32 +94,42 @@ export const StateContextProvider = ({ children }) => {
     );
   };
 
-  // FIXME
-  // React.useEffect(() => {
-  //  firebase.auth().onAuthStateChanged((res) => {
-  //    setIsLoading(false);
-  //    setAuthRes(res);
-  //  });
-  // }, []);
+  React.useEffect(() => {
+    // NOTE debug related might need to take this out
+    if (!debug) {
+      firebase.auth().onAuthStateChanged((res) => {
+        setIsLoading(false);
+        setAuthRes(res);
+      });
+    } else {
+      setIsLoading(false);
+      setUser({ uid: '123' });
+    }
+  }, []);
 
   React.useEffect(() => {
     if (authRes && !authRes.emailVerified && !justRegistered) {
       API.logout(() => {});
-      //    // FIXME
-      //    setUser(null);
+      // NOTE debug related might take this out
+      if (!debug) {
+        setUser(null);
+      }
       return;
     }
     if (authRes && !authRes.emailVerified && justRegistered) {
       authRes.sendEmailVerification();
       setJustRegistered(false);
     }
-    // FIXME
-    //  setUser(authRes);
+    // NOTE debug related might take this out
+    if (!debug) {
+      setUser(authRes);
+    }
   }, [authRes]);
 
   return (
     <StateContext.Provider
       value={{
+        debug,
         isLoading,
         setIsLoading: () => setIsLoading(!isLoading),
         user,
