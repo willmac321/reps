@@ -14,13 +14,8 @@ function updateSettings(uid, userDetails) {
     .catch((e) => console.error(e));
 }
 
-function resetSettings(uid, detailsId, defaultUserDetails) {
-  return db
-    .collection('users')
-    .doc(uid)
-    .collection('settings')
-    .doc(detailsId)
-    .set(defaultUserDetails);
+function resetSettings(uid, defaultUserDetails) {
+  return db.collection('users').doc(uid).collection('settings').doc(uid).set(defaultUserDetails);
 }
 
 export default {
