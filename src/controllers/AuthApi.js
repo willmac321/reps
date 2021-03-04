@@ -37,8 +37,8 @@ function register(email, password, callback) {
   firebase
     .auth()
     .createUserWithEmailAndPassword(email, password)
-    .then((user) => {
-      callback(null, user);
+    .then((res) => {
+      callback(null, res.user.uid);
     })
     .catch((error) => {
       callback(error);

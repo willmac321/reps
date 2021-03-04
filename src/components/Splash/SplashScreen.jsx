@@ -31,7 +31,7 @@ const SplashScreen = ({ theme }) => {
     userDetails: { splashScreenIcon },
   } = React.useContext(StateContext);
   const isAdonis = () => splashScreenIcon === 'adonis';
-  const mainColor = () => isAdonis() ? theme.colors.primary : theme.colors.background;
+  const mainColor = () => (isAdonis() ? theme.colors.primary : theme.colors.background);
   return (
     <View
       theme={theme}
@@ -60,12 +60,12 @@ const SplashScreen = ({ theme }) => {
           width: `24%`,
         }}
       />
-      <Title theme={theme} style={[styles.head, {color: mainColor()}]}>
+      <Title theme={theme} style={[styles.head, { color: mainColor() }]}>
         REPS
       </Title>
       <StateContext.Consumer>
         {({ isLoading }) =>
-            isLoading && <ActivityIndicator animating size="large" color={mainColor()} />
+          isLoading && <ActivityIndicator animating size="large" color={mainColor()} />
         }
       </StateContext.Consumer>
     </View>

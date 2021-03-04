@@ -33,14 +33,15 @@ const Login = ({ theme, style, setShowNotify, setNotifyMessage, setNotifyTitle }
 
   const callbackHandlePress = (err, user) => {
     setIsLoading(false);
-    if (!user.emailVerified) {
-      setNotifyTitle('But really...');
-      setNotifyMessage('Please verify your email to continue using REPS.');
-      setShowNotify(true);
-    }
     if (err) {
       setNotifyTitle('Uhoh Brobro!');
       setNotifyMessage(err.message.toString());
+      setShowNotify(true);
+      return;
+    }
+    if (!user.emailVerified) {
+      setNotifyTitle('But really...');
+      setNotifyMessage('Please verify your email to continue using REPS.');
       setShowNotify(true);
     }
   };

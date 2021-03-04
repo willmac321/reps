@@ -7,15 +7,24 @@ import themeLight from '../theme/themeLight';
 export const StateContext = React.createContext();
 
 export const StateContextProvider = ({ children }) => {
-  // const [debug] = React.useState(process.env.NODE_ENV === 'development');
-  // used to spoof endpoints and user auth for dev
-  const [debug] = React.useState(true);
+  // used to spoof endpoints and user auth for dev,
+  // XXX leave compare to dev string in case I forget!
+  const [debug] = React.useState(process.env.NODE_ENV === 'development' && false);
   const [isLoading, setIsLoading] = React.useState(true);
   const [justRegistered, setJustRegistered] = React.useState(false);
   const [authRes, setAuthRes] = React.useState(null);
   const [user, setUser] = React.useState(null);
+
+  // default user state, use this on account create and overwrite after login
+  const [defaultUserDetails] = React.useState({
+    theme: 'light',
+    ackPrivacyPolicy: false,
+    splashScreenIcon: 'aphrodite',
+    timeout: false,
+    contactEmail: 'help@loblollysoftware.com',
+  });
+
   const [userDetails, setUserDetails] = React.useState({
-    uid: '123',
     theme: 'light',
     ackPrivacyPolicy: false,
     splashScreenIcon: 'aphrodite',
@@ -133,6 +142,7 @@ export const StateContextProvider = ({ children }) => {
         isLoading,
         setIsLoading: () => setIsLoading(!isLoading),
         user,
+        defaultUserDetails,
         userDetails,
         setUserDetails,
         setJustRegistered,
