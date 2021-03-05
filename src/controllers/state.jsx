@@ -19,15 +19,15 @@ export const StateContextProvider = ({ children }) => {
   // default user state, use this on account create and overwrite after login
   const [defaultUserDetails] = React.useState({
     theme: 'light',
-    ackPrivacyPolicy: false,
     splashScreenIcon: 'aphrodite',
     timeout: false,
     contactEmail: 'help@loblollysoftware.com',
   });
 
+  // TODO use saved state for init
+  // may need to have seperate collection by a device uid that isn't tied to user id
   const [userDetails, setUserDetails] = React.useState({
     theme: 'light',
-    ackPrivacyPolicy: false,
     splashScreenIcon: 'aphrodite',
     timeout: false,
     contactEmail: 'help@loblollysoftware.com',
@@ -118,11 +118,29 @@ export const StateContextProvider = ({ children }) => {
   }, []);
 
   React.useEffect(() => {
-    console.log(authRes);
-    if (authRes && !authRes.emailVerified && !justRegistered) {
-      AuthAPI.logout(() => {});
+    const setDetails = async (aR) => {
       // NOTE debug related might take this out
       if (!debug) {
+        setUser(aR);
+        // set user settings if auth user changes
+        if (aR && aR.uid) {
+          const res = await UserSettingsAPI.getSettings(aR.uid);
+          if (res && !(res instanceof Error)) {
+            setUserDetails(res);
+          } else {
+            setUserDetails(defaultUserDetails);
+          }
+        } else {
+          setUserDetails(defaultUserDetails);
+        }
+      }
+    };
+    if (authRes && !authRes.emailVerified && !justRegistered) {
+      AuthAPI.logout(() => {});
+      // NOTE if statement debug related might take this out
+      if (!debug) {
+        // if authRes is null -- ie logout then set to default
+        setUserDetails(defaultUserDetails);
         setUser(null);
       }
       return;
@@ -131,11 +149,7 @@ export const StateContextProvider = ({ children }) => {
       authRes.sendEmailVerification();
       setJustRegistered(false);
     }
-    // NOTE debug related might take this out
-    if (!debug) {
-      setUser(authRes);
-      if (authRes && authRes.uid) setUserDetails(UserSettingsAPI.getSettings(authRes.uid));
-    }
+    setDetails(authRes);
   }, [authRes]);
 
   return (

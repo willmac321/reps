@@ -53,6 +53,7 @@ const Register = ({
       return;
     }
     UserSettingsAPI.updateSettings(uid, defaultUserDetails);
+    UserSettingsAPI.setAckPrivacy(uid);
   };
 
   const handleOnPress = (setJustRegistered) => {

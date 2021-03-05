@@ -60,8 +60,6 @@ const NewWorkout = ({ navigation, user, theme, data, addWorkoutToList }) => {
         <TextInput
           mode="outlined"
           theme={theme}
-          autoCompleteType="email"
-          textContentType="emailAddress"
           label="Workout name"
           error={isError}
           value={workoutName}

@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, Linking } from 'react-native';
 import { withTheme, Switch, List, RadioButton, Button, Text } from 'react-native-paper';
+import { debounce } from 'lodash';
 import { StateContext } from '../../../controllers/state';
 import CardWithButton from '../../../template/CardWithButton';
 import LegalPrivacyPolicy from '../../NoAuth/Legal/LegalPrivacy';
@@ -10,7 +11,7 @@ import Logout from './parts/Logout';
 import ChangeEmail from './parts/ChangeEmail';
 import API from '../../../controllers/UserSettingsApi.js';
 
-const {resetSettings} = API;
+const { updateSettings } = API;
 
 const SettingsScreen = ({ navigation, theme }) => {
   const { user, userDetails, setUserDetails, defaultUserDetails } = React.useContext(StateContext);
@@ -86,9 +87,21 @@ const SettingsScreen = ({ navigation, theme }) => {
     Linking.openURL('mailto:help@loblollysoftware.com?subject=RepsApp Help');
 
   const handleReset = () => {
-    resetSettings(user.uid, defaultUserDetails);
+    setSplashToggle(defaultUserDetails.splashScreenIcon);
+    setThemeToggle(defaultUserDetails.theme);
     setUserDetails(defaultUserDetails);
   };
+
+  const updateDetails = React.useCallback(
+    debounce((userDetail, uid) => {
+      updateSettings(uid, userDetail);
+    }, 250),
+    []
+  );
+
+  React.useEffect(() => {
+    updateDetails(userDetails, user.uid);
+  }, [userDetails]);
 
   // Settings for app, excluding reset/change password, email, delete account
   // have privacy policy in here
