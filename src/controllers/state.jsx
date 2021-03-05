@@ -1,6 +1,7 @@
 import React from 'react';
 import { firebase } from '../firebase/config';
-import API from './AuthApi';
+import AuthAPI from './AuthApi';
+import UserSettingsAPI from './UserSettingsApi';
 import themeDark from '../theme/themeDark';
 import themeLight from '../theme/themeLight';
 
@@ -117,8 +118,9 @@ export const StateContextProvider = ({ children }) => {
   }, []);
 
   React.useEffect(() => {
+    console.log(authRes);
     if (authRes && !authRes.emailVerified && !justRegistered) {
-      API.logout(() => {});
+      AuthAPI.logout(() => {});
       // NOTE debug related might take this out
       if (!debug) {
         setUser(null);
@@ -132,6 +134,7 @@ export const StateContextProvider = ({ children }) => {
     // NOTE debug related might take this out
     if (!debug) {
       setUser(authRes);
+      if (authRes && authRes.uid) setUserDetails(UserSettingsAPI.getSettings(authRes.uid));
     }
   }, [authRes]);
 
