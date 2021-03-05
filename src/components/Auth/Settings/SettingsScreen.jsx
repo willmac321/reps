@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, Linking } from 'react-native';
 import { withTheme, Switch, List, RadioButton, Button, Text } from 'react-native-paper';
+import { debounce } from 'lodash';
 import { StateContext } from '../../../controllers/state';
 import CardWithButton from '../../../template/CardWithButton';
 import LegalPrivacyPolicy from '../../NoAuth/Legal/LegalPrivacy';
@@ -8,9 +9,12 @@ import DeleteAccount from './parts/DeleteAccount';
 import ResetPassword from './parts/ResetPassword';
 import Logout from './parts/Logout';
 import ChangeEmail from './parts/ChangeEmail';
+import API from '../../../controllers/UserSettingsApi.js';
+
+const { updateSettings } = API;
 
 const SettingsScreen = ({ navigation, theme }) => {
-  const { userDetails, setUserDetails } = React.useContext(StateContext);
+  const { user, userDetails, setUserDetails, defaultUserDetails } = React.useContext(StateContext);
   const [showLegal, setShowLegal] = React.useState(false);
   const [showDelete, setShowDelete] = React.useState(false);
   const [showLogout, setShowLogout] = React.useState(false);
@@ -81,6 +85,23 @@ const SettingsScreen = ({ navigation, theme }) => {
 
   const setShowContact = () =>
     Linking.openURL('mailto:help@loblollysoftware.com?subject=RepsApp Help');
+
+  const handleReset = () => {
+    setSplashToggle(defaultUserDetails.splashScreenIcon);
+    setThemeToggle(defaultUserDetails.theme);
+    setUserDetails(defaultUserDetails);
+  };
+
+  const updateDetails = React.useCallback(
+    debounce((userDetail, uid) => {
+      updateSettings(uid, userDetail);
+    }, 250),
+    []
+  );
+
+  React.useEffect(() => {
+    updateDetails(userDetails, user.uid);
+  }, [userDetails]);
 
   // Settings for app, excluding reset/change password, email, delete account
   // have privacy policy in here
@@ -199,6 +220,28 @@ const SettingsScreen = ({ navigation, theme }) => {
                   onPress={() => setShowLegal(true)}
                 >
                   View
+                </Button>
+              )}
+            />
+          </List.Section>
+          <List.Section>
+            <List.Subheader
+              style={{
+                borderTopWidth: 1,
+                borderColor: theme.colors.primary,
+                borderStyle: 'solid',
+              }}
+            />
+            <List.Item
+              title="Reset Settings"
+              onPress={handleReset}
+              right={() => (
+                <Button
+                  style={[styles.linkButton]}
+                  labelStyle={[styles.linkText, { color: theme.colors.alert }]}
+                  onPress={handleReset}
+                >
+                  Reset it
                 </Button>
               )}
             />

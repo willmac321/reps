@@ -1,8 +1,19 @@
-import { firebase, db } from '../firebase/config';
+import { db } from '../firebase/config';
 
-function getSettings() {
-  const user = firebase.auth().currentUser;
-  return db.collection('users').doc(user.uid).collection('settings').get();
+async function getSettings(uid) {
+  return db
+    .collection('users')
+    .doc(uid)
+    .collection('settings')
+    .doc(uid)
+    .get()
+    .then((res) => {
+      if (res.exists) {
+        return res.data();
+      }
+      return null;
+    })
+    .catch((e) => e);
 }
 
 function updateSettings(uid, userDetails) {
@@ -14,17 +25,14 @@ function updateSettings(uid, userDetails) {
     .catch((e) => console.error(e));
 }
 
-function resetSettings(uid, detailsId, defaultUserDetails) {
-  return db
-    .collection('users')
+function setAckPrivacy(uid) {
+  db.collection('privacyAck')
     .doc(uid)
-    .collection('settings')
-    .doc(detailsId)
-    .set(defaultUserDetails);
+    .catch((e) => console.error(e));
 }
 
 export default {
   updateSettings,
   getSettings,
-  resetSettings,
+  setAckPrivacy,
 };
