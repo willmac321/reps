@@ -15,11 +15,23 @@ async function newWorkout(uid, workout) {
       workoutRef.set(workout);
       return workout;
     })
-    .catch((e) => {console.error(e); return e;});
+    .catch((e) => {
+      console.error(e);
+      return e;
+    });
+}
+
+async function getWorkouts(uid) {
+  return db
+    .collection('users')
+    .doc(uid)
+    .collection('workouts')
+    .get()
+    .then((res) => res.docs.map((doc) => doc.data()))
+    .catch((e) => e);
 }
 
 function deleteWorkout(workout) {}
-function getWorkouts() {}
 
 export default {
   updateWorkout,

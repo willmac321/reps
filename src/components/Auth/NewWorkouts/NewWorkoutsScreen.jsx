@@ -12,6 +12,10 @@ const NewWorkoutsScreen = ({ navigation, theme }) => {
   const [notifyMessage, setNotifyMessage] = React.useState('');
   const [notifyTitle, setNotifyTitle] = React.useState('');
   const [keyboardActive, setKeyboardActive] = React.useState(false);
+  const {
+    user,
+    workouts: { getWorkouts },
+  } = React.useContext(StateContext);
 
   const keyboardEventShow = () => {
     setKeyboardActive(true);
@@ -22,6 +26,14 @@ const NewWorkoutsScreen = ({ navigation, theme }) => {
     setKeyboardActive(false);
     LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
   };
+
+  React.useEffect(() => {
+    if (user.uid) {
+      console.log(user.uid);
+      //FIXME why does this get run 1 million times
+    //  getWorkouts();
+    }
+  }, [user.uid]);
 
   React.useEffect(() => {
     Keyboard.addListener('keyboardDidShow', keyboardEventShow);
@@ -39,7 +51,6 @@ const NewWorkoutsScreen = ({ navigation, theme }) => {
       {({
         selectedWorkout: { setSelectedWorkout },
         workouts: { workouts = [], setWorkouts = () => {} },
-        user = null,
       }) => (
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -65,6 +76,7 @@ const NewWorkoutsScreen = ({ navigation, theme }) => {
               setShowNotify={setShowNotify}
               isOk={isOk}
               setIsOk={setIsOk}
+              userUid={user ? user.uid : null}
             />
           )}
           <WarnModal

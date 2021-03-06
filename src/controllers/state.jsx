@@ -2,6 +2,7 @@ import React from 'react';
 import { firebase } from '../firebase/config';
 import AuthAPI from './AuthApi';
 import UserSettingsAPI from './UserSettingsApi';
+import WorkoutAPI from './WorkoutApi';
 import themeDark from '../theme/themeDark';
 import themeLight from '../theme/themeLight';
 
@@ -62,6 +63,7 @@ export const StateContextProvider = ({ children }) => {
     if (!isAlreadyThere) unsortedWorkouts.push(w);
     setWorkouts(() => unsortedWorkouts.sort((a, b) => a.title.localeCompare(b.title)));
   };
+
   const setExercises = (ex, id = -1) => {
     // for local state
     // add exercise to list
@@ -81,12 +83,23 @@ export const StateContextProvider = ({ children }) => {
     // update workouts array too
     setWorkouts(() =>
       workouts.map((w) => {
-        if (w.id === selectedWorkout.id) {
+        if (w.title === selectedWorkout.title) {
           return selectedWorkout;
         }
         return w;
       })
     );
+  };
+
+  const getWorkouts = async (uid) => {
+    if (uid) {
+      setWorkouts(
+        (await WorkoutAPI.getWorkouts(uid)).sort((a, b) => a.title.localeCompare(b.title))
+      );
+      // setWorkouts(async () =>
+      //  (await WorkoutAPI.getWorkouts(user.uid)).sort((a, b) => a.title.localeCompare(b.title))
+      // );
+    }
   };
 
   React.useEffect(() => {
@@ -109,6 +122,7 @@ export const StateContextProvider = ({ children }) => {
         setUser(aR);
         // set user settings if auth user changes
         if (aR && aR.uid) {
+          getWorkouts(aR.uid);
           const res = await UserSettingsAPI.getSettings(aR.uid);
           if (res && !(res instanceof Error)) {
             setUserDetails(res);
@@ -148,7 +162,7 @@ export const StateContextProvider = ({ children }) => {
         userDetails,
         setUserDetails,
         setJustRegistered,
-        workouts: { workouts, setWorkouts },
+        workouts: { workouts, setWorkouts, getWorkouts },
         exercises: { exercises, setExercises },
         selectedWorkout: { selectedWorkout, setSelectedWorkout },
         theme,

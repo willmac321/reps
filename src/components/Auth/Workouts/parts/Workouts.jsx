@@ -9,7 +9,7 @@ import WorkoutItem from './WorkoutItem';
 // const Data = [];
 const Workouts = ({
   theme,
-  user,
+  userUid,
   navigation,
   setMessage,
   setNotifyTitle,
@@ -19,8 +19,10 @@ const Workouts = ({
   data,
   setData,
   setSelectedWorkout,
+  getWorkouts,
 }) => {
   const [isLoading, setIsLoading] = React.useState(false);
+  const [isWorkoutCalled, setIsWorkoutCalled] = React.useState(false);
   const [isDisable, setIsDisable] = React.useState(true);
   const [selected, setSelected] = React.useState(null);
   const [modalOnOkSelectedId, setModalOnOkSelected] = React.useState('');
@@ -45,7 +47,7 @@ const Workouts = ({
       setIsOk(false);
       setModalOnOkSelected(null);
       springAnim.setValue(1);
-      setData(data.filter((d) => d.id !== id));
+      setData(data.filter((d) => d.title !== id));
       setSelected(null);
     });
     // TODO API call
@@ -70,7 +72,7 @@ const Workouts = ({
     setIsDisable(true);
     setSelected(id);
     setNotifyTitle('Woah, you sure...');
-    setMessage(`Do you really want to delete ${data.filter((d) => d.id === id)[0].title}?`);
+    setMessage(`Do you really want to delete ${data.filter((d) => d.title === id)[0].title}?`);
     setIsOk(false);
     setModalOnOkSelected(id);
     setShowNotify(true);
@@ -99,8 +101,8 @@ const Workouts = ({
       }
     >
       <WorkoutItem
-        onPress={() => onPress(item.id)}
-        isSelected={item.id === selected}
+        onPress={() => onPress(item.title)}
+        isSelected={item.title === selected}
         text={item}
         handleTrash={handleTrash}
         handleEdit={handleEdit}
@@ -175,7 +177,7 @@ const Workouts = ({
       <ScrollList
         data={data}
         renderItem={Item}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.title}
         extraData={selected}
         theme={theme}
         ItemSeparatorComponent={ItemSeparator}

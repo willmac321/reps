@@ -1,4 +1,4 @@
-import { db } from '../firebase/config';
+import { firebase, db } from '../firebase/config';
 
 async function getSettings(uid) {
   return db
@@ -26,8 +26,11 @@ function updateSettings(uid, userDetails) {
 }
 
 function setAckPrivacy(uid) {
-  db.collection('privacyAck')
+  db.collection('users')
     .doc(uid)
+    .collection('privacyAck')
+    .doc(uid)
+    .set({ accepted: true })
     .catch((e) => console.error(e));
 }
 

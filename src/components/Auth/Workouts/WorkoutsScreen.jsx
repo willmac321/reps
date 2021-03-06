@@ -27,7 +27,7 @@ const WorkoutsScreen = ({ navigation, theme }) => {
             setShowNotify={setShowNotify}
             isOk={isOk}
             setIsOk={setIsOk}
-            user={user}
+            userUid={user ? user.uid : null}
           />
           <WarnModal
             title={notifyTitle}
