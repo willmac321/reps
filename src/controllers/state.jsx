@@ -36,26 +36,11 @@ export const StateContextProvider = ({ children }) => {
   const theme = userDetails.theme !== 'light' ? themeDark : themeLight;
 
   // TODO set this on get from api
-  const [workouts, setWorkouts] = React.useState(
-    [...Array(15).keys()].map((k) => ({
-      id: k.toString(),
-      title: `workout ${k}`,
-      date: Date.now().toLocaleString(),
-      exercises: ['456', '234'],
-    }))
-  );
+  const [workouts, setWorkouts] = React.useState([]);
+
   // TODO set this on get from api
   // and sort it based on name or something
-  const [exercises, updateExercises] = React.useState(
-    ['456', '234'].map((k) => ({
-      parentWorkoutIds: [],
-      id: k.toString(),
-      title: `exercise ${k}`,
-      sets: 7 - Math.floor(Math.random() * 6 + 1),
-      repRange: [4, 10],
-      rest: 45 - Math.floor(Math.random() * 15 + 1),
-    }))
-  );
+  const [exercises, updateExercises] = React.useState([]);
 
   const [selectedWorkout, updateSelectedWorkout] = React.useState({});
 
