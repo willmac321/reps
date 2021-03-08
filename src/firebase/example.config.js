@@ -2,6 +2,9 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/database';
 
+const fieldValue = firebase.firestore.FieldValue;
+const fieldPath = firebase.firestore.FieldPath;
+
 const firebaseConfig = {
   apiKey: '',
   authDomain: '',
@@ -29,4 +32,4 @@ firebase
     }
   });
 
-export { firebase, db };
+export { firebase, db, fieldValue, fieldPath };

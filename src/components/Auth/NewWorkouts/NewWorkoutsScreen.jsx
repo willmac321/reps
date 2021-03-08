@@ -1,5 +1,5 @@
 import React from 'react';
-import { Platform, LayoutAnimation, Keyboard, KeyboardAvoidingView } from 'react-native';
+import { View, Platform, LayoutAnimation, Keyboard, KeyboardAvoidingView } from 'react-native';
 import { withTheme } from 'react-native-paper';
 import { StateContext } from '../../../controllers/state';
 import WarnModal from '../../../template/WarnModal';
@@ -16,7 +16,8 @@ const NewWorkoutsScreen = ({ navigation, theme }) => {
   const {
     workouts: { workouts },
     user,
-    selectedWorkout: { selectedWorkout, setSelectedWorkout },
+    selectedWorkout: { setSelectedWorkout },
+    editWorkout: { editWorkout },
   } = React.useContext(StateContext);
 
   const [isEditWorkout, setIsEditWorkout] = React.useState(false);
@@ -40,7 +41,7 @@ const NewWorkoutsScreen = ({ navigation, theme }) => {
 
   React.useEffect(() => {
     if (isMounted.current) {
-      setIsEditWorkout(Object.keys(selectedWorkout).length > 0);
+      setIsEditWorkout(Object.keys(editWorkout).length > 0);
     }
   }, [isMounted.current]);
 
@@ -58,7 +59,10 @@ const NewWorkoutsScreen = ({ navigation, theme }) => {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={{ flex: 1, flexGrow: 1 }}
+      style={{
+        flex: !isEditWorkout ? 1 : null,
+        flexGrow: !isEditWorkout ? 1 : null,
+      }}
     >
       <NewWorkout
         addWorkoutToList={setSelectedWorkout}
@@ -66,7 +70,7 @@ const NewWorkoutsScreen = ({ navigation, theme }) => {
         navigation={navigation}
         theme={theme}
         user={user}
-        style={{ flex: 1 }}
+        style={{ flex: !isEditWorkout ? 1 : null }}
       />
       {!isEditWorkout && !keyboardActive && (
         <Workouts
@@ -74,6 +78,7 @@ const NewWorkoutsScreen = ({ navigation, theme }) => {
           setMessage={setNotifyMessage}
           setNotifyTitle={setNotifyTitle}
           setShowNotify={setShowNotify}
+          showEditAndSelect={false}
           isOk={isOk}
           setIsOk={setIsOk}
         />

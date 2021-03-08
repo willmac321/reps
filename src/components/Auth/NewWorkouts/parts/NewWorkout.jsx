@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, ScrollView } from 'react-native';
 import { withTheme, TextInput, HelperText } from 'react-native-paper';
 import API from '../../../../controllers/WorkoutApi';
 import CardWithButton from '../../../../template/CardWithButton';
@@ -15,13 +15,13 @@ const NewWorkout = ({ navigation, user, theme, data, addWorkoutToList }) => {
     input: theme.input,
   });
   const {
-    workouts: { workouts, setWorkouts },
-    selectedWorkout: { selectedWorkout },
+    workouts: { workouts },
+    editWorkout: { editWorkout, setEditWorkout },
   } = React.useContext(StateContext);
 
   const isNameTaken = () =>
     workoutName &&
-    selectedWorkout.title !== workoutName &&
+    editWorkout.title !== workoutName &&
     data.map((a) => a.title).includes(workoutName);
 
   React.useEffect(() => {
@@ -31,8 +31,8 @@ const NewWorkout = ({ navigation, user, theme, data, addWorkoutToList }) => {
     };
   }, []);
   React.useEffect(() => {
-    if (isMounted.current && Object.keys(selectedWorkout).length > 0) {
-      setWorkoutName(selectedWorkout.title);
+    if (isMounted.current && Object.keys(editWorkout).length > 0) {
+      setWorkoutName(editWorkout.title);
     }
   }, []);
 
@@ -56,25 +56,25 @@ const NewWorkout = ({ navigation, user, theme, data, addWorkoutToList }) => {
     };
 
     let newWorkouts = [...workouts];
-    if (selectedWorkout && selectedWorkout.id) {
-      newWorkouts = newWorkouts.filter((d) => d.title !== selectedWorkout.title);
+    if (editWorkout && editWorkout.id) {
+      newWorkouts = newWorkouts.filter((d) => d.title !== editWorkout.title);
       workout = {
         ...workout,
         id: workoutName,
-        date: selectedWorkout.date,
-        exercises: selectedWorkout.exercises,
+        date: editWorkout.date,
+        exercises: editWorkout.exercises,
       };
     }
 
     addWorkoutToList(workout, newWorkouts);
     setWorkoutName('');
-    setIsLoading(false);
-    API.deleteWorkout(user.uid, selectedWorkout.title).then(() => {
+    setEditWorkout({});
+    API.deleteWorkout(user.uid, editWorkout.title).then(() => {
       API.newWorkout(user.uid, workout);
     });
 
     setIsLoading(false);
-    navigation.navigate('Create', { screen: 'NewExercises' });
+    navigation.navigate('NewExercises');
   };
 
   return (
@@ -87,22 +87,28 @@ const NewWorkout = ({ navigation, user, theme, data, addWorkoutToList }) => {
         onPress={handleOnPress}
         isLoading={isLoading}
         theme={theme}
-        style={{ flex: 1 }}
       >
-        <TextInput
-          mode="outlined"
-          theme={theme}
-          label="Workout name"
-          error={isError}
-          value={workoutName}
-          onChangeText={(val) => setWorkoutName(val)}
-          style={[styles.input, { paddingTop: 10 }]}
-        />
-        {!!isNameTaken() && (
-          <HelperText type="error" visible={isError || isNameTaken()}>
-            Try a different name!
-          </HelperText>
-        )}
+        <ScrollView
+          style={{
+            flex: 1,
+            scrollbarColor: `${theme.colors.primary} ${theme.colors.surface}`,
+          }}
+        >
+          <TextInput
+            mode="outlined"
+            theme={theme}
+            label="Workout name"
+            error={isError}
+            value={workoutName}
+            onChangeText={(val) => setWorkoutName(val)}
+            style={[styles.input, { paddingTop: 10 }]}
+          />
+          {!!isNameTaken() && (
+            <HelperText type="error" visible={isError || isNameTaken()}>
+              Try a different name!
+            </HelperText>
+          )}
+        </ScrollView>
       </CardWithButton>
     </>
   );

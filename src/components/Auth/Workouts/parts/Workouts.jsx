@@ -17,10 +17,12 @@ const Workouts = ({
   setShowNotify,
   isOk,
   setIsOk,
+  showEditAndSelect = true,
 }) => {
   const {
     user,
-    selectedWorkout: {selectedWorkout,  setSelectedWorkout },
+    selectedWorkout: { setSelectedWorkout },
+    editWorkout: { setEditWorkout },
     workouts: { workouts, setWorkouts },
   } = React.useContext(StateContext);
 
@@ -54,12 +56,21 @@ const Workouts = ({
     }
   };
 
+  const setWorkoutToEdit = (id) => {
+    if (id) {
+      setEditWorkout(workouts.find((a) => a.title === id));
+    } else {
+      setEditWorkout({});
+    }
+  };
+
   const deleteWorkout = React.useCallback(
     (id) => {
       if (id && user && user.uid && isMounted.current) {
         WorkoutAPI.deleteWorkout(user.uid, id);
       }
       springOut(() => {
+        setWorkoutToEdit();
         if (isMounted.current) {
           setIsOk(false);
           setModalOnOkSelected(null);
@@ -71,15 +82,16 @@ const Workouts = ({
     },
     [user, workouts]
   );
-
   const editWorkout = React.useCallback(() => {
-    setUpdatedWorkout(selected);
-    navigation.navigate('Create');
+    setWorkoutToEdit(selected);
+    setUpdatedWorkout({});
+    navigation.navigate('Create', { screen: 'NewWorkout' });
   }, [selected, user, workouts]);
 
   const handleOnSubmit = React.useCallback(() => {
     setIsLoading(!isDisable);
     setUpdatedWorkout(selected);
+    setWorkoutToEdit();
     navigation.navigate('Exercises');
   }, [selected, workouts, isDisable]);
 
@@ -148,6 +160,7 @@ const Workouts = ({
         text={item}
         handleTrash={handleTrash}
         handleEdit={handleEdit}
+        showEditAndTrash={showEditAndSelect}
       />
     </Animated.View>
   );
@@ -205,7 +218,7 @@ const Workouts = ({
   return (
     <CardWithButton
       buttonText="Select"
-      showButton={workouts && workouts.length > 0}
+      showButton={showEditAndSelect && workouts && workouts.length > 0}
       theme={theme}
       buttonDisabled={isDisable}
       onPress={handleOnSubmit}

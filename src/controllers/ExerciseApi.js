@@ -1,8 +1,7 @@
-import { db } from '../firebase/config';
+import { db, fieldValue, fieldPath } from '../firebase/config';
 
 // auth is handled by firebase
-function updateExercise(exercise) {}
-async function newExercise(uid, exercise, workout) {
+async function newExercise(uid, exercise, workoutId) {
   return db
     .collection('users')
     .doc(uid)
@@ -13,19 +12,34 @@ async function newExercise(uid, exercise, workout) {
       db.collection('users')
         .doc(uid)
         .collection('workouts')
-        .doc(workout.id)
-        .update(workout.exercises)
+        .doc(workoutId)
+        .update({
+          exercises: fieldValue.arrayUnion(docRef.id),
+        })
         .catch((e) => console.error(e));
       return docRef.id;
     })
     .catch((e) => console.error(e));
 }
-function deleteWorkout(workout) {}
-function getWorkouts() {}
+
+async function getExercises(uid, exerciseArr) {
+  if (!exerciseArr || exerciseArr.length === 0) return [];
+  return db
+    .collection('users')
+    .doc(uid)
+    .collection('exercises')
+    .where(fieldPath.documentId(), 'in', exerciseArr)
+    .get()
+    .then((res) => res.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+    .catch((e) => e);
+}
+
+function deleteExercise(workout) {}
+function updateExercise(exercise) {}
 
 export default {
   updateExercise,
   newExercise,
-  deleteWorkout,
-  getWorkouts,
+  deleteExercise,
+  getExercises,
 };

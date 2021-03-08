@@ -46,7 +46,7 @@ users: {
     */
     exercises: {
       uid: {
-        id: string
+        id: uid
         title: string,
         sets: int,
         repRange: [int, int],

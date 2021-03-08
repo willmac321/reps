@@ -51,6 +51,7 @@ export const StateContextProvider = ({ children }) => {
   const [exercises, updateExercises] = React.useState([]);
 
   const [selectedWorkout, updateSelectedWorkout] = React.useState({});
+  const [editWorkout, setEditWorkout] = React.useState({});
 
   // update local workouts at the same time
   const setSelectedWorkout = (w, ws = workouts) => {
@@ -76,12 +77,17 @@ export const StateContextProvider = ({ children }) => {
   };
 
   const setExercises = (ex, id = -1) => {
+    // if ex for set is an array of exercises, just set these and return
+    if (isMounted.current && Array.isArray(ex)) {
+      updateExercises(ex);
+      return;
+    }
     // for local state
     // add exercise to list
     // add exercise uid to workout
-    if (isMounted.current) updateExercises([...exercises, ex]);
+    updateExercises([...exercises, ex]);
     // update selected workout exercise array
-    const currExercise = selectedWorkout.exercises.slice();
+    const currExercise = [...selectedWorkout.exercises];
     if (currExercise.indexOf(ex.id) > -1) {
       currExercise.splice(currExercise.indexOf(ex.id), 1);
     }
@@ -91,7 +97,11 @@ export const StateContextProvider = ({ children }) => {
       currExercise.push(ex.id);
     }
 
-    if (isMounted.current) setSelectedWorkout({ ...selectedWorkout, exercises: currExercise });
+    if (isMounted.current)
+      setSelectedWorkout(() => ({
+        ...selectedWorkout,
+        exercises: currExercise,
+      }));
     // update workouts array too
     if (isMounted.current)
       setWorkouts(() =>
@@ -190,6 +200,7 @@ export const StateContextProvider = ({ children }) => {
         workouts: { workouts, setWorkouts },
         exercises: { exercises, setExercises },
         selectedWorkout: { selectedWorkout, setSelectedWorkout },
+        editWorkout: { editWorkout, setEditWorkout },
         theme,
       }}
     >

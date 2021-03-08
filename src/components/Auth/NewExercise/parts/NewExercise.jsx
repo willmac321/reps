@@ -4,7 +4,8 @@ import { withTheme, TextInput, HelperText, Text } from 'react-native-paper';
 import API from '../../../../controllers/ExerciseApi';
 import CardWithButton from '../../../../template/CardWithButton';
 
-const NewWorkout = ({ navigation, theme, user, exercises, workout, addExerciseToList }) => {
+const NewExercise = ({ navigation, theme, user, exercises, workout, addExerciseToList }) => {
+  const isMounted = React.useRef(true);
   const [isDisable, setIsDisable] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
   const [titleChange, setTitleChange] = React.useState(null);
@@ -15,7 +16,6 @@ const NewWorkout = ({ navigation, theme, user, exercises, workout, addExerciseTo
     rest: false,
   });
   const [newExercise, setNewExercise] = React.useState({
-    parentWorkoutIds: [],
     id: '',
     title: '',
     sets: 0,
@@ -56,6 +56,12 @@ const NewWorkout = ({ navigation, theme, user, exercises, workout, addExerciseTo
   const isNameTaken = () => exercises.map((a) => a.title).includes(newExercise.name);
   const isEmpty = () =>
     !(newExercise.title && newExercise.sets && newExercise.rest && newExercise.repRange[1]);
+  React.useEffect(
+    () => () => {
+      isMounted.current = false;
+    },
+    []
+  );
 
   React.useEffect(() => {
     if (isEmpty() || isNameTaken()) {
@@ -128,15 +134,17 @@ const NewWorkout = ({ navigation, theme, user, exercises, workout, addExerciseTo
   const handleOnPress = async () => {
     if (titleChange) titleChange.flush();
     setIsLoading(true);
-    setNewExercise({
+    const newE = {
       ...newExercise,
-      parentWorkoutIds: newExercise.parentWorkoutIds.splice().push(workout.id),
       id: await API.newExercise(user.uid, newExercise, workout.id),
-    });
-    addExerciseToList(newExercise);
-    setIsLoading(false);
+    };
+    if (isMounted.current) {
+      setNewExercise(newE);
+      setIsLoading(false);
+    }
+    addExerciseToList(newE);
     // TODO add exercise to list
-    navigation.navigate('Splash');
+    // navigation.navigate('Splash');
   };
 
   return (
@@ -270,4 +278,4 @@ const NewWorkout = ({ navigation, theme, user, exercises, workout, addExerciseTo
     </View>
   );
 };
-export default withTheme(NewWorkout);
+export default withTheme(NewExercise);
