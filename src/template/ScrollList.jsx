@@ -1,6 +1,6 @@
 import React from 'react';
 import { withTheme } from 'react-native-paper';
-import { FlatList, View } from 'react-native';
+import { FlatList } from 'react-native';
 
 const ScrollList = ({
   data,

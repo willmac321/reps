@@ -1,4 +1,4 @@
-import { firebase } from '../firebase/config';
+import { firebase, db } from '../firebase/config';
 
 function login(email, password, callback) {
   firebase
@@ -83,13 +83,11 @@ function deleteAccount(password, callback) {
   const cred = firebase.auth.EmailAuthProvider.credential(user.email, password);
   user
     .reauthenticateWithCredential(cred)
-    .then((e) => {
-      if (!e) {
-        user
-          .delete()
-          .then(() => callback())
-          .catch((er) => callback(er));
-      }
+    .then(() => {
+      user
+        .delete()
+        .then(() => callback())
+        .catch((er) => callback(er));
     })
     .catch((e) => callback(e));
 }

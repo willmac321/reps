@@ -1,11 +1,12 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, ScrollView } from 'react-native';
 import { withTheme, TextInput, HelperText } from 'react-native-paper';
 import API from '../../../../controllers/WorkoutApi';
 import CardWithButton from '../../../../template/CardWithButton';
-import NotifyModal from '../../../../template/NotifyModal';
+import { StateContext } from '../../../../controllers/state';
 
 const NewWorkout = ({ navigation, user, theme, data, addWorkoutToList }) => {
+  const isMounted = React.useRef(true);
   const [isDisable, setIsDisable] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
   const [isError, setIsError] = React.useState(false);
@@ -13,8 +14,27 @@ const NewWorkout = ({ navigation, user, theme, data, addWorkoutToList }) => {
   const styles = StyleSheet.create({
     input: theme.input,
   });
+  const {
+    workouts: { workouts },
+    editWorkout: { editWorkout, setEditWorkout },
+  } = React.useContext(StateContext);
 
-  const isNameTaken = () => data.map((a) => a.title).includes(workoutName);
+  const isNameTaken = () =>
+    workoutName &&
+    editWorkout.title !== workoutName &&
+    data.map((a) => a.title).includes(workoutName);
+
+  React.useEffect(() => {
+    isMounted.current = true;
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
+  React.useEffect(() => {
+    if (isMounted.current && Object.keys(editWorkout).length > 0) {
+      setWorkoutName(editWorkout.title);
+    }
+  }, []);
 
   React.useEffect(() => {
     setIsError(false);
@@ -28,21 +48,33 @@ const NewWorkout = ({ navigation, user, theme, data, addWorkoutToList }) => {
   const handleOnPress = async () => {
     setIsLoading(true);
     // workout will either be the new created one or the existing workout with the same name
-    const workout = await API.newWorkout(user.uid, {
+    let workout = {
       title: workoutName,
+      id: workoutName,
       date: new Date().toLocaleString(),
       exercises: [],
-    });
+    };
 
-    if (workout instanceof Error) {
-      setIsError(true);
-      return;
+    let newWorkouts = [...workouts];
+    if (editWorkout && editWorkout.id) {
+      newWorkouts = newWorkouts.filter((d) => d.title !== editWorkout.title);
+      workout = {
+        ...workout,
+        id: workoutName,
+        date: editWorkout.date,
+        exercises: editWorkout.exercises,
+      };
     }
 
-    addWorkoutToList(workout);
+    addWorkoutToList(workout, newWorkouts);
+    setWorkoutName('');
+    setEditWorkout({});
+    API.deleteWorkout(user.uid, editWorkout.title).then(() => {
+      API.newWorkout(user.uid, workout);
+    });
 
     setIsLoading(false);
-    navigation.navigate('Create', { screen: 'NewExercises' });
+    navigation.navigate('NewExercises');
   };
 
   return (
@@ -55,22 +87,28 @@ const NewWorkout = ({ navigation, user, theme, data, addWorkoutToList }) => {
         onPress={handleOnPress}
         isLoading={isLoading}
         theme={theme}
-        style={{ flex: 1 }}
       >
-        <TextInput
-          mode="outlined"
-          theme={theme}
-          label="Workout name"
-          error={isError}
-          value={workoutName}
-          onChangeText={(val) => setWorkoutName(val)}
-          style={[styles.input, { paddingTop: 10 }]}
-        />
-        {!!isNameTaken() && (
-          <HelperText type="error" visible={isError || isNameTaken()}>
-            Try a different name!
-          </HelperText>
-        )}
+        <ScrollView
+          style={{
+            flex: 1,
+            scrollbarColor: `${theme.colors.primary} ${theme.colors.surface}`,
+          }}
+        >
+          <TextInput
+            mode="outlined"
+            theme={theme}
+            label="Workout name"
+            error={isError}
+            value={workoutName}
+            onChangeText={(val) => setWorkoutName(val)}
+            style={[styles.input, { paddingTop: 10 }]}
+          />
+          {!!isNameTaken() && (
+            <HelperText type="error" visible={isError || isNameTaken()}>
+              Try a different name!
+            </HelperText>
+          )}
+        </ScrollView>
       </CardWithButton>
     </>
   );

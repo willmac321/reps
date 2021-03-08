@@ -2,28 +2,24 @@ import React from 'react';
 import { withTheme, List, Portal } from 'react-native-paper';
 import { View } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { StateContext } from '../../../../controllers/state';
 import CardWithButton from '../../../../template/CardWithButton';
 import ScrollList from '../../../../template/ScrollList';
 import LoadingOverlay from '../../../../template/LoadingOverlay';
 import ExerciseItem from './ExerciseItem';
 
-const Exercises = ({
-  isLoading,
-  navigation,
-  theme,
-  exercises,
-  workout,
-  setShowNotify,
-  isOk,
-  setIsOk,
-}) => {
+const Exercises = ({ isLoading, navigation, theme, setShowNotify, isOk, setIsOk, showEditAndSelect }) => {
+  const {
+    exercises: { exercises },
+  } = React.useContext(StateContext);
   const [selected, setSelected] = React.useState(null);
+
   const onPress = (id) => {
     setSelected(id);
   };
-  const handleNew = () => {
-    // TODO nave to new exercise screen
-  };
+
+  const handleNew = () => {};
+
   const Item = ({ item }) => (
     <View>
       <ExerciseItem

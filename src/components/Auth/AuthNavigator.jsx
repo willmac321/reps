@@ -1,6 +1,7 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import { withTheme } from 'react-native-paper';
 import { FontAwesome5 } from '@expo/vector-icons';
 
@@ -11,6 +12,7 @@ import NewExercisesScreen from './NewExercise/NewExerciseScreen';
 import ExercisesScreen from './Exercises/ExercisesScreen';
 import WorkoutsScreen from './Workouts/WorkoutsScreen';
 import SettingsScreen from './Settings/SettingsScreen';
+import { StateContext } from '../../controllers/state';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -39,18 +41,10 @@ const screenOptions = ({ route }) => ({
 });
 
 function AuthNavigator({ theme }) {
-  const [currentRoute, setCurrentRoute] = React.useState('Workouts');
-  const [lastRoute, setLastRoute] = React.useState('Workouts');
-
-  const setRoute = ({ route }) => ({
-    tabPress: () => {
-      if (currentRoute !== route.name) {
-        setLastRoute(currentRoute);
-        setCurrentRoute(route.name);
-      }
-    },
-  });
-
+  const {
+    editWorkout: { setEditWorkout },
+    selectedWorkout: { setSelectedWorkout },
+  } = React.useContext(StateContext);
   // should only route to new exercises when the page is on a selected workout screen
   const NewComponents = () => (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -68,7 +62,7 @@ function AuthNavigator({ theme }) {
   return (
     <Tab.Navigator
       screenOptions={(ev) => screenOptions(ev)}
-      initialRouteName="Create"
+      initialRouteName="Workouts"
       tabBarOptions={{
         activeTintColor: theme.colors.textSelected,
         inactiveTintColor: theme.colors.text,
@@ -83,9 +77,22 @@ function AuthNavigator({ theme }) {
         },
       }}
     >
-      <Tab.Screen name="Create" component={NewComponents} listeners={setRoute} />
-      <Tab.Screen name="Workouts" component={WorkoutComponents} listeners={setRoute} />
-      <Tab.Screen name="Settings" component={SettingsScreen} listeners={setRoute} />
+      <Tab.Screen
+        name="Create"
+        component={NewComponents}
+        listeners={({ route, navigation }) => ({
+          tabPress: () => {
+            // console.log(getFocusedRouteNameFromRoute(route));
+            if (navigation.isFocused()) {
+              setEditWorkout({});
+              setSelectedWorkout({});
+              navigation.navigate('Create', { screen: 'NewWorkout' });
+            }
+          },
+        })}
+      />
+      <Tab.Screen name="Workouts" component={WorkoutComponents} />
+      <Tab.Screen name="Settings" component={SettingsScreen} />
     </Tab.Navigator>
   );
 }

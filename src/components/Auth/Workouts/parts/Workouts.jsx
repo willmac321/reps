@@ -2,30 +2,38 @@ import React from 'react';
 import { withTheme, List } from 'react-native-paper';
 import { View, Animated, Easing } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { StateContext } from '../../../../controllers/state';
 import CardWithButton from '../../../../template/CardWithButton';
 import ScrollList from '../../../../template/ScrollList';
 import WorkoutItem from './WorkoutItem';
+import WorkoutAPI from '../../../../controllers/WorkoutApi';
 
 // const Data = [];
 const Workouts = ({
   theme,
-  user,
   navigation,
   setMessage,
   setNotifyTitle,
   setShowNotify,
   isOk,
   setIsOk,
-  data,
-  setData,
-  setSelectedWorkout,
+  showEditAndSelect = true,
 }) => {
+  const {
+    user,
+    selectedWorkout: { setSelectedWorkout },
+    editWorkout: { setEditWorkout },
+    workouts: { workouts, setWorkouts },
+  } = React.useContext(StateContext);
+
   const [isLoading, setIsLoading] = React.useState(false);
   const [isDisable, setIsDisable] = React.useState(true);
   const [selected, setSelected] = React.useState(null);
+  const [isDelete, setIsDelete] = React.useState(false);
+  const [isEdit, setIsEdit] = React.useState(false);
   const [modalOnOkSelectedId, setModalOnOkSelected] = React.useState('');
   const springAnim = React.useRef(new Animated.Value(1)).current;
-
+  const isMounted = React.useRef(true);
   const springOut = (callback) => {
     Animated.timing(springAnim, {
       toValue: 0,
@@ -40,22 +48,52 @@ const Workouts = ({
     outputRange: [500, 0],
   });
 
-  const deleteWorkout = (id) => {
-    springOut(() => {
-      setIsOk(false);
-      setModalOnOkSelected(null);
-      springAnim.setValue(1);
-      setData(data.filter((d) => d.id !== id));
-      setSelected(null);
-    });
-    // TODO API call
+  const setUpdatedWorkout = (id) => {
+    if (id) {
+      setSelectedWorkout(workouts.find((a) => a.title === id));
+    } else {
+      setSelectedWorkout();
+    }
   };
 
-  const handleOnSubmit = () => {
-    setIsLoading(!isDisable);
-    setSelectedWorkout(data[selected]);
-    navigation.navigate('Exercises');
+  const setWorkoutToEdit = (id) => {
+    if (id) {
+      setEditWorkout(workouts.find((a) => a.title === id));
+    } else {
+      setEditWorkout({});
+    }
   };
+
+  const deleteWorkout = React.useCallback(
+    (id) => {
+      if (id && user && user.uid && isMounted.current) {
+        WorkoutAPI.deleteWorkout(user.uid, id);
+      }
+      springOut(() => {
+        setWorkoutToEdit();
+        if (isMounted.current) {
+          setIsOk(false);
+          setModalOnOkSelected(null);
+          setSelected(null);
+        }
+        springAnim.setValue(1);
+        setWorkouts(() => [...workouts].filter((d) => d.id !== id));
+      });
+    },
+    [user, workouts]
+  );
+  const editWorkout = React.useCallback(() => {
+    setWorkoutToEdit(selected);
+    setUpdatedWorkout({});
+    navigation.navigate('Create', { screen: 'NewWorkout' });
+  }, [selected, user, workouts]);
+
+  const handleOnSubmit = React.useCallback(() => {
+    setIsLoading(!isDisable);
+    setUpdatedWorkout(selected);
+    setWorkoutToEdit();
+    navigation.navigate('Exercises');
+  }, [selected, workouts, isDisable]);
 
   const onPress = (id) => {
     setIsDisable(false);
@@ -64,14 +102,22 @@ const Workouts = ({
 
   const handleEdit = (_, id) => {
     setSelected(id);
+    setIsDisable(true);
+    setNotifyTitle('You wanna change this?');
+    setMessage(`You're about to edit ${workouts.filter((d) => d.id === id)[0].id}, ok?`);
+    setIsOk(false);
+    setIsEdit(true);
+    setModalOnOkSelected(id);
+    setShowNotify(true);
   };
 
   const handleTrash = (_, id) => {
     setIsDisable(true);
     setSelected(id);
     setNotifyTitle('Woah, you sure...');
-    setMessage(`Do you really want to delete ${data.filter((d) => d.id === id)[0].title}?`);
+    setMessage(`Do you really want to delete ${workouts.filter((d) => d.id === id)[0].id}?`);
     setIsOk(false);
+    setIsDelete(true);
     setModalOnOkSelected(id);
     setShowNotify(true);
   };
@@ -80,30 +126,41 @@ const Workouts = ({
     navigation.navigate('Create');
   };
 
-  //  React.useEffect(() => {
-  //    if (springAnim === 1) {
-  //    }
-  //  }, [springAnim]);
+  React.useEffect(() => {
+    isMounted.current = true;
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
 
   React.useEffect(() => {
-    if (isOk && modalOnOkSelectedId) {
-      deleteWorkout(modalOnOkSelectedId);
+    if (isMounted.current) {
+      if (isOk && isDelete && modalOnOkSelectedId) {
+        deleteWorkout(modalOnOkSelectedId);
+      } else if (isOk && isEdit && modalOnOkSelectedId) {
+        editWorkout(modalOnOkSelectedId);
+      }
+      setIsDelete(false);
+      setIsEdit(false);
+      setModalOnOkSelected(null);
     }
-    setModalOnOkSelected(null);
   }, [isOk]);
 
   const Item = ({ item }) => (
     <Animated.View
       style={
-        item.id === selected ? { opacity: springAnim, transform: [{ translateX: panX }] } : null
+        item && item.id === selected
+          ? { opacity: springAnim, transform: [{ translateX: panX }] }
+          : null
       }
     >
       <WorkoutItem
         onPress={() => onPress(item.id)}
-        isSelected={item.id === selected}
+        isSelected={item && item.id === selected}
         text={item}
         handleTrash={handleTrash}
         handleEdit={handleEdit}
+        showEditAndTrash={showEditAndSelect}
       />
     </Animated.View>
   );
@@ -161,21 +218,21 @@ const Workouts = ({
   return (
     <CardWithButton
       buttonText="Select"
-      showButton={data.length > 0}
+      showButton={showEditAndSelect && workouts && workouts.length > 0}
       theme={theme}
       buttonDisabled={isDisable}
       onPress={handleOnSubmit}
       isLoading={isLoading}
       flex={1}
       style={{
-        flex: data.length > 0 ? 2 : null,
+        flex: workouts && workouts.length > 0 ? 2 : null,
         marginBottom: 50,
       }}
     >
       <ScrollList
-        data={data}
+        data={workouts}
         renderItem={Item}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item && item.id}
         extraData={selected}
         theme={theme}
         ItemSeparatorComponent={ItemSeparator}

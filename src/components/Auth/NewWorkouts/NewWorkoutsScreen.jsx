@@ -1,5 +1,5 @@
 import React from 'react';
-import { Platform, LayoutAnimation, Keyboard, KeyboardAvoidingView } from 'react-native';
+import { View, Platform, LayoutAnimation, Keyboard, KeyboardAvoidingView } from 'react-native';
 import { withTheme } from 'react-native-paper';
 import { StateContext } from '../../../controllers/state';
 import WarnModal from '../../../template/WarnModal';
@@ -12,6 +12,15 @@ const NewWorkoutsScreen = ({ navigation, theme }) => {
   const [notifyMessage, setNotifyMessage] = React.useState('');
   const [notifyTitle, setNotifyTitle] = React.useState('');
   const [keyboardActive, setKeyboardActive] = React.useState(false);
+  const isMounted = React.useRef(true);
+  const {
+    workouts: { workouts },
+    user,
+    selectedWorkout: { setSelectedWorkout },
+    editWorkout: { editWorkout },
+  } = React.useContext(StateContext);
+
+  const [isEditWorkout, setIsEditWorkout] = React.useState(false);
 
   const keyboardEventShow = () => {
     setKeyboardActive(true);
@@ -22,6 +31,19 @@ const NewWorkoutsScreen = ({ navigation, theme }) => {
     setKeyboardActive(false);
     LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
   };
+
+  React.useEffect(() => {
+    isMounted.current = true;
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
+
+  React.useEffect(() => {
+    if (isMounted.current) {
+      setIsEditWorkout(Object.keys(editWorkout).length > 0);
+    }
+  }, [isMounted.current]);
 
   React.useEffect(() => {
     Keyboard.addListener('keyboardDidShow', keyboardEventShow);
@@ -35,50 +57,42 @@ const NewWorkoutsScreen = ({ navigation, theme }) => {
   }, []);
 
   return (
-    <StateContext.Consumer>
-      {({
-        selectedWorkout: { setSelectedWorkout },
-        workouts: { workouts = [], setWorkouts = () => {} },
-        user = null,
-      }) => (
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          style={{ flex: 1, flexGrow: 1 }}
-        >
-          <NewWorkout
-            addWorkoutToList={setSelectedWorkout}
-            data={workouts}
-            navigation={navigation}
-            theme={theme}
-            user={user}
-            style={{ flex: 1 }}
-          />
-          {!keyboardActive && (
-            <Workouts
-              data={workouts}
-              setData={setWorkouts}
-              navigation={navigation}
-              setSelectedWorkout={setSelectedWorkout}
-              setSelected
-              setMessage={setNotifyMessage}
-              setNotifyTitle={setNotifyTitle}
-              setShowNotify={setShowNotify}
-              isOk={isOk}
-              setIsOk={setIsOk}
-            />
-          )}
-          <WarnModal
-            title={notifyTitle}
-            buttonText="Yes"
-            theme={theme}
-            content={notifyMessage}
-            visible={showNotify}
-            setVisible={setShowNotify}
-            onPress={() => setIsOk(true)}
-          />
-        </KeyboardAvoidingView>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{
+        flex: !isEditWorkout ? 1 : null,
+        flexGrow: !isEditWorkout ? 1 : null,
+      }}
+    >
+      <NewWorkout
+        addWorkoutToList={setSelectedWorkout}
+        data={workouts}
+        navigation={navigation}
+        theme={theme}
+        user={user}
+        style={{ flex: !isEditWorkout ? 1 : null }}
+      />
+      {!isEditWorkout && !keyboardActive && (
+        <Workouts
+          navigation={navigation}
+          setMessage={setNotifyMessage}
+          setNotifyTitle={setNotifyTitle}
+          setShowNotify={setShowNotify}
+          showEditAndSelect={false}
+          isOk={isOk}
+          setIsOk={setIsOk}
+        />
       )}
-    </StateContext.Consumer>
+      <WarnModal
+        title={notifyTitle}
+        buttonText="Yes"
+        theme={theme}
+        content={notifyMessage}
+        visible={showNotify}
+        setVisible={setShowNotify}
+        onPress={() => setIsOk(true)}
+      />
+    </KeyboardAvoidingView>
   );
 };
 

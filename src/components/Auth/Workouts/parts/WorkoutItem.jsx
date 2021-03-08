@@ -3,7 +3,15 @@ import { View, StyleSheet } from 'react-native';
 import { withTheme, List } from 'react-native-paper';
 import { FontAwesome5 } from '@expo/vector-icons';
 
-const WorkoutItem = ({ theme, isSelected, text, onPress, handleEdit, handleTrash }) => {
+const WorkoutItem = ({
+  theme,
+  isSelected,
+  text,
+  onPress,
+  handleEdit,
+  handleTrash,
+  showEditAndTrash = true,
+}) => {
   const styles = StyleSheet.create({
     item: isSelected
       ? {
@@ -51,12 +59,20 @@ const WorkoutItem = ({ theme, isSelected, text, onPress, handleEdit, handleTrash
       descriptionStyle={[styles.text, { fontWeight: 'normal' }]}
       right={() => (
         <>
-          <FontAwesome5 name="pen" style={styles.icon} onPress={(e) => handleEdit(e, text.id)} />
-          <FontAwesome5
-            name="trash-alt"
-            style={styles.icon}
-            onPress={(e) => handleTrash(e, text.id)}
-          />
+          {showEditAndTrash && (
+            <>
+              <FontAwesome5
+                name="pen"
+                style={styles.icon}
+                onPress={(e) => handleEdit(e, text.id)}
+              />
+              <FontAwesome5
+                name="trash-alt"
+                style={styles.icon}
+                onPress={(e) => handleTrash(e, text.id)}
+              />
+            </>
+          )}
         </>
       )}
     />
