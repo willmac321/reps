@@ -3,9 +3,10 @@ import { StyleSheet } from 'react-native';
 import { withTheme, TextInput, HelperText } from 'react-native-paper';
 import API from '../../../../controllers/WorkoutApi';
 import CardWithButton from '../../../../template/CardWithButton';
-import NotifyModal from '../../../../template/NotifyModal';
+import { StateContext } from '../../../../controllers/state';
 
 const NewWorkout = ({ navigation, user, theme, data, addWorkoutToList }) => {
+  const isMounted = React.useRef(true);
   const [isDisable, setIsDisable] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
   const [isError, setIsError] = React.useState(false);
@@ -13,8 +14,27 @@ const NewWorkout = ({ navigation, user, theme, data, addWorkoutToList }) => {
   const styles = StyleSheet.create({
     input: theme.input,
   });
+  const {
+    workouts: { workouts, setWorkouts },
+    selectedWorkout: { selectedWorkout },
+  } = React.useContext(StateContext);
 
-  const isNameTaken = () => data.map((a) => a.title).includes(workoutName);
+  const isNameTaken = () =>
+    workoutName &&
+    selectedWorkout.title !== workoutName &&
+    data.map((a) => a.title).includes(workoutName);
+
+  React.useEffect(() => {
+    isMounted.current = true;
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
+  React.useEffect(() => {
+    if (isMounted.current && Object.keys(selectedWorkout).length > 0) {
+      setWorkoutName(selectedWorkout.title);
+    }
+  }, []);
 
   React.useEffect(() => {
     setIsError(false);
@@ -28,18 +48,30 @@ const NewWorkout = ({ navigation, user, theme, data, addWorkoutToList }) => {
   const handleOnPress = async () => {
     setIsLoading(true);
     // workout will either be the new created one or the existing workout with the same name
-    const workout = await API.newWorkout(user.uid, {
+    let workout = {
       title: workoutName,
+      id: workoutName,
       date: new Date().toLocaleString(),
       exercises: [],
-    });
+    };
 
-    if (workout instanceof Error) {
-      setIsError(true);
-      return;
+    let newWorkouts = [...workouts];
+    if (selectedWorkout && selectedWorkout.id) {
+      newWorkouts = newWorkouts.filter((d) => d.title !== selectedWorkout.title);
+      workout = {
+        ...workout,
+        id: workoutName,
+        date: selectedWorkout.date,
+        exercises: selectedWorkout.exercises,
+      };
     }
 
-    addWorkoutToList(workout);
+    addWorkoutToList(workout, newWorkouts);
+    setWorkoutName('');
+    setIsLoading(false);
+    API.deleteWorkout(user.uid, selectedWorkout.title).then(() => {
+      API.newWorkout(user.uid, workout);
+    });
 
     setIsLoading(false);
     navigation.navigate('Create', { screen: 'NewExercises' });

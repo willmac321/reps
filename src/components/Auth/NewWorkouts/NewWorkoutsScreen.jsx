@@ -12,10 +12,14 @@ const NewWorkoutsScreen = ({ navigation, theme }) => {
   const [notifyMessage, setNotifyMessage] = React.useState('');
   const [notifyTitle, setNotifyTitle] = React.useState('');
   const [keyboardActive, setKeyboardActive] = React.useState(false);
+  const isMounted = React.useRef(true);
   const {
+    workouts: { workouts },
     user,
-    workouts: { getWorkouts },
+    selectedWorkout: { selectedWorkout, setSelectedWorkout },
   } = React.useContext(StateContext);
+
+  const [isEditWorkout, setIsEditWorkout] = React.useState(false);
 
   const keyboardEventShow = () => {
     setKeyboardActive(true);
@@ -28,12 +32,17 @@ const NewWorkoutsScreen = ({ navigation, theme }) => {
   };
 
   React.useEffect(() => {
-    if (user.uid) {
-      console.log(user.uid);
-      //FIXME why does this get run 1 million times
-    //  getWorkouts();
+    isMounted.current = true;
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
+
+  React.useEffect(() => {
+    if (isMounted.current) {
+      setIsEditWorkout(Object.keys(selectedWorkout).length > 0);
     }
-  }, [user.uid]);
+  }, [isMounted.current]);
 
   React.useEffect(() => {
     Keyboard.addListener('keyboardDidShow', keyboardEventShow);
@@ -47,50 +56,38 @@ const NewWorkoutsScreen = ({ navigation, theme }) => {
   }, []);
 
   return (
-    <StateContext.Consumer>
-      {({
-        selectedWorkout: { setSelectedWorkout },
-        workouts: { workouts = [], setWorkouts = () => {} },
-      }) => (
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          style={{ flex: 1, flexGrow: 1 }}
-        >
-          <NewWorkout
-            addWorkoutToList={setSelectedWorkout}
-            data={workouts}
-            navigation={navigation}
-            theme={theme}
-            user={user}
-            style={{ flex: 1 }}
-          />
-          {!keyboardActive && (
-            <Workouts
-              data={workouts}
-              setData={setWorkouts}
-              navigation={navigation}
-              setSelectedWorkout={setSelectedWorkout}
-              setSelected
-              setMessage={setNotifyMessage}
-              setNotifyTitle={setNotifyTitle}
-              setShowNotify={setShowNotify}
-              isOk={isOk}
-              setIsOk={setIsOk}
-              userUid={user ? user.uid : null}
-            />
-          )}
-          <WarnModal
-            title={notifyTitle}
-            buttonText="Yes"
-            theme={theme}
-            content={notifyMessage}
-            visible={showNotify}
-            setVisible={setShowNotify}
-            onPress={() => setIsOk(true)}
-          />
-        </KeyboardAvoidingView>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{ flex: 1, flexGrow: 1 }}
+    >
+      <NewWorkout
+        addWorkoutToList={setSelectedWorkout}
+        data={workouts}
+        navigation={navigation}
+        theme={theme}
+        user={user}
+        style={{ flex: 1 }}
+      />
+      {!isEditWorkout && !keyboardActive && (
+        <Workouts
+          navigation={navigation}
+          setMessage={setNotifyMessage}
+          setNotifyTitle={setNotifyTitle}
+          setShowNotify={setShowNotify}
+          isOk={isOk}
+          setIsOk={setIsOk}
+        />
       )}
-    </StateContext.Consumer>
+      <WarnModal
+        title={notifyTitle}
+        buttonText="Yes"
+        theme={theme}
+        content={notifyMessage}
+        visible={showNotify}
+        setVisible={setShowNotify}
+        onPress={() => setIsOk(true)}
+      />
+    </KeyboardAvoidingView>
   );
 };
 

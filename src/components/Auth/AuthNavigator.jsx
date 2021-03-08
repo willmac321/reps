@@ -39,18 +39,6 @@ const screenOptions = ({ route }) => ({
 });
 
 function AuthNavigator({ theme }) {
-  const [currentRoute, setCurrentRoute] = React.useState('Workouts');
-  const [lastRoute, setLastRoute] = React.useState('Workouts');
-
-  const setRoute = ({ route }) => ({
-    tabPress: () => {
-      if (currentRoute !== route.name) {
-        setLastRoute(currentRoute);
-        setCurrentRoute(route.name);
-      }
-    },
-  });
-
   // should only route to new exercises when the page is on a selected workout screen
   const NewComponents = () => (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -68,7 +56,7 @@ function AuthNavigator({ theme }) {
   return (
     <Tab.Navigator
       screenOptions={(ev) => screenOptions(ev)}
-      initialRouteName="Create"
+      initialRouteName="Workouts"
       tabBarOptions={{
         activeTintColor: theme.colors.textSelected,
         inactiveTintColor: theme.colors.text,
@@ -83,9 +71,9 @@ function AuthNavigator({ theme }) {
         },
       }}
     >
-      <Tab.Screen name="Create" component={NewComponents} listeners={setRoute} />
-      <Tab.Screen name="Workouts" component={WorkoutComponents} listeners={setRoute} />
-      <Tab.Screen name="Settings" component={SettingsScreen} listeners={setRoute} />
+      <Tab.Screen name="Create" component={NewComponents} />
+      <Tab.Screen name="Workouts" component={WorkoutComponents} />
+      <Tab.Screen name="Settings" component={SettingsScreen} />
     </Tab.Navigator>
   );
 }

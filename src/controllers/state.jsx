@@ -9,6 +9,14 @@ import themeLight from '../theme/themeLight';
 export const StateContext = React.createContext();
 
 export const StateContextProvider = ({ children }) => {
+  // this is used because everything is mounted twice in dev to stest for errors, like long async api calls having no object to update
+  const isMounted = React.useRef(true);
+  React.useEffect(() => {
+    isMounted.current = true;
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
   // used to spoof endpoints and user auth for dev,
   // XXX leave compare to dev string in case I forget!
   const [debug] = React.useState(process.env.NODE_ENV === 'development' && false);
@@ -36,7 +44,6 @@ export const StateContextProvider = ({ children }) => {
 
   const theme = userDetails.theme !== 'light' ? themeDark : themeLight;
 
-  // TODO set this on get from api
   const [workouts, setWorkouts] = React.useState([]);
 
   // TODO set this on get from api
@@ -46,29 +53,33 @@ export const StateContextProvider = ({ children }) => {
   const [selectedWorkout, updateSelectedWorkout] = React.useState({});
 
   // update local workouts at the same time
-  const setSelectedWorkout = (w) => {
-    if (!w) {
+  const setSelectedWorkout = (w, ws = workouts) => {
+    if (!w || (w && !w.id)) {
       updateSelectedWorkout({});
       return;
     }
+
     let isAlreadyThere = false;
-    const unsortedWorkouts = workouts.map((a) => {
+    const unsortedWorkouts = ws.map((a) => {
       if (a.id === w.id) {
         isAlreadyThere = true;
         return w;
       }
       return a;
     });
-    updateSelectedWorkout(w);
-    if (!isAlreadyThere) unsortedWorkouts.push(w);
-    setWorkouts(() => unsortedWorkouts.sort((a, b) => a.title.localeCompare(b.title)));
+
+    if (isMounted.current) updateSelectedWorkout(w);
+    if (!isAlreadyThere) {
+      unsortedWorkouts.push(w);
+      setWorkouts(() => unsortedWorkouts.sort((a, b) => a.id.localeCompare(b.id)));
+    }
   };
 
   const setExercises = (ex, id = -1) => {
     // for local state
     // add exercise to list
     // add exercise uid to workout
-    updateExercises([...exercises, ex]);
+    if (isMounted.current) updateExercises([...exercises, ex]);
     // update selected workout exercise array
     const currExercise = selectedWorkout.exercises.slice();
     if (currExercise.indexOf(ex.id) > -1) {
@@ -79,28 +90,40 @@ export const StateContextProvider = ({ children }) => {
     } else {
       currExercise.push(ex.id);
     }
-    setSelectedWorkout({ ...selectedWorkout, exercises: currExercise });
+
+    if (isMounted.current) setSelectedWorkout({ ...selectedWorkout, exercises: currExercise });
     // update workouts array too
-    setWorkouts(() =>
-      workouts.map((w) => {
-        if (w.title === selectedWorkout.title) {
-          return selectedWorkout;
-        }
-        return w;
-      })
-    );
+    if (isMounted.current)
+      setWorkouts(() =>
+        workouts.map((w) => {
+          if (w.id === selectedWorkout.id) {
+            return selectedWorkout;
+          }
+          return w;
+        })
+      );
   };
 
-  const getWorkouts = async (uid) => {
-    if (uid) {
-      setWorkouts(
-        (await WorkoutAPI.getWorkouts(uid)).sort((a, b) => a.title.localeCompare(b.title))
-      );
-      // setWorkouts(async () =>
-      //  (await WorkoutAPI.getWorkouts(user.uid)).sort((a, b) => a.title.localeCompare(b.title))
-      // );
+  const getWorkouts = React.useCallback((uid) => {
+    setIsLoading(true);
+    if (uid && isMounted.current) {
+      WorkoutAPI.getWorkouts(uid)
+        .then((res) => {
+          if (isMounted.current) {
+            const t = res.sort((a, b) => a.id.localeCompare(b.id));
+            setWorkouts(t);
+          }
+          setIsLoading(false);
+        })
+        .catch(() => setIsLoading(false));
     }
-  };
+  }, []);
+
+  React.useMemo(() => {
+    if (isMounted.current && user && user.uid) {
+      getWorkouts(user.uid);
+    }
+  }, [user]);
 
   React.useEffect(() => {
     // NOTE debug related might need to take this out
@@ -122,7 +145,6 @@ export const StateContextProvider = ({ children }) => {
         setUser(aR);
         // set user settings if auth user changes
         if (aR && aR.uid) {
-          getWorkouts(aR.uid);
           const res = await UserSettingsAPI.getSettings(aR.uid);
           if (res && !(res instanceof Error)) {
             setUserDetails(res);
@@ -134,6 +156,7 @@ export const StateContextProvider = ({ children }) => {
         }
       }
     };
+
     if (authRes && !authRes.emailVerified && !justRegistered) {
       AuthAPI.logout(() => {});
       // NOTE if statement debug related might take this out
@@ -144,10 +167,12 @@ export const StateContextProvider = ({ children }) => {
       }
       return;
     }
+
     if (authRes && !authRes.emailVerified && justRegistered) {
       authRes.sendEmailVerification();
       setJustRegistered(false);
     }
+
     setDetails(authRes);
   }, [authRes]);
 
@@ -162,7 +187,7 @@ export const StateContextProvider = ({ children }) => {
         userDetails,
         setUserDetails,
         setJustRegistered,
-        workouts: { workouts, setWorkouts, getWorkouts },
+        workouts: { workouts, setWorkouts },
         exercises: { exercises, setExercises },
         selectedWorkout: { selectedWorkout, setSelectedWorkout },
         theme,
