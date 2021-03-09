@@ -8,7 +8,15 @@ import ScrollList from '../../../../template/ScrollList';
 import LoadingOverlay from '../../../../template/LoadingOverlay';
 import ExerciseItem from './ExerciseItem';
 
-const Exercises = ({ isLoading, navigation, theme, setShowNotify, isOk, setIsOk, showEditAndSelect }) => {
+const Exercises = ({
+  isLoading,
+  navigation,
+  theme,
+  setShowNotify,
+  isOk,
+  setIsOk,
+  showEditAndSelect,
+}) => {
   const {
     exercises: { exercises },
   } = React.useContext(StateContext);
