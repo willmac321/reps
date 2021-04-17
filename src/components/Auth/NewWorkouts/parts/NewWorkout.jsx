@@ -55,21 +55,30 @@ const NewWorkout = ({ navigation, user, theme, data, addWorkoutToList }) => {
       exercises: [],
     };
 
+    // copy context workout version for local use
     let newWorkouts = [...workouts];
     if (editWorkout && editWorkout.id) {
+      // filter newWorkouts to all but the one that is being edited.  This is done because
+      // the addWorkoutToList func updates local store to use that filtered list and adds the workout to it
       newWorkouts = newWorkouts.filter((d) => d.title !== editWorkout.title);
+      workout = newWorkouts.length > 0 ? newWorkouts[0] : workout;
       workout = {
         ...workout,
         id: workoutName,
+        title: workoutName,
         date: editWorkout.date,
         exercises: editWorkout.exercises,
       };
     }
 
+    // this either replaces or add workout to context list
     addWorkoutToList(workout, newWorkouts);
-    setWorkoutName('');
-    setEditWorkout({});
-    API.deleteWorkout(user.uid, editWorkout.title).then(() => {
+
+    // if it is an existing workout delete it in the db and readd it
+    // TODO change to update func instead of delete and replace
+    API.deleteWorkout(user.uid, workoutName).then(() => {
+      setWorkoutName('');
+      setEditWorkout({});
       API.newWorkout(user.uid, workout);
     });
 
