@@ -25,11 +25,24 @@ const Register = ({
   const [isDisable, setIsDisable] = React.useState(false);
   const styles = StyleSheet.create({
     input: theme.input,
-    link: {
+    text: {
       marginTop: 20,
       marginBottom: 10,
+      display: 'flex',
+      alignSelf: 'flex-start',
+      textAlignVertical: 'middle',
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+    },
+    link: {
+      margin: 'auto',
       fontSize: 16,
+      marginLeft: 5,
+    },
+    link_text: {
+      margin: 'auto',
       color: theme.colors.link,
+      fontSize: 16,
       marginLeft: 5,
     },
   });
@@ -135,15 +148,16 @@ const Register = ({
                   Passwords do not match!
                 </HelperText>
               )}
-              <View>
+              <View style={styles.text}>
                 <Checkbox
                   theme={theme}
                   color={theme.colors.text}
                   status={acceptedEULA ? 'checked' : 'unchecked'}
                   onPress={() => setAcceptedEULA(!acceptedEULA)}
+                  style={styles.link}
                 />
-                <Text>I agree to the</Text>
-                <Text onPress={() => setEulaVis(!eulaVis)} style={styles.link}>
+                <Text style={styles.link}>I agree to the</Text>
+                <Text onPress={() => setEulaVis(!eulaVis)} style={styles.link_text}>
                   privacy policy and terms of service.
                 </Text>
               </View>

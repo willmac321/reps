@@ -19,6 +19,7 @@ export const dropShadow = () => {
     default:
       return {
         boxSizing: 'border-box',
+        shadowColor: 'black',
         boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
       };
   }
@@ -41,6 +42,7 @@ const theme = {
     alert: '#14a8a8',
     secondary: '#372721',
     backdrop: 'rgba(0,0,0,0.2)',
+    underlineColor: 'transparent',
   },
   marginHorizontal: 20,
   title: {

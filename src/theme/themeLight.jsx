@@ -41,6 +41,7 @@ const theme = {
     alert: '#eb5757',
     secondary: '#c8d8de',
     backdrop: 'rgba(0,0,0,0.2)',
+    underlineColor: 'transparent',
   },
   marginHorizontal: 20,
   title: {
