@@ -25,6 +25,11 @@ const NewExerciseScreen = ({ navigation, theme }) => {
   const [notifyMessage, setNotifyMessage] = React.useState('');
   const [notifyTitle, setNotifyTitle] = React.useState('');
 
+  // FIXME
+  React.useEffect(() => {
+    console.log(selectedWorkout, exercises);
+  }, [selectedWorkout]);
+
   const keyboardEventShow = () => {
     setKeyboardActive(true);
     LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);

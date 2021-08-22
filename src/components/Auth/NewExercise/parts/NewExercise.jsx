@@ -15,12 +15,18 @@ const NewExercise = ({ navigation, theme, user, exercises, workout, addExerciseT
     repRange: [false, false],
     rest: false,
   });
+  // FIXME
   const [newExercise, setNewExercise] = React.useState({
     id: '',
-    title: '',
-    sets: 0,
-    repRange: [0, 0],
-    rest: 0,
+    title: 'ttt',
+    sets: 1,
+    repRange: [3, 2],
+    rest: 4,
+    // id: '',
+    // title: '',
+    // sets: 0,
+    // repRange: [0, 0],
+    // rest: 0,
   });
 
   const styles = StyleSheet.create({
@@ -132,19 +138,17 @@ const NewExercise = ({ navigation, theme, user, exercises, workout, addExerciseT
   };
 
   const handleOnPress = async () => {
-    if (titleChange) titleChange.flush();
     setIsLoading(true);
+    if (titleChange) {
+      titleChange.flush();
+    }
     const newE = {
       ...newExercise,
       id: await API.newExercise(user.uid, newExercise, workout.id),
     };
-    if (isMounted.current) {
-      setNewExercise(newE);
-      setIsLoading(false);
-    }
+    setNewExercise(newE);
     addExerciseToList(newE);
-    // TODO add exercise to list
-    // navigation.navigate('Splash');
+    setIsLoading(false);
   };
 
   return (

@@ -41,6 +41,14 @@ const screenOptions = ({ route }) => ({
 });
 
 function AuthNavigator({ theme }) {
+  const isMounted = React.useRef(true);
+  React.useEffect(() => {
+    isMounted.current = true;
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
+
   const {
     editWorkout: { setEditWorkout },
     selectedWorkout: { setSelectedWorkout },
@@ -83,7 +91,7 @@ function AuthNavigator({ theme }) {
         listeners={({ route, navigation }) => ({
           tabPress: () => {
             // console.log(getFocusedRouteNameFromRoute(route));
-            if (navigation.isFocused()) {
+            if (navigation.isFocused() && isMounted.current) {
               setEditWorkout({});
               setSelectedWorkout({});
               navigation.navigate('Create', { screen: 'NewWorkout' });

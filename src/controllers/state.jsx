@@ -97,11 +97,11 @@ export const StateContextProvider = ({ children }) => {
       currExercise.push(ex.id);
     }
 
-    if (isMounted.current)
-      setSelectedWorkout(() => ({
-        ...selectedWorkout,
-        exercises: currExercise,
-      }));
+    //    if (isMounted.current)
+    //      setSelectedWorkout(() => ({
+    //        ...selectedWorkout,
+    //        exercises: currExercise,
+    //      }));
     // update workouts array too
     if (isMounted.current)
       setWorkouts(() =>
