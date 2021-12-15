@@ -1,7 +1,8 @@
 import { db } from '../firebase/config';
 
 // auth is handled by firebase
-function updateWorkout(workout) {}
+function updateWorkout(uid, workout) {}
+
 async function newWorkout(uid, workout) {
   // get ref to any existing doc
   const workoutRef = db.collection('users').doc(uid).collection('workouts').doc(workout.title);

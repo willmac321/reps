@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Platform, LayoutAnimation, Keyboard, KeyboardAvoidingView } from 'react-native';
+import { Platform, LayoutAnimation, Keyboard, KeyboardAvoidingView } from 'react-native';
 import { withTheme } from 'react-native-paper';
 import { StateContext } from '../../../controllers/state';
 import WarnModal from '../../../template/WarnModal';
@@ -46,13 +46,13 @@ const NewWorkoutsScreen = ({ navigation, theme }) => {
   }, [isMounted.current]);
 
   React.useEffect(() => {
-    Keyboard.addListener('keyboardDidShow', keyboardEventShow);
-    Keyboard.addListener('keyboardDidHide', keyboardEventHide);
+    const keyboardShow = Keyboard.addListener('keyboardDidShow', keyboardEventShow);
+    const keyboardHide = Keyboard.addListener('keyboardDidHide', keyboardEventHide);
 
     // cleanup function
     return () => {
-      Keyboard.removeListener('keyboardDidShow', keyboardEventShow);
-      Keyboard.removeListener('keyboardDidHide', keyboardEventHide);
+      keyboardShow.remove();
+      keyboardHide.remove();
     };
   }, []);
 

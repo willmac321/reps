@@ -1,6 +1,6 @@
 import React from 'react';
 import { withTheme, Card } from 'react-native-paper';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import ButtonTemplate from './ButtonTemplate';
 
 const CardWithButton = ({
@@ -23,7 +23,18 @@ const CardWithButton = ({
   return (
     <Card theme={theme} style={[styles.card, style]}>
       {title && <Card.Title theme={theme} titleStyle={styles.title} title={title} />}
-      <Card.Content style={{ flex, marginTop: title ? 'auto' : 20 }}>{children}</Card.Content>
+      <Card.Content
+        style={{
+          flexGrow: '1',
+          flexShrink: '1',
+          flexBasis: 'auto',
+          ...flex,
+          overflowY: 'auto',
+          marginTop: title ? 'auto' : 20,
+        }}
+      >
+        {children}
+      </Card.Content>
       <Card.Actions>
         {showButton && (
           <ButtonTemplate

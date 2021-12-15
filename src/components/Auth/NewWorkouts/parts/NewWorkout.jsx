@@ -76,16 +76,16 @@ const NewWorkout = ({ navigation, user, theme, data, addWorkoutToList }) => {
 
     // if it is an existing workout delete it in the db and readd it
     // TODO change to update func instead of delete and replace
-    API.deleteWorkout(user.uid, workoutName).then(() => {
-      if (isMounted.current) {
+    API.deleteWorkout(user.uid, workoutName)
+      .then(() => {
         setWorkoutName('');
         setEditWorkout({});
         API.newWorkout(user.uid, workout);
-      }
-    });
-
-    setIsLoading(false);
-    navigation.navigate('NewExercises');
+      })
+      .finally(() => {
+        setIsLoading(false);
+        navigation.navigate('NewExercises');
+      });
   };
 
   return (

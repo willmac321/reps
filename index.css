@@ -1,3 +1,7 @@
 input {
   outline: none !important;
 }
+
+#root {
+  overflow-y: hidden;
+}
