@@ -16,14 +16,20 @@ const Exercises = ({
   isOk,
   setIsOk,
   showEditAndSelect,
+  OnPressExerciseComponent = null,
 }) => {
   const {
     exercises: { exercises },
   } = React.useContext(StateContext);
+
   const [selected, setSelected] = React.useState(null);
 
   const onPress = (id) => {
     setSelected(id);
+  };
+
+  const onHandleProgress = (c) => {
+    console.log(c);
   };
 
   const handleNew = () => {};
@@ -34,13 +40,15 @@ const Exercises = ({
         onPress={() => onPress(item.id)}
         isSelected={item.id === selected}
         text={item}
+        OnPressComponent={OnPressExerciseComponent}
+        handleProgress={onHandleProgress}
       />
     </View>
   );
 
   const EmptyComponent = () => (
     <List.Item
-      title="Like, Scoob..., try adding a workout!"
+      title="Like, Scoob... try adding a workout!"
       titleStyle={{
         ...theme.buttonText,
         color: theme.colors.primary,

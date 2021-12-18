@@ -25,11 +25,6 @@ const NewExerciseScreen = ({ navigation, theme }) => {
   const [notifyMessage, setNotifyMessage] = React.useState('');
   const [notifyTitle, setNotifyTitle] = React.useState('');
 
-  // FIXME
-  React.useEffect(() => {
-    console.log(selectedWorkout, exercises);
-  }, [selectedWorkout]);
-
   const keyboardEventShow = () => {
     setKeyboardActive(true);
     LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
@@ -52,6 +47,11 @@ const NewExerciseScreen = ({ navigation, theme }) => {
       Keyboard.removeListener('keyboardDidHide', keyboardEventHide);
     };
   }, []);
+
+  const OnPressExerciseComponent = () => {
+    console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+    return <></>;
+  };
 
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
@@ -76,6 +76,7 @@ const NewExerciseScreen = ({ navigation, theme }) => {
           showEditAndSelect={false}
           isOk={isOk}
           setIsOk={setIsOk}
+          OnPressExerciseComponent={OnPressExerciseComponent}
         />
       )}
       <WarnModal

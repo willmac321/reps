@@ -20,7 +20,7 @@ function App() {
             <NavigationContainer theme={theme}>
               <StateContext.Consumer>
                 {({ user, isLoading, debug }) => {
-                  if (isLoading) {
+                  if (!user && isLoading) {
                     return (
                       <Stack.Navigator>
                         <Stack.Screen

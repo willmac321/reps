@@ -1,8 +1,10 @@
 import React from 'react';
+import { isEqual } from 'lodash';
 import { firebase } from '../firebase/config';
 import AuthAPI from './AuthApi';
 import UserSettingsAPI from './UserSettingsApi';
 import WorkoutAPI from './WorkoutApi';
+import ExerciseApi from './ExerciseApi';
 import themeDark from '../theme/themeDark';
 import themeLight from '../theme/themeLight';
 
@@ -50,7 +52,10 @@ export const StateContextProvider = ({ children }) => {
   // and sort it based on name or something
   const [exercises, updateExercises] = React.useState([]);
 
-  const [selectedWorkout, updateSelectedWorkout] = React.useState({});
+  const [selectedWorkout, updateSelectedWorkout] = React.useState({
+    id: null,
+    exercises: null,
+  });
   const [editWorkout, setEditWorkout] = React.useState({});
 
   // update local workouts at the same time
@@ -97,11 +102,6 @@ export const StateContextProvider = ({ children }) => {
       currExercise.push(ex.id);
     }
 
-    //    if (isMounted.current)
-    //      setSelectedWorkout(() => ({
-    //        ...selectedWorkout,
-    //        exercises: currExercise,
-    //      }));
     // update workouts array too
     if (isMounted.current)
       setWorkouts(() =>
@@ -112,6 +112,21 @@ export const StateContextProvider = ({ children }) => {
           return w;
         })
       );
+  };
+
+  const getExercises = () => {
+    const getStuff = async () => {
+      const exs = await ExerciseApi.getExercises(user.uid, selectedWorkout.exercises);
+      if (isMounted.current && !isEqual(exs, exercises)) {
+        setExercises([...exs]);
+      }
+      setIsLoading(false);
+    };
+
+    if (selectedWorkout && selectedWorkout !== {} && selectedWorkout.exercises !== null) {
+      setIsLoading(true);
+      getStuff();
+    }
   };
 
   const getWorkouts = React.useCallback((uid) => {
@@ -191,14 +206,14 @@ export const StateContextProvider = ({ children }) => {
       value={{
         debug,
         isLoading,
-        setIsLoading: () => setIsLoading(!isLoading),
+        setIsLoading: (v) => setIsLoading(v !== null ? v : !isLoading),
         user,
         defaultUserDetails,
         userDetails,
         setUserDetails,
         setJustRegistered,
         workouts: { workouts, setWorkouts },
-        exercises: { exercises, setExercises },
+        exercises: { exercises, setExercises, getExercises },
         selectedWorkout: { selectedWorkout, setSelectedWorkout },
         editWorkout: { editWorkout, setEditWorkout },
         theme,

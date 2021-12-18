@@ -3,7 +3,16 @@ import { View, StyleSheet } from 'react-native';
 import { withTheme, List, TouchableRipple, Text, Card } from 'react-native-paper';
 import { FontAwesome5 } from '@expo/vector-icons';
 
-const ExerciseItem = ({ theme, isSelected, text, onPress, handleEdit, handleTrash }) => {
+const ExerciseItem = ({
+  theme,
+  isSelected,
+  text,
+  onPress,
+  handleEdit,
+  handleTrash,
+  handleProgress,
+  OnPressComponent = null,
+}) => {
   const styles = StyleSheet.create({
     item: isSelected
       ? {
@@ -90,68 +99,72 @@ const ExerciseItem = ({ theme, isSelected, text, onPress, handleEdit, handleTras
         theme={theme}
         onPress={() => onPress(text.id)}
       >
-        <View>
-          <View theme={theme}>
-            <Text theme={theme} style={[styles.rowTextHeader, theme.buttonText, styles.text]}>
-              {text.title}
-            </Text>
-          </View>
-          <View theme={theme} style={styles.rowContainer}>
-            <View
-              style={[
-                {
-                  flex: 0,
-                  flexGrow: 4,
-                },
-              ]}
-            >
-              <Text theme={theme} style={[styles.rowTextHeader, styles.text]}>
-                Sets
-              </Text>
-              <Text theme={theme} style={[styles.rowText, styles.text]}>
-                {text.sets}
+        {isSelected && OnPressComponent ? (
+          <OnPressComponent theme={theme} content={text} onProgress={handleProgress} />
+        ) : (
+          <View>
+            <View theme={theme}>
+              <Text theme={theme} style={[styles.rowTextHeader, theme.buttonText, styles.text]}>
+                {text.title}
               </Text>
             </View>
-            <View
-              style={[
-                {
-                  flex: 0,
-                  flexGrow: 4,
-                },
-              ]}
-            >
-              <Text theme={theme} style={[styles.rowTextHeader, styles.text]}>
-                Rep Range
-              </Text>
-              <View theme={theme} style={styles.rowSubContainer}>
-                <Text theme={theme} style={[styles.rowSubText, styles.text]}>
-                  {text.repRange[0]}
+            <View theme={theme} style={styles.rowContainer}>
+              <View
+                style={[
+                  {
+                    flex: 0,
+                    flexGrow: 4,
+                  },
+                ]}
+              >
+                <Text theme={theme} style={[styles.rowTextHeader, styles.text]}>
+                  Sets
                 </Text>
-                <Text theme={theme} style={[styles.rowSubText, styles.text]}>
-                  to
+                <Text theme={theme} style={[styles.rowText, styles.text]}>
+                  {text.sets}
                 </Text>
-                <Text theme={theme} style={[styles.rowSubText, styles.text]}>
-                  {text.repRange[1]}
+              </View>
+              <View
+                style={[
+                  {
+                    flex: 0,
+                    flexGrow: 4,
+                  },
+                ]}
+              >
+                <Text theme={theme} style={[styles.rowTextHeader, styles.text]}>
+                  Rep Range
+                </Text>
+                <View theme={theme} style={styles.rowSubContainer}>
+                  <Text theme={theme} style={[styles.rowSubText, styles.text]}>
+                    {text.repRange[0]}
+                  </Text>
+                  <Text theme={theme} style={[styles.rowSubText, styles.text]}>
+                    to
+                  </Text>
+                  <Text theme={theme} style={[styles.rowSubText, styles.text]}>
+                    {text.repRange[1]}
+                  </Text>
+                </View>
+              </View>
+              <View
+                style={[
+                  {
+                    flex: 0,
+                    flexGrow: 4,
+                  },
+                ]}
+              >
+                <Text theme={theme} style={[styles.rowTextHeader, styles.text]}>
+                  Rest (mm:ss)
+                </Text>
+                <Text theme={theme} style={[styles.rowText, styles.text]}>
+                  {new Date(text.rest * 1000).toISOString().substr(14, 5)}
                 </Text>
               </View>
             </View>
-            <View
-              style={[
-                {
-                  flex: 0,
-                  flexGrow: 4,
-                },
-              ]}
-            >
-              <Text theme={theme} style={[styles.rowTextHeader, styles.text]}>
-                Rest (mm:ss)
-              </Text>
-              <Text theme={theme} style={[styles.rowText, styles.text]}>
-                {new Date(text.rest * 1000).toISOString().substr(14, 5)}
-              </Text>
-            </View>
           </View>
-        </View>
+        )}
       </TouchableRipple>
     </Card>
   );

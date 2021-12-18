@@ -8,7 +8,6 @@ import ScrollList from '../../../../template/ScrollList';
 import WorkoutItem from './WorkoutItem';
 import WorkoutAPI from '../../../../controllers/WorkoutApi';
 
-// const Data = [];
 const Workouts = ({
   theme,
   navigation,
@@ -24,11 +23,15 @@ const Workouts = ({
     selectedWorkout: { setSelectedWorkout },
     editWorkout: { setEditWorkout },
     workouts: { workouts, setWorkouts },
+    isLoading,
   } = React.useContext(StateContext);
 
-  const [isLoading, setIsLoading] = React.useState(false);
   const [isDisable, setIsDisable] = React.useState(true);
-  const [selected, setSelected] = React.useState(null);
+
+  // FIXME debug -- to null
+  const [selected, setSelected] = React.useState('fuck');
+  
+
   const [isDelete, setIsDelete] = React.useState(false);
   const [isEdit, setIsEdit] = React.useState(false);
   const [modalOnOkSelectedId, setModalOnOkSelected] = React.useState('');
@@ -39,7 +42,7 @@ const Workouts = ({
       toValue: 0,
       useNativeDriver: true,
       duration: 200,
-      easing: Easing.ease.out,
+      easing: Easing.out(),
     }).start(callback);
   };
 
@@ -89,11 +92,20 @@ const Workouts = ({
   }, [selected, user, workouts]);
 
   const handleOnSubmit = React.useCallback(() => {
-    setIsLoading(!isDisable);
     setUpdatedWorkout(selected);
     setWorkoutToEdit();
     navigation.navigate('Exercises');
   }, [selected, workouts, isDisable]);
+
+  // FIXME debug
+  React.useEffect(() => {
+    if (selected) {
+      setIsDisable(false);
+      setUpdatedWorkout(selected);
+      setWorkoutToEdit();
+      navigation.navigate('Exercises');
+    }
+  }, [workouts]);
 
   const onPress = (id) => {
     setIsDisable(false);
