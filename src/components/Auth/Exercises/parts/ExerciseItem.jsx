@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Animated, Easing } from 'react-native';
 import { withTheme, List, TouchableRipple, Text, Card } from 'react-native-paper';
 import { FontAwesome5 } from '@expo/vector-icons';
 
@@ -87,6 +87,27 @@ const ExerciseItem = ({
       justifyContent: 'space-around',
     },
   });
+  const springAnim = React.useRef(new Animated.Value(0)).current;
+
+  React.useEffect(() => {
+    if (!isSelected) {
+      Animated.spring(springAnim, {
+        toValue: 100,
+        useNativeDriver: true,
+        duration: 300,
+      }).start();
+    }
+  }, [isSelected, OnPressComponent]);
+
+  const onLocalPress = () => {
+    Animated.timing(springAnim, {
+      toValue: 0,
+      useNativeDriver: true,
+      duration: 100,
+      easing: Easing.in(),
+    }).start(onPress);
+  };
+
 
   return (
     <Card theme={theme} style={styles.item}>
@@ -97,12 +118,28 @@ const ExerciseItem = ({
           borderWidth: 0,
         }}
         theme={theme}
-        onPress={() => onPress(text.id)}
+        onPress={onPress}
       >
         {isSelected && OnPressComponent ? (
-          <OnPressComponent theme={theme} content={text} onProgress={handleProgress} />
+          <OnPressComponent
+            theme={theme}
+            content={text}
+            onProgress={handleProgress}
+            onPress={onLocalPress}
+          />
         ) : (
-          <View>
+          <Animated.View
+            style={{
+              height: springAnim.interpolate({
+                inputRange: [0, 100],
+                outputRange: ['0em', `4.5em`],
+              }),
+              opacity: springAnim.interpolate({
+                inputRange: [0, 100],
+                outputRange: [0, 1],
+              }),
+            }}
+          >
             <View theme={theme}>
               <Text theme={theme} style={[styles.rowTextHeader, theme.buttonText, styles.text]}>
                 {text.title}
@@ -163,7 +200,7 @@ const ExerciseItem = ({
                 </Text>
               </View>
             </View>
-          </View>
+          </Animated.View>
         )}
       </TouchableRipple>
     </Card>

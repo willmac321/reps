@@ -24,9 +24,17 @@ const Exercises = ({
 
   const [selected, setSelected] = React.useState(null);
 
-  const onPress = (id) => {
-    setSelected(id);
-  };
+  const onPress = React.useCallback(
+    (id) => {
+      console.log(selected, id);
+      if (id === selected) {
+        setSelected(null);
+      } else {
+        setSelected(id);
+      }
+    },
+    [selected]
+  );
 
   const onHandleProgress = (c) => {
     console.log(c);
