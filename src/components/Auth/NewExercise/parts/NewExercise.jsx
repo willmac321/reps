@@ -17,16 +17,16 @@ const NewExercise = ({ navigation, theme, user, exercises, workout, addExerciseT
   });
   // FIXME
   const [newExercise, setNewExercise] = React.useState({
-    id: '',
-    title: 'ttt',
-    sets: 1,
-    repRange: [3, 2],
-    rest: 4,
     // id: '',
-    // title: '',
-    // sets: 0,
-    // repRange: [0, 0],
-    // rest: 0,
+    // title: 'ttt',
+    // sets: 1,
+    // repRange: [3, 2],
+    // rest: 4,
+    id: '',
+    title: '',
+    sets: 0,
+    repRange: [0, 0],
+    rest: 0,
   });
 
   const styles = StyleSheet.create({

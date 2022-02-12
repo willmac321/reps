@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView } from 'react-native';
+import { ScrollView } from 'react-native';
 import { withTheme, Portal, Dialog, Paragraph } from 'react-native-paper';
 import Button from './ButtonTemplate';
 
@@ -13,6 +13,7 @@ const NotifyModal = ({
   children,
   isVisible = false,
   showButton = true,
+  style = {}
 }) => {
   const hideDialog = (e) => {
     setIsVisible(false);
@@ -24,7 +25,7 @@ const NotifyModal = ({
       <Dialog
         visible={isVisible}
         onDismiss={hideDialog}
-        style={{ backgroundColor: theme.colors.background }}
+        style={{ backgroundColor: theme.colors.background, ...style }}
       >
         <Dialog.Title theme={theme} style={theme.title}>
           {title}

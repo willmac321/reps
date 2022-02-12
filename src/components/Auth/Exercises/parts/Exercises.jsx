@@ -2,6 +2,7 @@ import React from 'react';
 import { withTheme, List, Portal } from 'react-native-paper';
 import { View } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
+import NotifyModal from '../../../../template/NotifyModal';
 import { StateContext } from '../../../../controllers/state';
 import CardWithButton from '../../../../template/CardWithButton';
 import ScrollList from '../../../../template/ScrollList';
@@ -22,12 +23,11 @@ const Exercises = ({
     exercises: { exercises },
   } = React.useContext(StateContext);
 
-  // FIXME change back to null
-  const [selected, setSelected] = React.useState('rIx106ArAAxE12O7DK30');
+  const [selected, setSelected] = React.useState(null);
+  const [showCompletion, setShowCompletion] = React.useState(false);
 
   const onPress = React.useCallback(
     (id) => {
-      console.log(selected, id);
       if (id === selected) {
         setSelected(null);
       } else {
@@ -37,8 +37,16 @@ const Exercises = ({
     [selected]
   );
 
-  const onHandleProgress = (c) => {
-    console.log(c);
+  const onHandleProgress = () => {
+    if (selected) {
+      const index = exercises.findIndex((a) => a.id === selected);
+      if (index > -1 && exercises.length > index + 1) {
+        setSelected(exercises[index + 1].id);
+      } else if (exercises.length === index + 1) {
+        setSelected(null);
+        setShowCompletion(true);
+      }
+    }
   };
 
   const handleNew = () => {};
@@ -51,6 +59,7 @@ const Exercises = ({
         text={item}
         OnPressComponent={OnPressExerciseComponent}
         handleProgress={onHandleProgress}
+        totalExercises={exercises.length}
       />
     </View>
   );
@@ -106,28 +115,44 @@ const Exercises = ({
   );
 
   return (
-    <Portal.Host>
-      <CardWithButton
-        theme={theme}
-        showButton={false}
-        flex={1}
-        style={{
-          flex: exercises.length > 0 ? 1 : null,
-          marginBottom: 50,
-        }}
-      >
-        <ScrollList
-          data={exercises}
-          renderItem={Item}
-          keyExtractor={(item) => item.id}
-          extraData={selected}
+    <>
+      <Portal.Host>
+        <CardWithButton
           theme={theme}
-          ItemSeparatorComponent={ItemSeparator}
-          ListEmptyComponent={EmptyComponent}
-        />
-        <LoadingOverlay theme={theme} isVisible={isLoading} />
-      </CardWithButton>
-    </Portal.Host>
+          showButton={false}
+          flex={1}
+          style={{
+            flex: exercises.length > 0 ? 1 : null,
+            marginBottom: 50,
+          }}
+        >
+          <ScrollList
+            data={exercises}
+            renderItem={Item}
+            keyExtractor={(item) => item.id}
+            extraData={selected}
+            theme={theme}
+            ItemSeparatorComponent={ItemSeparator}
+            ListEmptyComponent={EmptyComponent}
+          />
+          <LoadingOverlay theme={theme} isVisible={isLoading} />
+        </CardWithButton>
+      </Portal.Host>
+      <NotifyModal
+        title="🐎🐎🐎 Yesssss  🐎🐎🐎"
+        buttonText="👍"
+        theme={theme}
+        content="Nice work out!  Cool it down now."
+        isVisible={showCompletion}
+        setIsVisible={setShowCompletion}
+        style={{
+          width: 'unset',
+          margin: 'auto',
+          alignItems: 'center',
+          alignSelf: 'center',
+        }}
+      />
+    </>
   );
 };
 
