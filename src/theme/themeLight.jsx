@@ -40,6 +40,7 @@ const theme = {
     link: '#56CCF2',
     alert: '#eb5757',
     secondary: '#c8d8de',
+    secondarySelected: `${accent}CA`,
     backdrop: 'rgba(0,0,0,0.2)',
     underlineColor: 'transparent',
   },
@@ -67,6 +68,11 @@ const theme = {
   buttonText: {
     fontSize: 18,
     color: '#f2f2f2',
+    fontWeight: 'bold',
+  },
+  buttonTextSecondary: {
+    fontSize: 18,
+    color: '#8a8cc2',
     fontWeight: 'bold',
   },
   card: {
