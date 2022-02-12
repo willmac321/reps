@@ -29,8 +29,7 @@ const Workouts = ({
   const [isDisable, setIsDisable] = React.useState(true);
 
   // FIXME debug -- to null
-  const [selected, setSelected] = React.useState('fuck');
-  
+  const [selected, setSelected] = React.useState(null);
 
   const [isDelete, setIsDelete] = React.useState(false);
   const [isEdit, setIsEdit] = React.useState(false);
