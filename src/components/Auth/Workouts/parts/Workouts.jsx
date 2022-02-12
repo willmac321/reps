@@ -29,7 +29,7 @@ const Workouts = ({
   const [isDisable, setIsDisable] = React.useState(true);
 
   // FIXME debug -- to null
-  const [selected, setSelected] = React.useState(null);
+  const [selected, setSelected] = React.useState('tew123');
 
   const [isDelete, setIsDelete] = React.useState(false);
   const [isEdit, setIsEdit] = React.useState(false);

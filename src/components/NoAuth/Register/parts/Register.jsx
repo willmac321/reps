@@ -30,7 +30,7 @@ const Register = ({
       marginBottom: 10,
       display: 'flex',
       alignSelf: 'flex-start',
-      textAlignVertical: 'middle',
+      textAlignVertical: 'center',
       flexDirection: 'row',
       flexWrap: 'wrap',
     },

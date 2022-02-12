@@ -22,7 +22,8 @@ const Exercises = ({
     exercises: { exercises },
   } = React.useContext(StateContext);
 
-  const [selected, setSelected] = React.useState(null);
+  // FIXME change back to null
+  const [selected, setSelected] = React.useState('rIx106ArAAxE12O7DK30');
 
   const onPress = React.useCallback(
     (id) => {

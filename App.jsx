@@ -1,8 +1,8 @@
-import './index.css';
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Provider as PaperProvider } from 'react-native-paper';
+import 'expo-firestore-offline-persistence';
 
 import { StateContextProvider, StateContext } from './src/controllers/state';
 import NoAuthNavigator from './src/components/NoAuth/NoAuthNavigator';
@@ -10,6 +10,15 @@ import AuthNavigator from './src/components/Auth/AuthNavigator.jsx';
 import SplashScreen from './src/components/Splash/SplashScreen';
 
 const Stack = createStackNavigator();
+
+// const styles = StyleSheet.create({
+//   // input: {
+//   //   outline: 'none !important',
+//   // },
+//   root: {
+//     overflow: 'hidden',
+//   },
+// });
 
 function App() {
   return (

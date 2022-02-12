@@ -25,8 +25,8 @@ const CardWithButton = ({
       {title && <Card.Title theme={theme} titleStyle={styles.title} title={title} />}
       <Card.Content
         style={{
-          flexGrow: '1',
-          flexShrink: '1',
+          flexGrow: 1,
+          flexShrink: 1,
           flexBasis: 'auto',
           ...flex,
           overflowY: 'auto',

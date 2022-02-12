@@ -108,102 +108,88 @@ const ExerciseItem = ({
     }).start(onPress);
   };
 
-
   return (
-    <Card theme={theme} style={styles.item}>
-      <TouchableRipple
-        style={{
-          padding: 10,
-          borderRadius: theme.item.borderRadius,
-          borderWidth: 0,
-        }}
-        theme={theme}
-        onPress={onPress}
-      >
-        {isSelected && OnPressComponent ? (
-          <OnPressComponent
-            theme={theme}
-            content={text}
-            onProgress={handleProgress}
-            onPress={onLocalPress}
-          />
-        ) : (
-          <Animated.View
-            style={{
-              height: springAnim.interpolate({
-                inputRange: [0, 100],
-                outputRange: ['0em', `4.5em`],
-              }),
-              opacity: springAnim.interpolate({
-                inputRange: [0, 100],
-                outputRange: [0, 1],
-              }),
-            }}
-          >
-            <View theme={theme}>
-              <Text theme={theme} style={[styles.rowTextHeader, theme.buttonText, styles.text]}>
-                {text.title}
-              </Text>
-            </View>
-            <View theme={theme} style={styles.rowContainer}>
-              <View
-                style={[
-                  {
-                    flex: 0,
-                    flexGrow: 4,
-                  },
-                ]}
-              >
-                <Text theme={theme} style={[styles.rowTextHeader, styles.text]}>
-                  Sets
-                </Text>
-                <Text theme={theme} style={[styles.rowText, styles.text]}>
-                  {text.sets}
-                </Text>
-              </View>
-              <View
-                style={[
-                  {
-                    flex: 0,
-                    flexGrow: 4,
-                  },
-                ]}
-              >
-                <Text theme={theme} style={[styles.rowTextHeader, styles.text]}>
-                  Rep Range
-                </Text>
-                <View theme={theme} style={styles.rowSubContainer}>
-                  <Text theme={theme} style={[styles.rowSubText, styles.text]}>
-                    {text.repRange[0]}
-                  </Text>
-                  <Text theme={theme} style={[styles.rowSubText, styles.text]}>
-                    to
-                  </Text>
-                  <Text theme={theme} style={[styles.rowSubText, styles.text]}>
-                    {text.repRange[1]}
+    <View>
+      {isSelected && OnPressComponent ? (
+        <OnPressComponent
+          theme={theme}
+          content={text}
+          onProgress={handleProgress}
+          onPress={onLocalPress}
+        />
+      ) : (
+        <Animated.View
+          style={{
+            transform: [
+              {
+                scale: springAnim.interpolate({
+                  inputRange: [1, 100],
+                  outputRange: [0.8, 1],
+                }),
+              },
+            ],
+            opacity: springAnim.interpolate({
+              inputRange: [0, 100],
+              outputRange: [0, 1],
+            }),
+          }}
+        >
+          <Card theme={theme} style={styles.item}>
+            <TouchableRipple
+              style={{
+                padding: 10,
+                borderRadius: theme.item.borderRadius,
+                borderWidth: 0,
+              }}
+              theme={theme}
+              onPress={onPress}
+            >
+              <View>
+                <View theme={theme}>
+                  <Text theme={theme} style={[styles.rowTextHeader, theme.buttonText, styles.text]}>
+                    {text.title}
                   </Text>
                 </View>
+                <View theme={theme} style={styles.rowContainer}>
+                  <View style={styles.rowText}>
+                    <Text theme={theme} style={[styles.rowTextHeader, styles.text]}>
+                      Sets
+                    </Text>
+                    <Text theme={theme} style={[styles.rowText, styles.text]}>
+                      {text.sets}
+                    </Text>
+                  </View>
+                  <View style={styles.rowText}>
+                    <Text theme={theme} style={[styles.rowTextHeader, styles.text]}>
+                      Rep Range
+                    </Text>
+                    <View theme={theme} style={styles.rowSubContainer}>
+                      <Text theme={theme} style={[styles.rowSubText, styles.text]}>
+                        {text.repRange[0]}
+                      </Text>
+                      <Text theme={theme} style={[styles.rowSubText, styles.text]}>
+                        to
+                      </Text>
+                      <Text theme={theme} style={[styles.rowSubText, styles.text]}>
+                        {text.repRange[1]}
+                      </Text>
+                    </View>
+                  </View>
+                  <View style={styles.rowText}>
+                    <Text theme={theme} style={[styles.rowTextHeader, styles.text]}>
+                      Rest (mm:ss)
+                    </Text>
+                    <Text theme={theme} style={[styles.rowText, styles.text]}>
+                      {new Date(text.rest * 1000).toISOString().substr(14, 5)}
+                    </Text>
+                  </View>
+                </View>
               </View>
-              <View
-                style={[
-                  {
-                    flex: 0,
-                    flexGrow: 4,
-                  },
-                ]}
-              >
-                <Text theme={theme} style={[styles.rowTextHeader, styles.text]}>
-                  Rest (mm:ss)
-                </Text>
-                <Text theme={theme} style={[styles.rowText, styles.text]}>
-                  {new Date(text.rest * 1000).toISOString().substr(14, 5)}
-                </Text>
-              </View>
-            </View>
-          </Animated.View>
-        )}
-      </TouchableRipple>
-    </Card>
+            </TouchableRipple>
+          </Card>
+        </Animated.View>
+      )}
+    </View>
   );
 };
 
