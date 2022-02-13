@@ -29,6 +29,7 @@ const Workouts = ({
   const [isDisable, setIsDisable] = React.useState(true);
 
   // FIXME debug -- to null
+  // test1234
   const [selected, setSelected] = React.useState(null);
 
   const [isDelete, setIsDelete] = React.useState(false);
@@ -144,7 +145,7 @@ const Workouts = ({
     };
   }, []);
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     if (isMounted.current) {
       if (isOk && isDelete && modalOnOkSelectedId) {
         deleteWorkout(modalOnOkSelectedId);

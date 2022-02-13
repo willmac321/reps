@@ -18,6 +18,7 @@ const Exercises = ({
   setIsOk,
   showEditAndSelect,
   OnPressExerciseComponent = null,
+  setSelectedExercise = () => {},
 }) => {
   const {
     exercises: { exercises },
@@ -30,14 +31,19 @@ const Exercises = ({
     (id) => {
       if (id === selected) {
         setSelected(null);
+        setSelectedExercise(null);
       } else {
         setSelected(id);
+        if (exercises) {
+          const index = exercises.findIndex((e) => e.id === id);
+          setSelectedExercise(index > -1 ? exercises[index] : null);
+        }
       }
     },
-    [selected]
+    [selected, exercises]
   );
 
-  const onHandleProgress = () => {
+  const onHandleProgress = React.useCallback(() => {
     if (selected) {
       const index = exercises.findIndex((a) => a.id === selected);
       if (index > -1 && exercises.length > index + 1) {
@@ -47,9 +53,16 @@ const Exercises = ({
         setShowCompletion(true);
       }
     }
+  }, [selected, exercises]);
+
+  const handleNew = () => {
+    navigation.navigate('Create', { screen: 'NewExercises' });
   };
 
-  const handleNew = () => {};
+  // // TODO remove
+  // React.useLayoutEffect(() => {
+  //   handleNew();
+  // }, []);
 
   const Item = ({ item }) => (
     <View>
@@ -66,7 +79,7 @@ const Exercises = ({
 
   const EmptyComponent = () => (
     <List.Item
-      title="Like, Scoob... try adding a workout!"
+      title="Jenkies, add an exercise!"
       titleStyle={{
         ...theme.buttonText,
         color: theme.colors.primary,

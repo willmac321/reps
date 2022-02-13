@@ -1,5 +1,12 @@
 import React from 'react';
-import { Keyboard, KeyboardAvoidingView, Platform, LayoutAnimation, UIManager } from 'react-native';
+import {
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  LayoutAnimation,
+  UIManager,
+  ScrollView,
+} from 'react-native';
 import { withTheme } from 'react-native-paper';
 import { useFocusEffect } from '@react-navigation/native';
 import { StateContext } from '../../../controllers/state';
@@ -18,12 +25,20 @@ const NewExerciseScreen = ({ navigation, theme }) => {
     selectedWorkout: { selectedWorkout },
     exercises: { exercises, setExercises },
   } = React.useContext(StateContext);
+  const scroll = React.useRef(null);
   const [keyboardActive, setKeyboardActive] = React.useState(false);
   const [showNotify, setShowNotify] = React.useState(false);
   const [customTopMargin, setCustomTopMargin] = React.useState(theme.card.marginTop);
   const [isOk, setIsOk] = React.useState(false);
   const [notifyMessage, setNotifyMessage] = React.useState('');
   const [notifyTitle, setNotifyTitle] = React.useState('');
+  const [selectedExercise, setSelectedExercise] = React.useState(null);
+
+  React.useLayoutEffect(() => {
+    if (selectedExercise && scroll.current) {
+      scroll.current.scrollTo({ x: 0, y: 0, animated: true });
+    }
+  }, [selectedExercise]);
 
   const keyboardEventShow = () => {
     setKeyboardActive(true);
@@ -48,47 +63,51 @@ const NewExerciseScreen = ({ navigation, theme }) => {
     };
   }, []);
 
-  const OnPressExerciseComponent = () => {
-    console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
-    return <></>;
-  };
-
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-      {selectedWorkout && selectedWorkout.title && (
-        <Header title={`${selectedWorkout.title} - ${selectedWorkout.date}`} theme={theme} />
-      )}
-      <NewExercise
-        exercises={exercises}
-        addExerciseToList={setExercises}
-        workout={selectedWorkout}
-        navigation={navigation}
-        style={{ marginTop: customTopMargin }}
-        user={user}
-        theme={theme}
-      />
-      {!keyboardActive && (
-        <Exercises
-          isLoading={false}
+    <ScrollView
+      ref={scroll}
+      style={{
+        overflow: 'auto',
+        scrollbarColor: `${theme.colors.primary} ${theme.colors.surface}`,
+      }}
+    >
+      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        {selectedWorkout && selectedWorkout.title && (
+          <Header title={`${selectedWorkout.title} - ${selectedWorkout.date}`} theme={theme} />
+        )}
+        <NewExercise
+          exercises={exercises}
+          addExerciseToList={setExercises}
+          workout={selectedWorkout}
           navigation={navigation}
+          style={{ marginTop: customTopMargin }}
+          user={user}
           theme={theme}
-          setShowNotify={setShowNotify}
-          showEditAndSelect={false}
-          isOk={isOk}
-          setIsOk={setIsOk}
-          OnPressExerciseComponent={OnPressExerciseComponent}
+          prepopulateData={selectedExercise}
         />
-      )}
-      <WarnModal
-        title={notifyTitle}
-        buttonText="Yes"
-        theme={theme}
-        content={notifyMessage}
-        visible={showNotify}
-        setVisible={setShowNotify}
-        onPress={() => setIsOk(true)}
-      />
-    </KeyboardAvoidingView>
+        {!keyboardActive && (
+          <Exercises
+            isLoading={false}
+            navigation={navigation}
+            theme={theme}
+            setShowNotify={setShowNotify}
+            showEditAndSelect={false}
+            setSelectedExercise={setSelectedExercise}
+            isOk={isOk}
+            setIsOk={setIsOk}
+          />
+        )}
+        <WarnModal
+          title={notifyTitle}
+          buttonText="Yes"
+          theme={theme}
+          content={notifyMessage}
+          visible={showNotify}
+          setVisible={setShowNotify}
+          onPress={() => setIsOk(true)}
+        />
+      </KeyboardAvoidingView>
+    </ScrollView>
   );
 };
 

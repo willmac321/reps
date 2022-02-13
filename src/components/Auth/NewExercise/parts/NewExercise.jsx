@@ -4,7 +4,15 @@ import { withTheme, TextInput, HelperText, Text } from 'react-native-paper';
 import API from '../../../../controllers/ExerciseApi';
 import CardWithButton from '../../../../template/CardWithButton';
 
-const NewExercise = ({ navigation, theme, user, exercises, workout, addExerciseToList }) => {
+const NewExercise = ({
+  navigation,
+  theme,
+  user,
+  exercises,
+  workout,
+  addExerciseToList,
+  prepopulateData = null,
+}) => {
   const isMounted = React.useRef(true);
   const [isDisable, setIsDisable] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
@@ -57,8 +65,13 @@ const NewExercise = ({ navigation, theme, user, exercises, workout, addExerciseT
       justifyContent: 'space-around',
       marginTop: 15,
     },
+    inputFlex: {
+      flex: 0,
+      flexGrow: 4,
+    },
   });
 
+  console.log(exercises);
   const isNameTaken = () => exercises.map((a) => a.title).includes(newExercise.name);
   const isEmpty = () =>
     !(newExercise.title && newExercise.sets && newExercise.rest && newExercise.repRange[1]);
@@ -68,6 +81,12 @@ const NewExercise = ({ navigation, theme, user, exercises, workout, addExerciseT
     },
     []
   );
+
+  React.useLayoutEffect(() => {
+    if (prepopulateData) {
+      setNewExercise(prepopulateData);
+    }
+  }, [prepopulateData]);
 
   React.useEffect(() => {
     if (isEmpty() || isNameTaken()) {
@@ -180,15 +199,7 @@ const NewExercise = ({ navigation, theme, user, exercises, workout, addExerciseT
             </HelperText>
           )}
           <View style={[styles.rowContainer]}>
-            <View
-              theme={theme}
-              style={[
-                {
-                  flex: 0,
-                  flexGrow: 4,
-                },
-              ]}
-            >
+            <View theme={theme} style={styles.inputFlex}>
               <Text theme={theme} style={styles.rowTextHeader}>
                 Sets
               </Text>
@@ -200,18 +211,10 @@ const NewExercise = ({ navigation, theme, user, exercises, workout, addExerciseT
                 error={isError.sets}
                 value={newExercise.sets ? newExercise.sets.toString() : ''}
                 onChangeText={(val) => setVal(val, 'sets')}
-                style={[styles.input, styles.rowInput]}
+                style={[styles.input, styles.rowInput, styles.inputFlex]}
               />
             </View>
-            <View
-              theme={theme}
-              style={[
-                {
-                  flex: 0,
-                  flexGrow: 4,
-                },
-              ]}
-            >
+            <View theme={theme} style={styles.inputFlex}>
               <Text theme={theme} style={[styles.rowTextHeader, { marginLeft: 15 }]}>
                 Reps
               </Text>
@@ -223,9 +226,8 @@ const NewExercise = ({ navigation, theme, user, exercises, workout, addExerciseT
                     marginBottom: 0,
                     justifyContent: 'space-around',
                     paddingHorizontal: 10,
-                    flex: 0,
-                    flexGrow: 4,
                   },
+                  styles.inputFlex,
                 ]}
               >
                 <TextInput
@@ -253,15 +255,7 @@ const NewExercise = ({ navigation, theme, user, exercises, workout, addExerciseT
                 />
               </View>
             </View>
-            <View
-              theme={theme}
-              style={[
-                {
-                  flex: 0,
-                  flexGrow: 4,
-                },
-              ]}
-            >
+            <View theme={theme} style={styles.inputFlex}>
               <Text theme={theme} style={styles.rowTextHeader}>
                 Rest
               </Text>
@@ -273,7 +267,7 @@ const NewExercise = ({ navigation, theme, user, exercises, workout, addExerciseT
                 error={isError.rest}
                 value={newExercise.rest ? newExercise.rest.toString() : ''}
                 onChangeText={(val) => setVal(val, 'rest')}
-                style={[styles.input, styles.rowInput]}
+                style={[styles.input, styles.rowInput, styles.inputFlex]}
               />
             </View>
           </View>

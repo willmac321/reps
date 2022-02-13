@@ -18,6 +18,7 @@ const NotifyModal = ({
   };
   const continueForward = (e) => {
     onPress(e);
+    setVisible(false);
   };
 
   return (
