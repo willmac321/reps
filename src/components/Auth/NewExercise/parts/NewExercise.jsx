@@ -71,7 +71,6 @@ const NewExercise = ({
     },
   });
 
-  console.log(exercises);
   const isNameTaken = () => exercises.map((a) => a.title).includes(newExercise.name);
   const isEmpty = () =>
     !(newExercise.title && newExercise.sets && newExercise.rest && newExercise.repRange[1]);

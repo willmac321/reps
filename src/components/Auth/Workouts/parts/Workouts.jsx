@@ -15,6 +15,8 @@ const Workouts = ({
   setNotifyTitle,
   setShowNotify,
   isOk,
+  isCancel,
+  setIsCancel,
   setIsOk,
   showEditAndSelect = true,
 }) => {
@@ -41,14 +43,14 @@ const Workouts = ({
     Animated.timing(springAnim, {
       toValue: 0,
       useNativeDriver: true,
-      duration: 200,
-      easing: Easing.out(),
+      duration: 300,
+      easing: Easing.out(Easing.exp),
     }).start(callback);
   };
 
   const panX = springAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: [500, 0],
+    outputRange: [600, 0],
   });
 
   const setUpdatedWorkout = (id) => {
@@ -85,6 +87,7 @@ const Workouts = ({
     },
     [user, workouts]
   );
+
   const editWorkout = React.useCallback(() => {
     setWorkoutToEdit(selected);
     setUpdatedWorkout({});
@@ -160,11 +163,7 @@ const Workouts = ({
 
   const Item = ({ item }) => (
     <Animated.View
-      style={
-        item && item.id === selected
-          ? { opacity: springAnim, transform: [{ translateX: panX }] }
-          : null
-      }
+      style={item && item.id === selected ? { transform: [{ translateX: panX }] } : null}
     >
       <WorkoutItem
         onPress={() => onPress(item.id)}

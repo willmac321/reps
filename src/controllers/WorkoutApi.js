@@ -40,13 +40,9 @@ async function getWorkouts(uid) {
 
 function deleteWorkout(uid, workoutId) {
   if (!workoutId) {
-    return new Promise((r) => r());
+    return null;
   }
-  const doc = db.collection('users').doc(uid).collection('workouts').doc(workoutId);
-  if (doc.exists) {
-    return doc.delete();
-  }
-  return new Promise((r) => r());
+  return db.collection('users').doc(uid).collection('workouts').doc(workoutId).delete();
 }
 
 export default {

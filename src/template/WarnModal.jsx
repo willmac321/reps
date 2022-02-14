@@ -11,9 +11,11 @@ const NotifyModal = ({
   visible,
   setVisible,
   isLoading,
+  setIsCancel = () => {},
   children,
 }) => {
   const hideDialog = () => {
+    setIsCancel(true);
     setVisible(false);
   };
   const continueForward = (e) => {

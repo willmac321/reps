@@ -85,7 +85,7 @@ const ExerciseOnPressLog = ({ theme, content, onProgress }) => {
       toValue: 1,
       useNativeDriver: true,
       duration: 400,
-      easing: Easing.in(),
+      easing: Easing.in(Easing.exp),
     }).start(() => {});
   };
 
