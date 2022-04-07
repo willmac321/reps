@@ -20,9 +20,24 @@ const Exercises = ({
   OnPressExerciseComponent = null,
   setSelectedExercise = () => {},
 }) => {
+  const [localExercises, setLocalExercises] = React.useState([]);
   const {
     exercises: { exercises },
   } = React.useContext(StateContext);
+
+  React.useEffect(() => {
+    if (exercises) {
+      setLocalExercises(
+        exercises.map((v) => {
+          const rv = { ...v };
+          if (v.sets !== '' && v.sets !== null) {
+            rv.sets = parseInt(v.sets, 10);
+          }
+          return rv;
+        })
+      );
+    }
+  }, [exercises]);
 
   const [selected, setSelected] = React.useState(null);
   const [showCompletion, setShowCompletion] = React.useState(false);
@@ -34,26 +49,26 @@ const Exercises = ({
         setSelectedExercise(null);
       } else {
         setSelected(id);
-        if (exercises) {
-          const index = exercises.findIndex((e) => e.id === id);
-          setSelectedExercise(index > -1 ? exercises[index] : null);
+        if (localExercises) {
+          const index = localExercises.findIndex((e) => e.id === id);
+          setSelectedExercise(index > -1 ? localExercises[index] : null);
         }
       }
     },
-    [selected, exercises]
+    [selected, localExercises]
   );
 
   const onHandleProgress = React.useCallback(() => {
     if (selected) {
-      const index = exercises.findIndex((a) => a.id === selected);
-      if (index > -1 && exercises.length > index + 1) {
-        setSelected(exercises[index + 1].id);
-      } else if (exercises.length === index + 1) {
+      const index = localExercises.findIndex((a) => a.id === selected);
+      if (index > -1 && localExercises.length > index + 1) {
+        setSelected(localExercises[index + 1].id);
+      } else if (localExercises.length === index + 1) {
         setSelected(null);
         setShowCompletion(true);
       }
     }
-  }, [selected, exercises]);
+  }, [selected, localExercises]);
 
   const handleNew = () => {
     navigation.navigate('Create', { screen: 'NewExercises' });
@@ -72,7 +87,7 @@ const Exercises = ({
         text={item}
         OnPressComponent={OnPressExerciseComponent}
         handleProgress={onHandleProgress}
-        totalExercises={exercises.length}
+        totalExercises={localExercises.length}
       />
     </View>
   );
@@ -135,12 +150,12 @@ const Exercises = ({
           showButton={false}
           flex={1}
           style={{
-            flex: exercises.length > 0 ? 1 : null,
+            flex: localExercises.length > 0 ? 1 : null,
             marginBottom: 50,
           }}
         >
           <ScrollList
-            data={exercises}
+            data={localExercises}
             renderItem={Item}
             keyExtractor={(item) => item.id}
             extraData={selected}

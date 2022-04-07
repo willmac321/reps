@@ -90,7 +90,7 @@ const ExerciseOnPressLog = ({ theme, content, onProgress }) => {
   };
 
   const goNext = () => {
-    if (content.sets - 1 > selected) {
+    if (parseInt(content.sets, 10) - 1 > selected) {
       onLocalPress(selected + 1);
     } else {
       onProgress();
