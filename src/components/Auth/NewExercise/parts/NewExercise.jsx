@@ -3,6 +3,7 @@ import { KeyboardAvoidingView, View, StyleSheet } from 'react-native';
 import { withTheme, TextInput, HelperText, Text } from 'react-native-paper';
 import API from '../../../../controllers/ExerciseApi';
 import CardWithButton from '../../../../template/CardWithButton';
+import { useIsMounted } from '../../../../utils/useIsMounted';
 
 const NewExercise = ({
   navigation,
@@ -13,7 +14,7 @@ const NewExercise = ({
   addExerciseToList,
   prepopulateData = null,
 }) => {
-  const isMounted = React.useRef(true);
+  const isMounted = useIsMounted();
   const [isDisable, setIsDisable] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
   const [titleChange, setTitleChange] = React.useState(null);
@@ -74,12 +75,6 @@ const NewExercise = ({
   const isNameTaken = () => exercises.map((a) => a.title).includes(newExercise.name);
   const isEmpty = () =>
     !(newExercise.title && newExercise.sets && newExercise.rest && newExercise.repRange[1]);
-  React.useEffect(
-    () => () => {
-      isMounted.current = false;
-    },
-    []
-  );
 
   React.useLayoutEffect(() => {
     if (prepopulateData) {

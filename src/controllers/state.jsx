@@ -102,16 +102,17 @@ export const StateContextProvider = ({ children }) => {
       currExercise.push(ex.id);
     }
 
-    // update workouts array too
-    if (isMounted.current)
-      setWorkouts(() =>
-        workouts.map((w) => {
-          if (w.id === selectedWorkout.id) {
-            return selectedWorkout;
-          }
-          return w;
-        })
-      );
+    // FIXME commented out because it messes up the add exercise flow and triggeres rerender
+    // // update workouts array too
+    // if (isMounted.current)
+    //   setWorkouts(() =>
+    //     workouts.map((w) => {
+    //       if (w.id === selectedWorkout.id) {
+    //         return selectedWorkout;
+    //       }
+    //       return w;
+    //     })
+    //   );
   };
 
   const getExercises = () => {

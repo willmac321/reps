@@ -7,6 +7,7 @@ import { StateContext } from '../../../../controllers/state';
 import CardWithButton from '../../../../template/CardWithButton';
 import ScrollList from '../../../../template/ScrollList';
 import LoadingOverlay from '../../../../template/LoadingOverlay';
+import { useIsMounted } from '../../../../utils/useIsMounted';
 import ExerciseItem from './ExerciseItem';
 
 const Exercises = ({
@@ -17,16 +18,22 @@ const Exercises = ({
   isOk,
   setIsOk,
   showEditAndSelect,
+  markSelected,
+  setMarkSelected,
   OnPressExerciseComponent = null,
   setSelectedExercise = () => {},
 }) => {
   const [localExercises, setLocalExercises] = React.useState([]);
+  const isMounted = useIsMounted();
   const {
     exercises: { exercises },
   } = React.useContext(StateContext);
 
+  const [selected, setSelected] = React.useState(null);
+  const [showCompletion, setShowCompletion] = React.useState(false);
+
   React.useEffect(() => {
-    if (exercises) {
+    if (isMounted.current && localExercises) {
       setLocalExercises(
         exercises.map((v) => {
           const rv = { ...v };
@@ -37,29 +44,36 @@ const Exercises = ({
         })
       );
     }
-  }, [exercises]);
-
-  const [selected, setSelected] = React.useState(null);
-  const [showCompletion, setShowCompletion] = React.useState(false);
+  }, [exercises, isMounted]);
 
   const onPress = React.useCallback(
     (id) => {
-      if (id === selected) {
-        setSelected(null);
-        setSelectedExercise(null);
-      } else {
-        setSelected(id);
-        if (localExercises) {
-          const index = localExercises.findIndex((e) => e.id === id);
-          setSelectedExercise(index > -1 ? localExercises[index] : null);
+      if (isMounted.current) {
+        if (id === selected) {
+          setSelected(null);
+          setSelectedExercise(null);
+          if (typeof setMarkSelected === 'function') setMarkSelected(null);
+        } else {
+          setSelected(id);
+          if (localExercises) {
+            const index = localExercises.findIndex((e) => e.id === id);
+            setSelectedExercise(index > -1 ? localExercises[index] : null);
+            if (typeof setMarkSelected === 'function') setMarkSelected(id);
+          }
         }
       }
     },
-    [selected, localExercises]
+    [isMounted, selected, localExercises, setMarkSelected]
   );
 
+  React.useEffect(() => {
+    if (markSelected && selected && markSelected !== selected) {
+      onPress(markSelected);
+    }
+  }, [markSelected, setMarkSelected, selected, onPress]);
+
   const onHandleProgress = React.useCallback(() => {
-    if (selected) {
+    if (isMounted.current && selected) {
       const index = localExercises.findIndex((a) => a.id === selected);
       if (index > -1 && localExercises.length > index + 1) {
         setSelected(localExercises[index + 1].id);
@@ -68,13 +82,13 @@ const Exercises = ({
         setShowCompletion(true);
       }
     }
-  }, [selected, localExercises]);
+  }, [selected, localExercises, isMounted]);
 
   const handleNew = () => {
     navigation.navigate('Create', { screen: 'NewExercises' });
   };
 
-  // // TODO remove
+  // // TODO remove was in here for debugging
   // React.useLayoutEffect(() => {
   //   handleNew();
   // }, []);

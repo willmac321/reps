@@ -26,6 +26,8 @@ const NewExerciseScreen = ({ navigation, theme }) => {
     exercises: { exercises, setExercises },
   } = React.useContext(StateContext);
   const scroll = React.useRef(null);
+  const keyboardShow = React.useRef(null);
+  const keyboardHide = React.useRef(null);
   const [keyboardActive, setKeyboardActive] = React.useState(false);
   const [showNotify, setShowNotify] = React.useState(false);
   const [customTopMargin, setCustomTopMargin] = React.useState(theme.card.marginTop);
@@ -52,14 +54,16 @@ const NewExerciseScreen = ({ navigation, theme }) => {
     setCustomTopMargin(theme.card.marginTop);
   };
 
+  const [markSelected, setMarkSelected] = React.useState(null);
+
   React.useEffect(() => {
-    Keyboard.addListener('keyboardDidShow', keyboardEventShow);
-    Keyboard.addListener('keyboardDidHide', keyboardEventHide);
+    keyboardShow.current = Keyboard.addListener('keyboardDidShow', keyboardEventShow);
+    keyboardHide.current = Keyboard.addListener('keyboardDidHide', keyboardEventHide);
 
     // cleanup function
     return () => {
-      Keyboard.removeListener('keyboardDidShow', keyboardEventShow);
-      Keyboard.removeListener('keyboardDidHide', keyboardEventHide);
+      keyboardShow.current.remove();
+      keyboardHide.current.remove();
     };
   }, []);
 
@@ -77,7 +81,10 @@ const NewExerciseScreen = ({ navigation, theme }) => {
         )}
         <NewExercise
           exercises={exercises}
-          addExerciseToList={setExercises}
+          addExerciseToList={(val) => {
+            setExercises(val);
+            setMarkSelected(val.id || null);
+          }}
           workout={selectedWorkout}
           navigation={navigation}
           style={{ marginTop: customTopMargin }}
@@ -92,6 +99,8 @@ const NewExerciseScreen = ({ navigation, theme }) => {
             theme={theme}
             setShowNotify={setShowNotify}
             showEditAndSelect={false}
+            markSelected={markSelected}
+            setMarkSelected={setMarkSelected}
             setSelectedExercise={setSelectedExercise}
             isOk={isOk}
             setIsOk={setIsOk}

@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import { Platform, View, Animated, Easing, Text, StyleSheet } from 'react-native';
 import { Card, withTheme, TouchableRipple } from 'react-native-paper';
-import { View, Animated, Easing, Text, StyleSheet } from 'react-native';
+import { useIsMounted } from '../../../../utils/useIsMounted';
 import Button from '../../../../template/ButtonTemplate';
 
 const ExerciseOnPressLog = ({ theme, content, onProgress }) => {
   const springAnim = React.useRef(new Animated.Value(0)).current;
+  const isMounted = useIsMounted();
   const animColor = React.useRef(new Animated.Value(0)).current;
   const [selected, setSelected] = useState(0);
 
@@ -80,23 +82,43 @@ const ExerciseOnPressLog = ({ theme, content, onProgress }) => {
   }, []);
 
   const onLocalPress = (index) => {
-    setSelected(index);
-    Animated.timing(animColor, {
-      toValue: 1,
-      useNativeDriver: true,
-      duration: 400,
-      easing: Easing.in(Easing.exp),
-    }).start(() => {});
-  };
-
-  const goNext = () => {
-    if (parseInt(content.sets, 10) - 1 > selected) {
-      onLocalPress(selected + 1);
-    } else {
-      onProgress();
-      setSelected(null);
+    if (isMounted.current) {
+      setSelected(index);
+      Animated.timing(animColor, {
+        toValue: 1,
+        useNativeDriver: true,
+        duration: 400,
+        easing: Easing.in(Easing.exp),
+      }).start(() => {});
     }
   };
+
+  const goNext = React.useCallback(() => {
+    if (isMounted.current) {
+      if (parseInt(content.sets, 10) - 1 > selected) {
+        onLocalPress(selected + 1);
+      } else {
+        onProgress();
+        setSelected(null);
+      }
+    }
+  }, [isMounted, selected, onProgress, onLocalPress, setSelected, content.sets]);
+
+  React.useEffect(() => {
+    const listener = (event) => {
+      if (isMounted.current && (event.code === 'Enter' || event.code === 'NumpadEnter')) {
+        goNext();
+      }
+    };
+    if (isMounted.current === true && Platform.OS === 'web') {
+      document.addEventListener('keydown', listener);
+    }
+    return () => {
+      if (Platform.OS === 'web') {
+        document.removeEventListener('keydown', listener);
+      }
+    };
+  }, [goNext, isMounted]);
 
   return (
     <>

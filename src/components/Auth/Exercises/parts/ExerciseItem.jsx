@@ -2,6 +2,7 @@ import React from 'react';
 import { View, StyleSheet, Animated, Easing } from 'react-native';
 import { withTheme, List, TouchableRipple, Text, Card } from 'react-native-paper';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { useIsMounted } from '../../../../utils/useIsMounted';
 
 const ExerciseItem = ({
   theme,
@@ -87,10 +88,12 @@ const ExerciseItem = ({
       justifyContent: 'space-around',
     },
   });
+
+  const isMounted = useIsMounted();
   const springAnim = React.useRef(new Animated.Value(0)).current;
 
   React.useEffect(() => {
-    if (!isSelected) {
+    if (isMounted.current && !isSelected) {
       Animated.spring(springAnim, {
         toValue: 100,
         useNativeDriver: true,
@@ -100,12 +103,14 @@ const ExerciseItem = ({
   }, [isSelected, OnPressComponent]);
 
   const onLocalPress = () => {
-    Animated.timing(springAnim, {
-      toValue: 0,
-      useNativeDriver: true,
-      duration: 100,
-      easing: Easing.in(),
-    }).start(onPress);
+    if (isMounted.current) {
+      Animated.timing(springAnim, {
+        toValue: 0,
+        useNativeDriver: true,
+        duration: 100,
+        easing: Easing.in(),
+      }).start(onPress);
+    }
   };
 
   return (
