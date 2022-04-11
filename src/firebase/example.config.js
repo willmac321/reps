@@ -1,6 +1,7 @@
+import 'expo-firestore-offline-persistence';
+
 import firebase from 'firebase/app';
 import 'firebase/auth';
-import 'firebase/database';
 import 'firebase/firestore';
 
 const fieldValue = firebase.firestore.FieldValue;
@@ -22,12 +23,15 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 // this only needs to be done for web
-db.enablePersistence().catch((err) => {
-  if (err.code === 'failed-precondition') {
-    // multiple tabs open, can only do this once per instance
-  } else if (err.code === 'unimplemented') {
-    // feautre not supported for offline storage
-  }
-});
+firebase
+  .firestore()
+  .enablePersistence()
+  .catch((err) => {
+    if (err.code === 'failed-precondition') {
+      // multiple tabs open, can only do this once per instance
+    } else if (err.code === 'unimplemented') {
+      // feautre not supported for offline storage
+    }
+  });
 
 export { firebase, db, fieldValue, fieldPath };
