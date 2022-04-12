@@ -14,6 +14,7 @@ import WarnModal from '../../../template/WarnModal';
 import Header from '../../../template/Header';
 import NewExercise from './parts/NewExercise';
 import Exercises from '../Exercises/parts/Exercises';
+import NewExerciseNext from './parts/NewExerciseNext';
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
   UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -82,8 +83,15 @@ const NewExerciseScreen = ({ navigation, theme }) => {
         <NewExercise
           exercises={exercises}
           addExerciseToList={(val) => {
-            setExercises(val);
-            setMarkSelected(val.id || null);
+            if (val) {
+              //FIXME id on select not getting set
+              console.log(val);
+              setExercises(val);
+              setMarkSelected(val.id || null);
+            } else {
+              setSelectedExercise(null);
+              setMarkSelected(null);
+            }
           }}
           workout={selectedWorkout}
           navigation={navigation}
@@ -106,6 +114,7 @@ const NewExerciseScreen = ({ navigation, theme }) => {
             setIsOk={setIsOk}
           />
         )}
+        <NewExerciseNext theme={theme} navigation={navigation} />
         <WarnModal
           title={notifyTitle}
           buttonText="Yes"

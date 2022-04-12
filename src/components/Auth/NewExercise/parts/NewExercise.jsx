@@ -1,9 +1,23 @@
 import React from 'react';
+import { FontAwesome5 } from '@expo/vector-icons';
 import { KeyboardAvoidingView, View, StyleSheet } from 'react-native';
 import { withTheme, TextInput, HelperText, Text } from 'react-native-paper';
 import API from '../../../../controllers/ExerciseApi';
 import CardWithButton from '../../../../template/CardWithButton';
 import { useIsMounted } from '../../../../utils/useIsMounted';
+
+const EMPTY_EXERCISE = {
+  // id: '',
+  // title: 'ttt',
+  // sets: 1,
+  // repRange: [3, 2],
+  // rest: 4,
+  id: '',
+  title: '',
+  sets: 0,
+  repRange: [0, 0],
+  rest: 0,
+};
 
 const NewExercise = ({
   navigation,
@@ -25,21 +39,18 @@ const NewExercise = ({
     rest: false,
   });
   // FIXME
-  const [newExercise, setNewExercise] = React.useState({
-    // id: '',
-    // title: 'ttt',
-    // sets: 1,
-    // repRange: [3, 2],
-    // rest: 4,
-    id: '',
-    title: '',
-    sets: 0,
-    repRange: [0, 0],
-    rest: 0,
-  });
+  const [newExercise, setNewExercise] = React.useState(EMPTY_EXERCISE);
 
   const styles = StyleSheet.create({
     input: theme.input,
+    icon: {
+      fontSize: '1em',
+    },
+    editTitle: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      width: '100%',
+    },
     rowInput: {
       flex: 0,
       flexGrow: 3,
@@ -164,11 +175,24 @@ const NewExercise = ({
     setIsLoading(false);
   };
 
+  const handleClearForm = React.useCallback(() => {
+    setNewExercise(EMPTY_EXERCISE);
+    // clear the form and deselect in parent
+    addExerciseToList(null);
+  }, [setNewExercise]);
+
+  const title = () => (
+    <View style={styles.editTitle}>
+      <Text>Build-a-Exercise</Text>
+      <FontAwesome5 name="times-circle" style={styles.icon} onPress={handleClearForm} />
+    </View>
+  );
+
   return (
     <View theme={theme}>
       <CardWithButton
-        title="Build-a-Exercise"
-        buttonText="Add"
+        title={title()}
+        buttonText={prepopulateData ? 'Modify' : 'Add'}
         showButton
         buttonDisabled={isDisable}
         onPress={handleOnPress}
