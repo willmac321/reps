@@ -81,7 +81,7 @@ export const StateContextProvider = ({ children }) => {
     }
   };
 
-  const setExercises = (ex, id = -1) => {
+  const setExercises = (ex) => {
     // if ex for set is an array of exercises, just set these and return
     if (isMounted.current && Array.isArray(ex)) {
       updateExercises(ex);
@@ -90,29 +90,13 @@ export const StateContextProvider = ({ children }) => {
     // for local state
     // add exercise to list
     // add exercise uid to workout
-    updateExercises([...exercises, ex]);
-    // update selected workout exercise array
-    const currExercise = [...selectedWorkout.exercises];
-    if (currExercise.indexOf(ex.id) > -1) {
-      currExercise.splice(currExercise.indexOf(ex.id), 1);
-    }
-    if (id > -1) {
-      currExercise.splice(id, 0, ex.id);
+    if (exercises.some((v) => v.id === ex.id)) {
+      const tempExercises = [...exercises];
+      tempExercises[tempExercises.findIndex((e) => e.id === ex.id)] = ex;
+      updateExercises(tempExercises);
     } else {
-      currExercise.push(ex.id);
+      updateExercises([...exercises, ex]);
     }
-
-    // FIXME commented out because it messes up the add exercise flow and triggeres rerender
-    // // update workouts array too
-    // if (isMounted.current)
-    //   setWorkouts(() =>
-    //     workouts.map((w) => {
-    //       if (w.id === selectedWorkout.id) {
-    //         return selectedWorkout;
-    //       }
-    //       return w;
-    //     })
-    //   );
   };
 
   const getExercises = () => {

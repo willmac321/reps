@@ -84,8 +84,6 @@ const NewExerciseScreen = ({ navigation, theme }) => {
           exercises={exercises}
           addExerciseToList={(val) => {
             if (val) {
-              //FIXME id on select not getting set
-              console.log(val);
               setExercises(val);
               setMarkSelected(val.id || null);
             } else {
@@ -100,6 +98,7 @@ const NewExerciseScreen = ({ navigation, theme }) => {
           theme={theme}
           prepopulateData={selectedExercise}
         />
+        <NewExerciseNext theme={theme} navigation={navigation} />
         {!keyboardActive && (
           <Exercises
             isLoading={false}
@@ -114,7 +113,6 @@ const NewExerciseScreen = ({ navigation, theme }) => {
             setIsOk={setIsOk}
           />
         )}
-        <NewExerciseNext theme={theme} navigation={navigation} />
         <WarnModal
           title={notifyTitle}
           buttonText="Yes"

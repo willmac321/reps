@@ -119,7 +119,7 @@ const NewExercise = ({
         break;
       case 'sets':
         if (isValidNumber(val)) {
-          setNewExercise(() => ({ ...newExercise, sets: val }));
+          setNewExercise(() => ({ ...newExercise, sets: `${val}` }));
           setIsError({ ...isError, sets: false });
         } else setIsError({ ...isError, sets: true });
         break;
@@ -166,10 +166,19 @@ const NewExercise = ({
     if (titleChange) {
       titleChange.flush();
     }
-    const newE = {
-      ...newExercise,
-      id: await API.newExercise(user.uid, newExercise, workout.id),
-    };
+    let newE = {};
+    if (prepopulateData) {
+      newE = {
+        ...newExercise,
+        id: prepopulateData.id,
+      };
+      await API.updateExercise(user.uid, newExercise);
+    } else {
+      newE = {
+        ...newExercise,
+        id: await API.newExercise(user.uid, newExercise, workout.id),
+      };
+    }
     setNewExercise(newE);
     addExerciseToList(newE);
     setIsLoading(false);

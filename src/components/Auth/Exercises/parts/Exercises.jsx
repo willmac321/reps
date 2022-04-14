@@ -67,7 +67,7 @@ const Exercises = ({
   );
 
   React.useEffect(() => {
-    if (selected && markSelected !== selected) {
+    if (markSelected !== selected) {
       onPress(markSelected);
     }
   }, [markSelected, setMarkSelected, selected, onPress]);

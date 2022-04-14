@@ -22,6 +22,17 @@ async function newExercise(uid, exercise, workoutId) {
     .catch((e) => console.error(e));
 }
 
+async function updateExercise(uid, exercise) {
+  return db
+    .collection('users')
+    .doc(uid)
+    .collection('exercises')
+    .doc(exercise.id)
+    .update(exercise)
+    .then(() => exercise.id)
+    .catch((e) => console.error(e));
+}
+
 async function getExercises(uid, exerciseArr) {
   if (!exerciseArr || exerciseArr.length === 0) return [];
   return db
@@ -35,7 +46,6 @@ async function getExercises(uid, exerciseArr) {
 }
 
 function deleteExercise(workout) {}
-function updateExercise(exercise) {}
 
 export default {
   updateExercise,
