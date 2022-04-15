@@ -8,6 +8,7 @@ import ExerciseOnPressLog from './parts/ExerciseOnPressLog';
 
 const ExercisesScreen = ({ navigation, theme }) => {
   const [showNotify, setShowNotify] = useState(false);
+  const [markSelected, setMarkSelected] = React.useState(null);
   const [isOk, setIsOk] = useState(false);
   const {
     exercises: { getExercises },

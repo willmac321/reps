@@ -13,7 +13,7 @@ import { StateContext } from '../../../controllers/state';
 import WarnModal from '../../../template/WarnModal';
 import Header from '../../../template/Header';
 import NewExercise from './parts/NewExercise';
-import Exercises from '../Exercises/parts/Exercises';
+import Exercises from './parts/NewExercises';
 import NewExerciseNext from './parts/NewExerciseNext';
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {

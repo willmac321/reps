@@ -27,7 +27,9 @@ const WorkoutsScreen = ({ navigation, theme }) => {
         theme={theme}
         content={notifyMessage}
         visible={showNotify}
-        setVisible={(res)=>{setShowNotify(res);}}
+        setVisible={(res) => {
+          setShowNotify(res);
+        }}
         setIsCancel={setIsCancel}
         onPress={() => setIsOk(true)}
       />
