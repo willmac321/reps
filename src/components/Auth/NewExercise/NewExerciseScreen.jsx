@@ -12,8 +12,8 @@ import { useFocusEffect } from '@react-navigation/native';
 import { StateContext } from '../../../controllers/state';
 import WarnModal from '../../../template/WarnModal';
 import Header from '../../../template/Header';
-import NewExercise from './parts/NewExercise';
-import Exercises from './parts/NewExercises';
+import NewExerciseCreator from './parts/NewExerciseCreator';
+import NewExercises from './parts/NewExercises';
 import NewExerciseNext from './parts/NewExerciseNext';
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
@@ -80,7 +80,7 @@ const NewExerciseScreen = ({ navigation, theme }) => {
         {selectedWorkout && selectedWorkout.title && (
           <Header title={`${selectedWorkout.title} - ${selectedWorkout.date}`} theme={theme} />
         )}
-        <NewExercise
+        <NewExerciseCreator
           exercises={exercises}
           addExerciseToList={(val) => {
             if (val) {
@@ -100,7 +100,7 @@ const NewExerciseScreen = ({ navigation, theme }) => {
         />
         <NewExerciseNext theme={theme} navigation={navigation} />
         {!keyboardActive && (
-          <Exercises
+          <NewExercises
             isLoading={false}
             navigation={navigation}
             theme={theme}
@@ -109,8 +109,10 @@ const NewExerciseScreen = ({ navigation, theme }) => {
             markSelected={markSelected}
             setMarkSelected={setMarkSelected}
             setSelectedExercise={setSelectedExercise}
-            isOk={isOk}
             setIsOk={setIsOk}
+            isOk={isOk}
+            setNotifyTitle={setNotifyTitle}
+            setNotifyMessage={setNotifyMessage}
           />
         )}
         <WarnModal

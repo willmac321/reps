@@ -6,7 +6,6 @@ import Workouts from './parts/Workouts';
 const WorkoutsScreen = ({ navigation, theme }) => {
   const [showNotify, setShowNotify] = React.useState(false);
   const [isOk, setIsOk] = React.useState(false);
-  const [isCancel, setIsCancel] = React.useState(false);
   const [notifyMessage, setNotifyMessage] = React.useState('');
   const [notifyTitle, setNotifyTitle] = React.useState('');
   return (
@@ -17,8 +16,6 @@ const WorkoutsScreen = ({ navigation, theme }) => {
         setNotifyTitle={setNotifyTitle}
         setShowNotify={setShowNotify}
         isOk={isOk}
-        isCancel={isCancel}
-        setIsCancel={setIsCancel}
         setIsOk={setIsOk}
       />
       <WarnModal
@@ -30,7 +27,6 @@ const WorkoutsScreen = ({ navigation, theme }) => {
         setVisible={(res) => {
           setShowNotify(res);
         }}
-        setIsCancel={setIsCancel}
         onPress={() => setIsOk(true)}
       />
     </>

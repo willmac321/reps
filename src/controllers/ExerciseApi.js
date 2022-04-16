@@ -50,7 +50,8 @@ async function deleteExercise(uid, exercise, workoutId, newExerciseList) {
     .collection('users')
     .doc(uid)
     .collection('exercises')
-    .delete(exercise)
+    .doc(exercise)
+    .delete()
     .then(() => {
       db.collection('users')
         .doc(uid)

@@ -15,8 +15,6 @@ const Workouts = ({
   setNotifyTitle,
   setShowNotify,
   isOk,
-  isCancel,
-  setIsCancel,
   setIsOk,
   showEditAndSelect = true,
 }) => {

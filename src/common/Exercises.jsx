@@ -1,6 +1,6 @@
 import React from 'react';
 import { withTheme, List, Portal } from 'react-native-paper';
-import { View } from 'react-native';
+import { View, Animated } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import CardWithButton from '../template/CardWithButton';
 import ScrollList from '../template/ScrollList';
@@ -10,19 +10,17 @@ import ExerciseItem from './ExerciseItem';
 
 const Exercises = ({
   isLoading,
-  navigation,
   exercises,
   selected,
   setSelected,
   theme,
-  setShowNotify,
-  isOk,
-  setIsOk,
-  showEditAndTrash = false,
+  showTrash = false,
   handleNew = null,
+  handleTrash = () => {},
   setShowCompletion = () => {},
   OnPressExerciseComponent = null,
   setSelectedExercise = () => {},
+  panX = null,
 }) => {
   const [localExercises, setLocalExercises] = React.useState([]);
   const isMounted = useIsMounted();
@@ -77,7 +75,9 @@ const Exercises = ({
   // }, []);
 
   const Item = ({ item }) => (
-    <View>
+    <Animated.View
+      style={item && panX && item.id === selected ? { transform: [{ translateX: panX }] } : null}
+    >
       <ExerciseItem
         onPress={() => handleSetSelected(item.id)}
         isSelected={item.id === selected}
@@ -85,9 +85,10 @@ const Exercises = ({
         OnPressComponent={OnPressExerciseComponent}
         handleProgress={onHandleProgress}
         totalExercises={localExercises.length}
-        showEditAndTrash={showEditAndTrash}
+        showTrash={showTrash}
+        handleTrash={() => handleTrash(item.id)}
       />
-    </View>
+    </Animated.View>
   );
 
   const EmptyComponent = () => (

@@ -81,38 +81,49 @@ export const StateContextProvider = ({ children }) => {
     }
   };
 
-  const setExercises = (ex) => {
-    // if ex for set is an array of exercises, just set these and return
-    if (isMounted.current && Array.isArray(ex)) {
-      updateExercises(ex);
-      return;
-    }
-    // for local state
-    // add exercise to list
-    // add exercise uid to workout
-    if (exercises.some((v) => v.id === ex.id)) {
-      const tempExercises = [...exercises];
-      tempExercises[tempExercises.findIndex((e) => e.id === ex.id)] = ex;
-      updateExercises(tempExercises);
-    } else {
-      updateExercises([...exercises, ex]);
-    }
-  };
-
-  const getExercises = (setLoading = true) => {
-    const getStuff = async () => {
-      const exs = await ExerciseApi.getExercises(user.uid, selectedWorkout.exercises);
-      if (isMounted.current && !isEqual(exs, exercises)) {
-        setExercises([...exs]);
+  const setExercises = React.useCallback(
+    (ex) => {
+      // if ex for set is an array of exercises, just set these and return
+      if (isMounted.current && Array.isArray(ex)) {
+        updateExercises(ex);
+        return;
       }
-      if (setLoading) setIsLoading(false);
-    };
+      // for local state
+      // add exercise to list
+      // add exercise uid to workout
+      if (exercises.some((v) => v.id === ex.id)) {
+        const tempExercises = [...exercises];
+        tempExercises[tempExercises.findIndex((e) => e.id === ex.id)] = ex;
+        updateExercises(tempExercises);
+      } else {
+        updateExercises([...exercises, ex]);
+      }
+    },
+    [selectedWorkout, exercises, workouts]
+  );
 
-    if (selectedWorkout && selectedWorkout !== {} && selectedWorkout.exercises !== null) {
-      if (setLoading) setIsLoading(true);
-      getStuff();
-    }
-  };
+  const getExercises = React.useCallback(
+    (setLoading = true, selectedW = null) => {
+      const localSelectedWorkout = selectedW || selectedWorkout;
+      const getStuff = async () => {
+        const exs = await ExerciseApi.getExercises(user.uid, localSelectedWorkout.exercises);
+        if (isMounted.current && !isEqual(exs, exercises)) {
+          setExercises([...exs]);
+        }
+        if (setLoading) setIsLoading(false);
+      };
+
+      if (
+        localSelectedWorkout &&
+        localSelectedWorkout !== {} &&
+        localSelectedWorkout.exercises !== null
+      ) {
+        if (setLoading) setIsLoading(true);
+        getStuff();
+      }
+    },
+    [selectedWorkout, exercises]
+  );
 
   const getWorkouts = React.useCallback((uid, setLoading = true) => {
     if (setLoading) setIsLoading(true);
@@ -130,22 +141,32 @@ export const StateContextProvider = ({ children }) => {
   }, []);
 
   const deleteExercise = React.useCallback(
-    (exUid) => {
-      setIsLoading(true);
+    async (exUid) => {
       if (exUid && isMounted.current) {
-        const localExercises = selectedWorkout.exercises.filter((e) => e !== exUid);
-        ExerciseApi.deleteExercise(user.uid, exUid, selectedWorkout.id, localExercises)
-          .then(() => {
-            getWorkouts(false);
-            getExercises(false);
+        const localExercises = exercises.map((e) => e.id).filter((e) => e !== exUid);
+        await ExerciseApi.deleteExercise(user.uid, exUid, selectedWorkout.id, localExercises)
+          .then(async () => {
+            const localSelectedWorkout = { ...selectedWorkout, exercises: localExercises };
+            updateSelectedWorkout(localSelectedWorkout);
+            const getStuff = async () => {
+              const exs = await ExerciseApi.getExercises(user.uid, localSelectedWorkout.exercises);
+              if (isMounted.current && !isEqual(exs, exercises)) {
+                setExercises([...exs]);
+              }
+            };
+
+            if (
+              localSelectedWorkout &&
+              localSelectedWorkout !== {} &&
+              localSelectedWorkout.exercises !== null
+            ) {
+              await getStuff();
+            }
           })
-          .then(() => {
-            setIsLoading(false);
-          })
-          .catch(() => setIsLoading(false));
+          .catch((e) => console.error(e));
       }
     },
-    [user, selectedWorkout]
+    [user, getExercises, updateSelectedWorkout, exercises, selectedWorkout]
   );
 
   React.useMemo(() => {

@@ -1,10 +1,9 @@
 import React from 'react';
 import { FontAwesome5 } from '@expo/vector-icons';
-import { KeyboardAvoidingView, View, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { withTheme, TextInput, HelperText, Text } from 'react-native-paper';
 import API from '../../../../controllers/ExerciseApi';
 import CardWithButton from '../../../../template/CardWithButton';
-import { useIsMounted } from '../../../../utils/useIsMounted';
 
 const EMPTY_EXERCISE = {
   // id: '',
@@ -20,7 +19,6 @@ const EMPTY_EXERCISE = {
 };
 
 const NewExercise = ({
-  navigation,
   theme,
   user,
   exercises,
@@ -28,7 +26,6 @@ const NewExercise = ({
   addExerciseToList,
   prepopulateData = null,
 }) => {
-  const isMounted = useIsMounted();
   const [isDisable, setIsDisable] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
   const [titleChange, setTitleChange] = React.useState(null);

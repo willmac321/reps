@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Animated, Easing } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Animated, Easing } from 'react-native';
 import { withTheme, TouchableRipple, Text, Card } from 'react-native-paper';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useIsMounted } from '../utils/useIsMounted';
@@ -9,9 +9,8 @@ const ExerciseItem = ({
   isSelected,
   text,
   onPress,
-  handleEdit,
   handleTrash,
-  showEditAndTrash = false,
+  showTrash = false,
   handleProgress,
   OnPressComponent = null,
 }) => {
@@ -34,14 +33,12 @@ const ExerciseItem = ({
     icon: isSelected
       ? {
           color: theme.buttonText.color,
-          marginVertical: 20,
-          paddingRight: 20,
+          margin: 'auto',
           ...theme.title,
         }
       : {
           color: theme.colors.primary,
-          paddingRight: 20,
-          marginVertical: 20,
+          margin: 'auto',
           ...theme.title,
         },
     text: isSelected
@@ -78,9 +75,25 @@ const ExerciseItem = ({
     rowContainer: {
       flexDirection: 'row',
       flexWrap: 'wrap',
+      flexGrow: 1,
       marginHorizontal: 10,
-      justifyContent: 'space-around',
       marginTop: 10,
+    },
+    rowButtonContainer: {
+      flex: 0,
+      flexGrow: 1,
+      alignItems: 'end',
+      padding: 0,
+      flexDirection: 'row',
+      margin: 'auto',
+    },
+    rowItemContainer: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      flexGrow: 10,
+      marginHorizontal: 10,
+      marginTop: 10,
+      justifyContent: 'space-around',
     },
     rowSubContainer: {
       alignSelf: 'flex-start',
@@ -150,59 +163,61 @@ const ExerciseItem = ({
               theme={theme}
               onPress={onPress}
             >
-              <View>
-                <View theme={theme}>
-                  <Text theme={theme} style={[styles.rowTextHeader, theme.buttonText, styles.text]}>
-                    {text.title}
-                  </Text>
-                </View>
-                <View theme={theme} style={styles.rowContainer}>
-                  <View style={styles.rowText}>
-                    <Text theme={theme} style={[styles.rowTextHeader, styles.text]}>
-                      Sets
-                    </Text>
-                    <Text theme={theme} style={[styles.rowText, styles.text]}>
-                      {text.sets}
+              <View style={{ flexDirection: 'row' }}>
+                <View style={{ flexDirection: 'column', flexGrow: 10 }}>
+                  <View theme={theme}>
+                    <Text
+                      theme={theme}
+                      style={[styles.rowTextHeader, theme.buttonText, styles.text]}
+                    >
+                      {text.title}
                     </Text>
                   </View>
-                  <View style={styles.rowText}>
-                    <Text theme={theme} style={[styles.rowTextHeader, styles.text]}>
-                      Rep Range
-                    </Text>
-                    <View theme={theme} style={styles.rowSubContainer}>
-                      <Text theme={theme} style={[styles.rowSubText, styles.text]}>
-                        {text.repRange[0]}
-                      </Text>
-                      <Text theme={theme} style={[styles.rowSubText, styles.text]}>
-                        to
-                      </Text>
-                      <Text theme={theme} style={[styles.rowSubText, styles.text]}>
-                        {text.repRange[1]}
-                      </Text>
+                  <View theme={theme} style={styles.rowContainer}>
+                    <View theme={theme} style={styles.rowItemContainer}>
+                      <View style={styles.rowText}>
+                        <Text theme={theme} style={[styles.rowTextHeader, styles.text]}>
+                          Sets
+                        </Text>
+                        <Text theme={theme} style={[styles.rowText, styles.text]}>
+                          {text.sets}
+                        </Text>
+                      </View>
+                      <View style={styles.rowText}>
+                        <Text theme={theme} style={[styles.rowTextHeader, styles.text]}>
+                          Rep Range
+                        </Text>
+                        <View theme={theme} style={styles.rowSubContainer}>
+                          <Text theme={theme} style={[styles.rowSubText, styles.text]}>
+                            {text.repRange[0]}
+                          </Text>
+                          <Text theme={theme} style={[styles.rowSubText, styles.text]}>
+                            to
+                          </Text>
+                          <Text theme={theme} style={[styles.rowSubText, styles.text]}>
+                            {text.repRange[1]}
+                          </Text>
+                        </View>
+                      </View>
+                      <View style={styles.rowText}>
+                        <Text theme={theme} style={[styles.rowTextHeader, styles.text]}>
+                          Rest (mm:ss)
+                        </Text>
+                        <Text theme={theme} style={[styles.rowText, styles.text]}>
+                          {new Date(text.rest * 1000).toISOString().substr(14, 5)}
+                        </Text>
+                      </View>
                     </View>
                   </View>
-                  <View style={styles.rowText}>
-                    <Text theme={theme} style={[styles.rowTextHeader, styles.text]}>
-                      Rest (mm:ss)
-                    </Text>
-                    <Text theme={theme} style={[styles.rowText, styles.text]}>
-                      {new Date(text.rest * 1000).toISOString().substr(14, 5)}
-                    </Text>
-                  </View>
                 </View>
-                {showEditAndTrash && (
-                  <>
-                    <FontAwesome5
-                      name="pen"
-                      style={styles.icon}
-                      onPress={(e) => handleEdit(e, text.id)}
-                    />
-                    <FontAwesome5
-                      name="trash-alt"
-                      style={styles.icon}
-                      onPress={(e) => handleTrash(e, text.id)}
-                    />
-                  </>
+                {showTrash && (
+                  <TouchableOpacity
+                    theme={theme}
+                    style={styles.rowButtonContainer}
+                    onPress={(e) => handleTrash(e, text.id)}
+                  >
+                    <FontAwesome5 name="trash-alt" style={styles.icon} />
+                  </TouchableOpacity>
                 )}
               </View>
             </TouchableRipple>
