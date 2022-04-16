@@ -99,23 +99,23 @@ export const StateContextProvider = ({ children }) => {
     }
   };
 
-  const getExercises = () => {
+  const getExercises = (setLoading = true) => {
     const getStuff = async () => {
       const exs = await ExerciseApi.getExercises(user.uid, selectedWorkout.exercises);
       if (isMounted.current && !isEqual(exs, exercises)) {
         setExercises([...exs]);
       }
-      setIsLoading(false);
+      if (setLoading) setIsLoading(false);
     };
 
     if (selectedWorkout && selectedWorkout !== {} && selectedWorkout.exercises !== null) {
-      setIsLoading(true);
+      if (setLoading) setIsLoading(true);
       getStuff();
     }
   };
 
-  const getWorkouts = React.useCallback((uid) => {
-    setIsLoading(true);
+  const getWorkouts = React.useCallback((uid, setLoading = true) => {
+    if (setLoading) setIsLoading(true);
     if (uid && isMounted.current) {
       WorkoutAPI.getWorkouts(uid)
         .then((res) => {
@@ -123,11 +123,30 @@ export const StateContextProvider = ({ children }) => {
             const t = res.sort((a, b) => a.id.localeCompare(b.id));
             setWorkouts(t);
           }
-          setIsLoading(false);
+          if (setLoading) setIsLoading(false);
         })
-        .catch(() => setIsLoading(false));
+        .catch(() => setLoading && setIsLoading(false));
     }
   }, []);
+
+  const deleteExercise = React.useCallback(
+    (exUid) => {
+      setIsLoading(true);
+      if (exUid && isMounted.current) {
+        const localExercises = selectedWorkout.exercises.filter((e) => e !== exUid);
+        ExerciseApi.deleteExercise(user.uid, exUid, selectedWorkout.id, localExercises)
+          .then(() => {
+            getWorkouts(false);
+            getExercises(false);
+          })
+          .then(() => {
+            setIsLoading(false);
+          })
+          .catch(() => setIsLoading(false));
+      }
+    },
+    [user, selectedWorkout]
+  );
 
   React.useMemo(() => {
     if (isMounted.current && user && user.uid) {
@@ -143,6 +162,7 @@ export const StateContextProvider = ({ children }) => {
         setAuthRes(res);
       });
     } else {
+      // FIXME
       setIsLoading(false);
       setUser({ uid: '123' });
     }
@@ -198,7 +218,7 @@ export const StateContextProvider = ({ children }) => {
         setUserDetails,
         setJustRegistered,
         workouts: { workouts, setWorkouts },
-        exercises: { exercises, setExercises, getExercises },
+        exercises: { exercises, setExercises, getExercises, deleteExercise },
         selectedWorkout: { selectedWorkout, setSelectedWorkout },
         editWorkout: { editWorkout, setEditWorkout },
         theme,

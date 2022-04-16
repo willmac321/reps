@@ -33,6 +33,7 @@ const NewExercisesList = ({
       theme={theme}
       OnPressExerciseComponent={OnPressExerciseComponent}
       setSelectedExercise={setSelectedExercise}
+      showEditAndTrash
     />
   );
 };

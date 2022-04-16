@@ -11,6 +11,7 @@ const ExerciseItem = ({
   onPress,
   handleEdit,
   handleTrash,
+  showEditAndTrash = false,
   handleProgress,
   OnPressComponent = null,
 }) => {
@@ -188,6 +189,22 @@ const ExerciseItem = ({
                       {new Date(text.rest * 1000).toISOString().substr(14, 5)}
                     </Text>
                   </View>
+                </View>
+                <View>
+                  {showEditAndTrash && (
+                    <>
+                      <FontAwesome5
+                        name="pen"
+                        style={styles.icon}
+                        onPress={(e) => handleEdit(e, text.id)}
+                      />
+                      <FontAwesome5
+                        name="trash-alt"
+                        style={styles.icon}
+                        onPress={(e) => handleTrash(e, text.id)}
+                      />
+                    </>
+                  )}
                 </View>
               </View>
             </TouchableRipple>

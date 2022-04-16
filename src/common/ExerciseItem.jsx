@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, Animated, Easing } from 'react-native';
 import { withTheme, TouchableRipple, Text, Card } from 'react-native-paper';
+import { FontAwesome5 } from '@expo/vector-icons';
 import { useIsMounted } from '../utils/useIsMounted';
 
 const ExerciseItem = ({
@@ -10,6 +11,7 @@ const ExerciseItem = ({
   onPress,
   handleEdit,
   handleTrash,
+  showEditAndTrash = false,
   handleProgress,
   OnPressComponent = null,
 }) => {
@@ -188,6 +190,20 @@ const ExerciseItem = ({
                     </Text>
                   </View>
                 </View>
+                {showEditAndTrash && (
+                  <>
+                    <FontAwesome5
+                      name="pen"
+                      style={styles.icon}
+                      onPress={(e) => handleEdit(e, text.id)}
+                    />
+                    <FontAwesome5
+                      name="trash-alt"
+                      style={styles.icon}
+                      onPress={(e) => handleTrash(e, text.id)}
+                    />
+                  </>
+                )}
               </View>
             </TouchableRipple>
           </Card>

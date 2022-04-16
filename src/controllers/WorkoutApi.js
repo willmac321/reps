@@ -1,7 +1,16 @@
 import { db } from '../firebase/config';
 
 // auth is handled by firebase
-function updateWorkout(uid, workout) {}
+async function updateWorkout(uid, workout) {
+  return db
+    .collection('users')
+    .doc(uid)
+    .collection('workouts')
+    .doc(workout.id)
+    .update(workout)
+    .then(() => workout.id)
+    .catch((e) => console.error(e));
+}
 
 async function newWorkout(uid, workout) {
   // get ref to any existing doc
@@ -11,21 +20,6 @@ async function newWorkout(uid, workout) {
     .set(workout)
     .then((w) => w)
     .catch((e) => e);
-
-  // TODO does this need to be done?
-  // return workoutRef
-  //  .get()
-  //  .then((workoutRes) => {
-  //    if (workoutRes.exists) {
-  //      return workoutRes.data();
-  //    }
-  //    workoutRef.set(workout);
-  //    return workout;
-  //  })
-  //  .catch((e) => {
-  //    console.error(e);
-  //    return e;
-  //  });
 }
 
 async function getWorkouts(uid) {

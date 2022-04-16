@@ -18,7 +18,7 @@ const Exercises = ({
   setShowNotify,
   isOk,
   setIsOk,
-  showEditAndSelect = false,
+  showEditAndTrash = false,
   handleNew = null,
   setShowCompletion = () => {},
   OnPressExerciseComponent = null,
@@ -85,6 +85,7 @@ const Exercises = ({
         OnPressComponent={OnPressExerciseComponent}
         handleProgress={onHandleProgress}
         totalExercises={localExercises.length}
+        showEditAndTrash={showEditAndTrash}
       />
     </View>
   );
