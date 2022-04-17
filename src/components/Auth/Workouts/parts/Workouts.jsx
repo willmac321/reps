@@ -7,6 +7,7 @@ import CardWithButton from '../../../../template/CardWithButton';
 import ScrollList from '../../../../template/ScrollList';
 import WorkoutItem from './WorkoutItem';
 import WorkoutAPI from '../../../../controllers/WorkoutApi';
+import { useIsMounted } from '../../../../utils/useIsMounted';
 
 const Workouts = ({
   theme,
@@ -28,6 +29,8 @@ const Workouts = ({
 
   const [isDisable, setIsDisable] = React.useState(true);
 
+  const isMounted = useIsMounted();
+
   // FIXME debug -- to null
   // test1234
   const [selected, setSelected] = React.useState(null);
@@ -36,7 +39,6 @@ const Workouts = ({
   const [isEdit, setIsEdit] = React.useState(false);
   const [modalOnOkSelectedId, setModalOnOkSelected] = React.useState('');
   const springAnim = React.useRef(new Animated.Value(1)).current;
-  const isMounted = React.useRef(true);
   const springOut = (callback) => {
     Animated.timing(springAnim, {
       toValue: 0,
@@ -59,13 +61,16 @@ const Workouts = ({
     }
   };
 
-  const setWorkoutToEdit = (id) => {
-    if (id) {
-      setEditWorkout(workouts.find((a) => a.title === id));
-    } else {
-      setEditWorkout({});
-    }
-  };
+  const setWorkoutToEdit = React.useCallback(
+    (id) => {
+      if (id) {
+        setEditWorkout(workouts.find((a) => a.title === id));
+      } else {
+        setEditWorkout({});
+      }
+    },
+    [workouts]
+  );
 
   const deleteWorkout = React.useCallback(
     (id) => {
@@ -81,15 +86,18 @@ const Workouts = ({
         }
         springAnim.setValue(1);
         setWorkouts(() => [...workouts].filter((d) => d.id !== id));
+        setModalOnOkSelected(null);
       });
     },
     [user, workouts]
   );
 
   const editWorkout = React.useCallback(() => {
+    console.log(selected, workouts);
     setWorkoutToEdit(selected);
     setUpdatedWorkout({});
     navigation.navigate('Create', { screen: 'NewWorkout' });
+    setModalOnOkSelected(null);
   }, [selected, user, workouts]);
 
   const handleOnSubmit = React.useCallback(() => {
@@ -139,25 +147,23 @@ const Workouts = ({
     navigation.navigate('Create');
   };
 
-  React.useEffect(() => {
-    isMounted.current = true;
-    return () => {
-      isMounted.current = false;
-    };
-  }, []);
-
   React.useLayoutEffect(() => {
     if (isMounted.current) {
-      if (isOk && isDelete && modalOnOkSelectedId) {
-        deleteWorkout(modalOnOkSelectedId);
-      } else if (isOk && isEdit && modalOnOkSelectedId) {
-        editWorkout(modalOnOkSelectedId);
+      if (isOk && modalOnOkSelectedId) {
+        if (isDelete) {
+          deleteWorkout(modalOnOkSelectedId);
+          setIsDelete(false);
+        } else if (isEdit) {
+          editWorkout(modalOnOkSelectedId);
+          setIsEdit(false);
+        }
+        setIsOk(false);
       }
-      setIsDelete(false);
-      setIsEdit(false);
-      setModalOnOkSelected(null);
+      if (!isOk && modalOnOkSelectedId) {
+        setIsDisable(false);
+      }
     }
-  }, [isOk]);
+  }, [isOk, modalOnOkSelectedId]);
 
   const Item = ({ item }) => (
     <Animated.View

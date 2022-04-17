@@ -5,6 +5,7 @@ import { StateContext } from '../../../controllers/state';
 import WarnModal from '../../../template/WarnModal';
 import Workouts from '../Workouts/parts/Workouts';
 import NewWorkout from './parts/NewWorkout';
+import { useIsMounted } from '../../../utils/useIsMounted';
 
 const NewWorkoutsScreen = ({ navigation, theme }) => {
   const [showNotify, setShowNotify] = React.useState(false);
@@ -12,7 +13,7 @@ const NewWorkoutsScreen = ({ navigation, theme }) => {
   const [notifyMessage, setNotifyMessage] = React.useState('');
   const [notifyTitle, setNotifyTitle] = React.useState('');
   const [keyboardActive, setKeyboardActive] = React.useState(false);
-  const isMounted = React.useRef(true);
+  const isMounted = useIsMounted();
   const {
     workouts: { workouts },
     user,
@@ -32,18 +33,11 @@ const NewWorkoutsScreen = ({ navigation, theme }) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
   };
 
-  React.useEffect(() => {
-    isMounted.current = true;
-    return () => {
-      isMounted.current = false;
-    };
-  }, []);
-
-  React.useEffect(() => {
-    if (isMounted.current) {
+  React.useLayoutEffect(() => {
+    if (isMounted.current && editWorkout) {
       setIsEditWorkout(Object.keys(editWorkout).length > 0);
     }
-  }, [isMounted.current]);
+  }, [isMounted.current, editWorkout]);
 
   React.useEffect(() => {
     const keyboardShow = Keyboard.addListener('keyboardDidShow', keyboardEventShow);

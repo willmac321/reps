@@ -4,19 +4,23 @@ import { withTheme, TextInput, HelperText } from 'react-native-paper';
 import API from '../../../../controllers/WorkoutApi';
 import CardWithButton from '../../../../template/CardWithButton';
 import { StateContext } from '../../../../controllers/state';
+import { useIsMounted } from '../../../../utils/useIsMounted';
 
 const NewWorkout = ({ navigation, user, theme, data, addWorkoutToList }) => {
-  const isMounted = React.useRef(true);
+  const isMounted = useIsMounted();
   const [isDisable, setIsDisable] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
   const [isError, setIsError] = React.useState(false);
   const [workoutName, setWorkoutName] = React.useState('');
+
   const styles = StyleSheet.create({
     input: theme.input,
   });
+
   const {
     workouts: { workouts },
     editWorkout: { editWorkout, setEditWorkout },
+    selectedWorkout: { setSelectedWorkout },
   } = React.useContext(StateContext);
 
   const isNameTaken = () =>
@@ -25,16 +29,10 @@ const NewWorkout = ({ navigation, user, theme, data, addWorkoutToList }) => {
     data.map((a) => a.title).includes(workoutName);
 
   React.useEffect(() => {
-    isMounted.current = true;
-    return () => {
-      isMounted.current = false;
-    };
-  }, []);
-  React.useEffect(() => {
-    if (isMounted.current && Object.keys(editWorkout).length > 0) {
+    if (isMounted.current && editWorkout && Object.keys(editWorkout).length > 0) {
       setWorkoutName(editWorkout.title);
     }
-  }, []);
+  }, [editWorkout, isMounted]);
 
   React.useEffect(() => {
     setIsError(false);
@@ -45,7 +43,7 @@ const NewWorkout = ({ navigation, user, theme, data, addWorkoutToList }) => {
     }
   }, [workoutName, data]);
 
-  const handleOnPress = async () => {
+  const handleOnPress = React.useCallback(async () => {
     setIsLoading(true);
     // workout will either be the new created one or the existing workout with the same name
     let workout = {
@@ -83,10 +81,11 @@ const NewWorkout = ({ navigation, user, theme, data, addWorkoutToList }) => {
         API.newWorkout(user.uid, workout);
       })
       .finally(() => {
+        setSelectedWorkout(workout);
         setIsLoading(false);
         navigation.navigate('NewExercises');
       });
-  };
+  }, [workoutName, workouts, editWorkout, user]);
 
   return (
     <>

@@ -8,7 +8,6 @@ import {
   ScrollView,
 } from 'react-native';
 import { withTheme } from 'react-native-paper';
-import { useFocusEffect } from '@react-navigation/native';
 import { StateContext } from '../../../controllers/state';
 import WarnModal from '../../../template/WarnModal';
 import Header from '../../../template/Header';

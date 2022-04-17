@@ -1,9 +1,9 @@
 import { DefaultTheme } from 'react-native-paper';
 import { Platform } from 'react-native';
 
-const primary = '#75733d';
-const accent = '#241f0d';
-const surface = 'black';
+const primary = '#97c2aa';
+const accent = '#2a2b2b';
+const surface = '#414142';
 
 export const dropShadow = () => {
   switch (Platform.OS) {
@@ -33,14 +33,14 @@ const theme = {
     primary,
     accent,
     ripple: `${primary}ff`,
-    background: '#1b130f',
+    background: '#2b2b2b',
     text: primary,
-    textSelected: '#b1b09c',
+    textSelected: '#b3e6ca',
     surface,
     placeholder: primary,
     link: '#56CCF2',
-    alert: '#14a8a8',
-    secondary: '#372721',
+    alert: '#eb5757',
+    secondary: '#4f695b',
     backdrop: 'rgba(0,0,0,0.2)',
     underlineColor: 'transparent',
   },
@@ -67,7 +67,12 @@ const theme = {
   },
   buttonText: {
     fontSize: 18,
-    color: '#f2f2f2',
+    color: '#414142',
+    fontWeight: 'bold',
+  },
+  buttonTextSecondary: {
+    fontSize: 18,
+    color: primary,
     fontWeight: 'bold',
   },
   card: {
