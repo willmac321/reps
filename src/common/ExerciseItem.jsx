@@ -82,7 +82,7 @@ const ExerciseItem = ({
     rowButtonContainer: {
       flex: 0,
       flexGrow: 1,
-      alignItems: 'end',
+      alignItems: 'flex-end',
       padding: 0,
       flexDirection: 'row',
       margin: 'auto',

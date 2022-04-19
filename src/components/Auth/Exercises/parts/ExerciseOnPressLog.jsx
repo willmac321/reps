@@ -179,9 +179,12 @@ const ExerciseOnPressLog = ({ theme, content, onProgress }) => {
                         Rep Range: {content.repRange[0]} to {content.repRange[1]}
                       </Text>
                     </View>
-                    <View theme={theme} style={[styles.subItemText, { alignItems: 'end' }]}>
+                    <View theme={theme} style={[styles.subItemText, { alignItems: 'flex-end' }]}>
                       {selected === i ? (
-                        <View theme={theme} style={[styles.subItemText, { alignItems: 'end' }]}>
+                        <View
+                          theme={theme}
+                          style={[styles.subItemText, { alignItems: 'flex-end' }]}
+                        >
                           <Button
                             theme={{
                               button: {
