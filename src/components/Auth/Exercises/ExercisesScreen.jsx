@@ -7,8 +7,6 @@ import Header from '../../../template/Header';
 import ExerciseOnPressLog from './parts/ExerciseOnPressLog';
 
 const ExercisesScreen = ({ navigation, theme }) => {
-  const [showNotify, setShowNotify] = useState(false);
-  const [markSelected, setMarkSelected] = React.useState(null);
   const [isOk, setIsOk] = useState(false);
   const {
     exercises: { getExercises },
@@ -26,7 +24,6 @@ const ExercisesScreen = ({ navigation, theme }) => {
       )}
       <Exercises
         navigation={navigation}
-        setShowNotify={setShowNotify}
         isLoading={isLoading}
         isOk={isOk}
         setIsOk={setIsOk}
