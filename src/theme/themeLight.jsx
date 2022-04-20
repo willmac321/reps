@@ -33,10 +33,10 @@ const theme = {
     accent,
     ripple: `${primary}ff`,
     background: '#e4ecf0',
-    text: '#8a8cc2',
+    text: primary,
     textSelected: '#4e4f73',
     surface,
-    placeholder: '#8a8cc2',
+    placeholder: primary,
     link: '#56CCF2',
     alert: '#eb5757',
     secondary: '#c8d8de',
@@ -67,12 +67,12 @@ const theme = {
   },
   buttonText: {
     fontSize: 18,
-    color: '#f2f2f2',
+    color: surface,
     fontWeight: 'bold',
   },
   buttonTextSecondary: {
     fontSize: 18,
-    color: '#8a8cc2',
+    color: primary,
     fontWeight: 'bold',
   },
   card: {

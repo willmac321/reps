@@ -19,7 +19,6 @@ export const dropShadow = () => {
     default:
       return {
         boxSizing: 'border-box',
-        shadowColor: 'black',
         boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
       };
   }
@@ -41,6 +40,7 @@ const theme = {
     link: '#56CCF2',
     alert: '#eb5757',
     secondary: '#4f695b',
+    secondarySelected: `${accent}CA`,
     backdrop: 'rgba(0,0,0,0.2)',
     underlineColor: 'transparent',
   },
@@ -67,7 +67,7 @@ const theme = {
   },
   buttonText: {
     fontSize: 18,
-    color: '#414142',
+    color: surface,
     fontWeight: 'bold',
   },
   buttonTextSecondary: {
