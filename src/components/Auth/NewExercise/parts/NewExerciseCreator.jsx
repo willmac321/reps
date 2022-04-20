@@ -16,6 +16,7 @@ const EMPTY_EXERCISE = {
   sets: 0,
   repRange: [0, 0],
   rest: 0,
+  index: 0,
 };
 
 const NewExercise = ({
@@ -171,10 +172,7 @@ const NewExercise = ({
       };
       await API.updateExercise(user.uid, newExercise);
     } else {
-      newE = {
-        ...newExercise,
-        id: await API.newExercise(user.uid, newExercise, workout.id),
-      };
+      newE = await API.newExercise(user.uid, newExercise, workout.id);
     }
     setNewExercise(newE);
     addExerciseToList(newE);

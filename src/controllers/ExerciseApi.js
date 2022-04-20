@@ -1,27 +1,5 @@
 import { db, fieldValue, fieldPath } from '../firebase/config';
 
-// auth is handled by firebase
-async function newExercise(uid, exercise, workoutId) {
-  return db
-    .collection('users')
-    .doc(uid)
-    .collection('exercises')
-    .add(exercise)
-    .then((docRef) => {
-      // add the uid to workout
-      db.collection('users')
-        .doc(uid)
-        .collection('workouts')
-        .doc(workoutId)
-        .update({
-          exercises: fieldValue.arrayUnion(docRef.id),
-        })
-        .catch((e) => console.error(e));
-      return docRef.id;
-    })
-    .catch((e) => console.error(e));
-}
-
 async function updateExercise(uid, exercise) {
   return db
     .collection('users')
@@ -30,6 +8,47 @@ async function updateExercise(uid, exercise) {
     .doc(exercise.id)
     .update(exercise)
     .then(() => exercise.id)
+    .catch((e) => console.error(e));
+}
+
+// auth is handled by firebase
+async function newExercise(uid, exercise, workoutId) {
+  return db
+    .collection('users')
+    .doc(uid)
+    .collection('exercises')
+    .add(exercise)
+    .then((docRef) =>
+      // add the uid to workout
+      db
+        .collection('users')
+        .doc(uid)
+        .collection('workouts')
+        .doc(workoutId)
+        .update({
+          exercises: fieldValue.arrayUnion(docRef.id),
+        })
+        .then(() =>
+          // I hate it
+          db
+            .collection('users')
+            .doc(uid)
+            .collection('workouts')
+            .doc(workoutId)
+            .get()
+            .then((r) => {
+              if (r.exists) {
+                const tempExercise = exercise;
+                tempExercise.id = docRef.id;
+                tempExercise.index = r.data().exercises.findIndex((el) => el === docRef.id);
+                updateExercise(uid, tempExercise);
+                return tempExercise;
+              }
+              return {};
+            })
+        )
+        .catch((e) => console.error(e))
+    )
     .catch((e) => console.error(e));
 }
 
