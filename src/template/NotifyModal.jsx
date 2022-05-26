@@ -13,7 +13,7 @@ const NotifyModal = ({
   children,
   isVisible = false,
   showButton = true,
-  style = {}
+  style = {},
 }) => {
   const hideDialog = (e) => {
     setIsVisible(false);

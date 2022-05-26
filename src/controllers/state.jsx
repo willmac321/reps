@@ -74,10 +74,11 @@ export const StateContextProvider = ({ children }) => {
       return a;
     });
 
-    if (isMounted.current) updateSelectedWorkout(w);
     if (!isAlreadyThere) {
       unsortedWorkouts.push(w);
-      setWorkouts(() => unsortedWorkouts.sort((a, b) => a.id.localeCompare(b.id)));
+      const sorted = () => unsortedWorkouts.sort((a, b) => a.id.localeCompare(b.id));
+      setWorkouts(sorted);
+      updateSelectedWorkout(w);
     }
   };
 
@@ -107,9 +108,7 @@ export const StateContextProvider = ({ children }) => {
       const localSelectedWorkout = selectedW || selectedWorkout;
       const getStuff = async () => {
         const exs = await ExerciseApi.getExercises(user.uid, localSelectedWorkout.exercises);
-        if (isMounted.current && !isEqual(exs, exercises)) {
-          setExercises([...exs]);
-        }
+        setExercises([...exs]);
         if (setLoading) setIsLoading(false);
       };
 

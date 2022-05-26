@@ -9,7 +9,7 @@ const NewExerciseNext = ({ navigation, theme }) => {
   }, [navigation]);
   return (
     <View theme={theme}>
-      <CardWithButton title="" buttonText="Done" showButton onPress={handleOnPress} theme={theme} />
+      <CardWithButton buttonText="Done" showButton onPress={handleOnPress} theme={theme} />
     </View>
   );
 };

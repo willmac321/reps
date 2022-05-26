@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -21,9 +21,10 @@ if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental
 
 const NewExerciseScreen = ({ navigation, theme }) => {
   const {
+    isLoading,
     user = null,
     selectedWorkout: { selectedWorkout },
-    exercises: { exercises, setExercises },
+    exercises: { exercises, setExercises, getExercises },
   } = React.useContext(StateContext);
   const scroll = React.useRef(null);
   const keyboardShow = React.useRef(null);
@@ -35,6 +36,10 @@ const NewExerciseScreen = ({ navigation, theme }) => {
   const [notifyMessage, setNotifyMessage] = React.useState('');
   const [notifyTitle, setNotifyTitle] = React.useState('');
   const [selectedExercise, setSelectedExercise] = React.useState(null);
+
+  useEffect(() => {
+    if (selectedWorkout) getExercises(true, selectedWorkout);
+  }, [selectedWorkout]);
 
   React.useLayoutEffect(() => {
     if (selectedExercise && scroll.current) {
@@ -100,7 +105,7 @@ const NewExerciseScreen = ({ navigation, theme }) => {
         <NewExerciseNext theme={theme} navigation={navigation} />
         {!keyboardActive && (
           <NewExercises
-            isLoading={false}
+            isLoading={isLoading}
             navigation={navigation}
             theme={theme}
             setShowNotify={setShowNotify}

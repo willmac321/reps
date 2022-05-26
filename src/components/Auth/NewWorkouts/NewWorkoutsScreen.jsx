@@ -17,7 +17,6 @@ const NewWorkoutsScreen = ({ navigation, theme }) => {
   const {
     workouts: { workouts },
     user,
-    selectedWorkout: { setSelectedWorkout },
     editWorkout: { editWorkout },
   } = React.useContext(StateContext);
 
@@ -59,7 +58,6 @@ const NewWorkoutsScreen = ({ navigation, theme }) => {
       }}
     >
       <NewWorkout
-        addWorkoutToList={setSelectedWorkout}
         data={workouts}
         navigation={navigation}
         theme={theme}

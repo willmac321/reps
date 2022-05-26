@@ -93,7 +93,6 @@ const Workouts = ({
   );
 
   const editWorkout = React.useCallback(() => {
-    console.log(selected, workouts);
     setWorkoutToEdit(selected);
     setUpdatedWorkout({});
     navigation.navigate('Create', { screen: 'NewWorkout' });

@@ -6,7 +6,7 @@ import CardWithButton from '../../../../template/CardWithButton';
 import { StateContext } from '../../../../controllers/state';
 import { useIsMounted } from '../../../../utils/useIsMounted';
 
-const NewWorkout = ({ navigation, user, theme, data, addWorkoutToList }) => {
+const NewWorkout = ({ navigation, user, theme, data }) => {
   const isMounted = useIsMounted();
   const [isDisable, setIsDisable] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
@@ -19,7 +19,7 @@ const NewWorkout = ({ navigation, user, theme, data, addWorkoutToList }) => {
 
   const {
     workouts: { workouts },
-    editWorkout: { editWorkout, setEditWorkout },
+    editWorkout: { editWorkout },
     selectedWorkout: { setSelectedWorkout },
   } = React.useContext(StateContext);
 
@@ -69,19 +69,15 @@ const NewWorkout = ({ navigation, user, theme, data, addWorkoutToList }) => {
       };
     }
 
-    // this either replaces or add workout to context list
-    addWorkoutToList(workout, newWorkouts);
-
     // if it is an existing workout delete it in the db and readd it
     // TODO change to update func instead of delete and replace
-    API.deleteWorkout(user.uid, workoutName)
+    API.deleteWorkout(user.uid, editWorkout.id || workoutName)
       .then(() => {
-        setWorkoutName('');
-        setEditWorkout({});
         API.newWorkout(user.uid, workout);
       })
       .finally(() => {
-        setSelectedWorkout(workout);
+        setSelectedWorkout(workout, newWorkouts);
+        setWorkoutName('');
         setIsLoading(false);
         navigation.navigate('NewExercises');
       });
@@ -90,7 +86,7 @@ const NewWorkout = ({ navigation, user, theme, data, addWorkoutToList }) => {
   return (
     <>
       <CardWithButton
-        title="Name your workout"
+        title={`Editing workout name for "${editWorkout.title}"` || 'Name your workout'}
         buttonText="Ok"
         showButton
         buttonDisabled={isDisable}

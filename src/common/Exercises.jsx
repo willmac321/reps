@@ -26,7 +26,7 @@ const Exercises = ({
   const isMounted = useIsMounted();
 
   React.useEffect(() => {
-    if (isMounted.current && localExercises) {
+    if (isMounted.current) {
       setLocalExercises(
         exercises.map((v) => {
           const rv = { ...v };
