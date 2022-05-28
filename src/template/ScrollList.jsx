@@ -1,29 +1,49 @@
 import React from 'react';
 import { withTheme } from 'react-native-paper';
-import { FlatList } from 'react-native';
+import { FlatList, View } from 'react-native';
 
 const ScrollList = ({
   data,
-  renderItem,
+  renderItem: RenderItem,
   keyExtractor,
   extraData,
   ItemSeparatorComponent,
   contentContainerStyle,
   ListEmptyComponent,
   theme,
+  showScrollView = true,
 }) => (
-  <FlatList
-    data={data}
-    renderItem={renderItem}
-    style={{
-      scrollbarColor: `${theme.colors.primary} ${theme.colors.surface}`,
-    }}
-    keyExtractor={keyExtractor}
-    extraData={extraData}
-    ItemSeparatorComponent={ItemSeparatorComponent}
-    contentContainerStyle={contentContainerStyle}
-    ListEmptyComponent={ListEmptyComponent}
-  />
+  <>
+    {showScrollView ? (
+      <FlatList
+        data={data}
+        renderItem={RenderItem}
+        style={{
+          scrollbarColor: `${theme.colors.primary} ${theme.colors.surface}`,
+        }}
+        keyExtractor={keyExtractor}
+        extraData={extraData}
+        ItemSeparatorComponent={ItemSeparatorComponent}
+        contentContainerStyle={contentContainerStyle}
+        ListEmptyComponent={ListEmptyComponent}
+      />
+    ) : (
+      <>
+        {data ? (
+          <>
+            {data.map((item, index) => (
+              <View key={keyExtractor(item)} theme={theme}>
+                <RenderItem item={item} />
+                {index < data.length - 1 && <ItemSeparatorComponent />}
+              </View>
+            ))}
+          </>
+        ) : (
+          <ListEmptyComponent />
+        )}
+      </>
+    )}
+  </>
 );
 
 export default withTheme(ScrollList);

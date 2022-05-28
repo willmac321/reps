@@ -1,7 +1,6 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { withTheme, List } from 'react-native-paper';
-import { FontAwesome5 } from '@expo/vector-icons';
+import { StyleSheet } from 'react-native';
+import { withTheme, List, IconButton } from 'react-native-paper';
 
 const WorkoutItem = ({
   theme,
@@ -23,14 +22,10 @@ const WorkoutItem = ({
         },
     icon: isSelected
       ? {
-          color: theme.buttonText.color,
           marginVertical: 20,
-          paddingRight: 20,
           ...theme.title,
         }
       : {
-          color: theme.colors.primary,
-          paddingRight: 20,
           marginVertical: 20,
           ...theme.title,
         },
@@ -61,13 +56,15 @@ const WorkoutItem = ({
         <>
           {showEditAndTrash && (
             <>
-              <FontAwesome5
-                name="pen"
+              <IconButton
+                icon="pen"
+                color={isSelected ? theme.buttonText.color : theme.colors.primary}
                 style={styles.icon}
                 onPress={(e) => handleEdit(e, text.id)}
               />
-              <FontAwesome5
-                name="trash-alt"
+              <IconButton
+                color={isSelected ? theme.buttonText.color : theme.colors.primary}
+                icon="trash-alt"
                 style={styles.icon}
                 onPress={(e) => handleTrash(e, text.id)}
               />

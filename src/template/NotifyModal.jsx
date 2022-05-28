@@ -25,7 +25,12 @@ const NotifyModal = ({
       <Dialog
         visible={isVisible}
         onDismiss={hideDialog}
-        style={{ backgroundColor: theme.colors.background, ...style }}
+        style={{
+          backgroundColor: theme.colors.background,
+          borderColor: theme.colors.secondary,
+          borderWidth: 1,
+          ...style,
+        }}
       >
         <Dialog.Title theme={theme} style={theme.title}>
           {title}

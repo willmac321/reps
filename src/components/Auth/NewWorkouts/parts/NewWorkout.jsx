@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, ScrollView } from 'react-native';
-import { withTheme, TextInput, HelperText } from 'react-native-paper';
+import { Text, withTheme, TextInput, HelperText } from 'react-native-paper';
 import API from '../../../../controllers/WorkoutApi';
 import CardWithButton from '../../../../template/CardWithButton';
 import { StateContext } from '../../../../controllers/state';
@@ -87,9 +87,11 @@ const NewWorkout = ({ navigation, user, theme, data }) => {
     <>
       <CardWithButton
         title={
-          editWorkout.title
-            ? `Editing workout name for "${editWorkout.title}"`
-            : 'Name your workout'
+          <Text theme={theme} style={theme.title}>
+            {editWorkout.title
+              ? `Editing workout name for "${editWorkout.title}"`
+              : 'Name your workout'}
+          </Text>
         }
         buttonText="Ok"
         showButton

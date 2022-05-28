@@ -1,7 +1,6 @@
 import React from 'react';
-import { withTheme, List } from 'react-native-paper';
+import { withTheme, List, IconButton } from 'react-native-paper';
 import { View, Animated, Easing } from 'react-native';
-import { FontAwesome5 } from '@expo/vector-icons';
 import { StateContext } from '../../../../controllers/state';
 import CardWithButton from '../../../../template/CardWithButton';
 import ScrollList from '../../../../template/ScrollList';
@@ -199,10 +198,10 @@ const Workouts = ({
       onPress={handleNew}
       right={() => (
         <>
-          <FontAwesome5
-            name="plus-square"
+          <IconButton
+            icon="plus-square"
+            color={theme.colors.primary}
             style={{
-              color: theme.colors.primary,
               paddingRight: 20,
               marginVertical: 20,
               ...theme.title,

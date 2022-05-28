@@ -1,5 +1,5 @@
 import React from 'react';
-import { withTheme, List, Portal } from 'react-native-paper';
+import { withTheme, Text, List, Portal } from 'react-native-paper';
 import { View, Animated } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import CardWithButton from '../template/CardWithButton';
@@ -14,6 +14,7 @@ const Exercises = ({
   selected,
   setSelected,
   theme,
+  showScrollView,
   showTrash = false,
   handleNew = null,
   handleTrash = () => {},
@@ -21,6 +22,7 @@ const Exercises = ({
   OnPressExerciseComponent = null,
   setSelectedExercise = () => {},
   panX = null,
+  showAnimation = true,
 }) => {
   const [localExercises, setLocalExercises] = React.useState([]);
   const isMounted = useIsMounted();
@@ -87,13 +89,14 @@ const Exercises = ({
         totalExercises={localExercises.length}
         showTrash={showTrash}
         handleTrash={() => handleTrash(item.id)}
+        showAnimation={showAnimation}
       />
     </Animated.View>
   );
 
   const EmptyComponent = () => (
     <List.Item
-      title="Jenkies, add an exercise!"
+      title={<Text>Jenkies, add an exercise!</Text>}
       titleStyle={{
         ...theme.buttonText,
         color: theme.colors.primary,
@@ -162,6 +165,7 @@ const Exercises = ({
           theme={theme}
           ItemSeparatorComponent={ItemSeparator}
           ListEmptyComponent={EmptyComponent}
+          showScrollView={showScrollView}
         />
         <LoadingOverlay theme={theme} isVisible={isLoading} />
       </CardWithButton>

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Animated, Easing, Text, StyleSheet, Dimensions } from 'react-native';
 import { Card, withTheme, TouchableRipple } from 'react-native-paper';
 import { useIsMounted } from '../../../../utils/useIsMounted';
-import {isMobile} from '../../../../utils/checkPlatform';
+import { isMobile } from '../../../../utils/checkPlatform';
 import Button from '../../../../template/ButtonTemplate';
 
 const ExerciseOnPressLog = ({ theme, content, onProgress }) => {
@@ -82,6 +82,8 @@ const ExerciseOnPressLog = ({ theme, content, onProgress }) => {
     }).start();
   }, []);
 
+  const windowWidth = Dimensions.get('window').width;
+
   const onLocalPress = (index) => {
     if (isMounted.current) {
       setSelected(index);
@@ -107,15 +109,18 @@ const ExerciseOnPressLog = ({ theme, content, onProgress }) => {
 
   React.useEffect(() => {
     const listener = (event) => {
-      if (isMounted.current && (event.code === 'Enter' || event.code === 'NumpadEnter')) {
+      if (
+        isMounted.current &&
+        (event.code === 'Space' || event.code === 'Enter' || event.code === 'NumpadEnter')
+      ) {
         goNext();
       }
     };
-    if (isMounted.current === true && isMobile()) {
+    if (isMounted.current === true && !isMobile()) {
       document.addEventListener('keydown', listener);
     }
     return () => {
-      if (isMobile()) {
+      if (!isMobile()) {
         document.removeEventListener('keydown', listener);
       }
     };
@@ -163,57 +168,135 @@ const ExerciseOnPressLog = ({ theme, content, onProgress }) => {
                   style={selected === i ? styles.selectedSubItem : styles.subItem}
                   onPress={(e) => onLocalPress(i, e)}
                 >
-                  <View theme={theme} style={styles.subItemView}>
-                    <View style={styles.subItemText}>
-                      <Text
-                        theme={theme}
-                        style={selected === i ? styles.selectedText : styles.text}
-                      >
-                        Set {i + 1}
-                      </Text>
-                    </View>
-                    <View style={styles.subItemText}>
-                      <Text
-                        theme={theme}
-                        style={selected === i ? styles.selectedText : styles.text}
-                      >
-                        Rep Range: {content.repRange[0]} to {content.repRange[1]}
-                      </Text>
-                    </View>
-                    <View theme={theme} style={[styles.subItemText, { alignItems: 'flex-end' }]}>
-                      {selected === i ? (
+                  <View
+                    theme={theme}
+                    style={[
+                      styles.subItemView,
+                      selected
+                        ? {
+                            flexDirection: 'row',
+                            flexGrow: 1,
+                          }
+                        : {},
+                    ]}
+                  >
+                    {windowWidth >= 640 ? (
+                      <>
+                        <View style={styles.subItemText}>
+                          <Text
+                            theme={theme}
+                            style={selected === i ? styles.selectedText : styles.text}
+                          >
+                            Set {i + 1}
+                          </Text>
+                        </View>
+                        <View style={styles.subItemText}>
+                          <Text
+                            theme={theme}
+                            style={selected === i ? styles.selectedText : styles.text}
+                          >
+                            Rep Range: {content.repRange[0]} to {content.repRange[1]}
+                          </Text>
+                        </View>
                         <View
                           theme={theme}
                           style={[styles.subItemText, { alignItems: 'flex-end' }]}
                         >
-                          <Button
-                            theme={{
-                              button: {
-                                ...theme.button,
-                                width: 100,
-                                marginLeft: 10,
-                                marginRight: 10,
-                              },
-                            }}
-                            variant="secondary"
-                            onPress={goNext}
-                            // isLoading={isLoading}
-                          >
-                            Next
-                          </Button>
+                          {selected === i ? (
+                            <View
+                              theme={theme}
+                              style={[styles.subItemText, { alignItems: 'flex-end' }]}
+                            >
+                              <Text
+                                theme={theme}
+                                style={[styles.selectedText, theme.paragraph, { margin: 'auto' }]}
+                              >
+                                Rest Target:{' '}
+                                {new Date(content.rest * 1000).toISOString().substring(14, 19)}
+                              </Text>
+                              <Button
+                                theme={{
+                                  button: {
+                                    ...theme.button,
+                                    width: 100,
+                                    marginLeft: 10,
+                                    marginRight: 10,
+                                  },
+                                }}
+                                variant="secondary"
+                                onPress={goNext}
+                                // isLoading={isLoading}
+                              >
+                                Next
+                              </Button>
+                            </View>
+                          ) : (
+                            <Text theme={theme} style={[styles.text]}>
+                              Rest Target:{' '}
+                              {new Date(content.rest * 1000).toISOString().substring(14, 19)}
+                            </Text>
+                          )}
+                        </View>
+                      </>
+                    ) : (
+                      <View style={{ ...styles.subItemText, flexDirection: 'column' }}>
+                        <View style={styles.subItemText}>
                           <Text
                             theme={theme}
-                            style={[styles.selectedText, theme.paragraph, { margin: 'auto' }]}
+                            style={selected === i ? styles.selectedText : styles.text}
                           >
-                            Rest Target: {new Date(content.rest * 1000).toISOString().substr(14, 5)}
+                            Set {i + 1}
                           </Text>
                         </View>
-                      ) : (
-                        <Text theme={theme} style={[styles.text]}>
-                          Rest Target: {new Date(content.rest * 1000).toISOString().substr(14, 5)}
-                        </Text>
-                      )}
-                    </View>
+                        <View style={styles.subItemText}>
+                          <Text
+                            theme={theme}
+                            style={
+                              selected === i
+                                ? { ...styles.selectedText, ...theme.paragraph, paddingTop: 3 }
+                                : styles.text
+                            }
+                          >
+                            Rep Range: {content.repRange[0]} to {content.repRange[1]}
+                          </Text>
+                        </View>
+                        <View theme={theme} style={[styles.subItemText, { paddingTop: 5 }]}>
+                          {selected === i ? (
+                            <View theme={theme} style={styles.subItemText}>
+                              <Text
+                                theme={theme}
+                                style={[styles.selectedText, theme.paragraph, { margin: 'auto' }]}
+                              >
+                                Rest Target:{' '}
+                                {new Date(content.rest * 1000).toISOString().substring(14, 19)}
+                              </Text>
+                              <View theme={theme} style={{ alignItems: 'flex-end' }}>
+                                <Button
+                                  theme={{
+                                    button: {
+                                      ...theme.button,
+                                      width: 100,
+                                      marginLeft: 10,
+                                      marginRight: 10,
+                                    },
+                                  }}
+                                  variant="secondary"
+                                  onPress={goNext}
+                                  // isLoading={isLoading}
+                                >
+                                  Next
+                                </Button>
+                              </View>
+                            </View>
+                          ) : (
+                            <Text theme={theme} style={[styles.text]}>
+                              Rest Target:{' '}
+                              {new Date(content.rest * 1000).toISOString().substring(14, 19)}
+                            </Text>
+                          )}
+                        </View>
+                      </View>
+                    )}
                   </View>
                 </TouchableRipple>
               ))}

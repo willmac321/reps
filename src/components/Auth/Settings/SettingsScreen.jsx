@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, StyleSheet, Linking } from 'react-native';
+import { View, StyleSheet, Linking, ScrollView } from 'react-native';
 import { withTheme, Switch, List, RadioButton, Button, Text } from 'react-native-paper';
 import { debounce } from 'lodash';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { StateContext } from '../../../controllers/state';
 import CardWithButton from '../../../template/CardWithButton';
 import LegalPrivacyPolicy from '../../NoAuth/Legal/LegalPrivacy';
@@ -10,6 +11,7 @@ import ResetPassword from './parts/ResetPassword';
 import Logout from './parts/Logout';
 import ChangeEmail from './parts/ChangeEmail';
 import API from '../../../controllers/UserSettingsApi.js';
+import { isMobile } from '../../../utils/checkPlatform';
 
 const { updateSettings } = API;
 
@@ -108,160 +110,335 @@ const SettingsScreen = ({ navigation, theme }) => {
   // have theme picker, gender change on splash, timeout on login, share workouts, contact email
   return (
     <>
-      <CardWithButton
-        theme={theme}
-        showButton={false}
-        style={{
-          flex: 1,
-          marginBottom: 50,
-        }}
-      >
-        <View>
-          <List.Section>
-            <List.Item
-              title="Dark Mode"
-              right={() => (
-                <Switch value={themeToggle} onValueChange={onToggleTheme} theme={theme} />
-              )}
-            />
-            <List.Item title="Splash Display" right={splashSelect} />
-          </List.Section>
-          <List.Section>
-            <List.Subheader
+      {isMobile() ? (
+        <SafeAreaView style={isMobile() ? { flexGrow: 1 } : {}}>
+          <ScrollView
+            style={[
+              {
+                scrollbarColor: `${theme.colors.primary} ${theme.colors.surface}`,
+              },
+              isMobile() ? {} : { overflow: 'auto' },
+            ]}
+          >
+            <CardWithButton
+              theme={theme}
+              showButton={false}
               style={{
-                borderTopWidth: 1,
-                borderColor: theme.colors.primary,
-                borderStyle: 'solid',
+                marginBottom: 50,
               }}
+            >
+              <View>
+                <List.Section>
+                  <List.Item
+                    title="Dark Mode"
+                    right={() => (
+                      <Switch value={themeToggle} onValueChange={onToggleTheme} theme={theme} />
+                    )}
+                  />
+                  <List.Item title="Splash Display" right={splashSelect} />
+                </List.Section>
+                <List.Section>
+                  <List.Subheader
+                    style={{
+                      borderTopWidth: 1,
+                      borderColor: theme.colors.primary,
+                      borderStyle: 'solid',
+                    }}
+                  />
+                  <List.Item
+                    title="Change Email"
+                    onPress={() => setShowEmail(true)}
+                    right={() => (
+                      <Button
+                        style={[styles.linkButton]}
+                        labelStyle={[styles.linkText]}
+                        onPress={() => setShowEmail(true)}
+                      >
+                        Change it
+                      </Button>
+                    )}
+                  />
+                  <List.Item
+                    title="Reset Password"
+                    onPress={() => setShowResetPassword(true)}
+                    right={() => (
+                      <Button
+                        style={[styles.linkButton]}
+                        labelStyle={[styles.linkText]}
+                        onPress={() => setShowResetPassword(true)}
+                      >
+                        Reset it
+                      </Button>
+                    )}
+                  />
+                  <List.Item
+                    title="Logout"
+                    onPress={() => setShowLogout(true)}
+                    right={() => (
+                      <Button
+                        style={[styles.linkButton]}
+                        labelStyle={[styles.linkText]}
+                        onPress={() => setShowLogout(true)}
+                      >
+                        Log out of it
+                      </Button>
+                    )}
+                  />
+                </List.Section>
+                <List.Section>
+                  <List.Subheader
+                    style={{
+                      borderTopWidth: 1,
+                      borderColor: theme.colors.primary,
+                      borderStyle: 'solid',
+                    }}
+                  />
+                  <List.Item
+                    title="Delete Account (forever)"
+                    onPress={() => setShowDelete(true)}
+                    right={() => (
+                      <Button
+                        style={[styles.linkButton]}
+                        labelStyle={[styles.linkText, { color: theme.colors.alert }]}
+                        onPress={() => setShowDelete(true)}
+                      >
+                        Remove it
+                      </Button>
+                    )}
+                  />
+                </List.Section>
+                <List.Section>
+                  <List.Item
+                    title="Contact Us"
+                    onPress={setShowContact}
+                    right={() => (
+                      <Button
+                        style={[styles.linkButton]}
+                        labelStyle={[styles.linkText]}
+                        onPress={setShowContact}
+                      >
+                        Do it
+                      </Button>
+                    )}
+                  />
+                  <List.Item
+                    title="Legal & Privacy Policy"
+                    onPress={() => setShowLegal(true)}
+                    right={() => (
+                      <Button
+                        style={[styles.linkButton]}
+                        labelStyle={[styles.linkText]}
+                        onPress={() => setShowLegal(true)}
+                      >
+                        View
+                      </Button>
+                    )}
+                  />
+                </List.Section>
+                <List.Section>
+                  <List.Subheader
+                    style={{
+                      borderTopWidth: 1,
+                      borderColor: theme.colors.primary,
+                      borderStyle: 'solid',
+                    }}
+                  />
+                  <List.Item
+                    title="Reset Settings"
+                    onPress={handleReset}
+                    right={() => (
+                      <Button
+                        style={[styles.linkButton]}
+                        labelStyle={[styles.linkText, { color: theme.colors.alert }]}
+                        onPress={handleReset}
+                      >
+                        Reset it
+                      </Button>
+                    )}
+                  />
+                </List.Section>
+              </View>
+            </CardWithButton>
+            <LegalPrivacyPolicy
+              navigation={navigation}
+              theme={theme}
+              isVisible={showLegal}
+              setIsVisible={setShowLegal}
             />
-            <List.Item
-              title="Change Email"
-              onPress={() => setShowEmail(true)}
-              right={() => (
-                <Button
-                  style={[styles.linkButton]}
-                  labelStyle={[styles.linkText]}
+            <DeleteAccount isVisible={showDelete} setIsVisible={setShowDelete} theme={theme} />
+            <ResetPassword
+              isVisible={showResetPassword}
+              setIsVisible={setShowResetPassword}
+              theme={theme}
+            />
+            <Logout isVisible={showLogout} setIsVisible={setShowLogout} theme={theme} />
+            <ChangeEmail isVisible={showEmail} setIsVisible={setShowEmail} theme={theme} />
+          </ScrollView>
+        </SafeAreaView>
+      ) : (
+        <ScrollView
+          style={[
+            {
+              scrollbarColor: `${theme.colors.primary} ${theme.colors.surface}`,
+            },
+            isMobile() ? {} : { overflow: 'auto' },
+          ]}
+        >
+          <CardWithButton
+            theme={theme}
+            showButton={false}
+            style={{
+              marginBottom: 50,
+            }}
+          >
+            <View>
+              <List.Section>
+                <List.Item
+                  title="Dark Mode"
+                  right={() => (
+                    <Switch value={themeToggle} onValueChange={onToggleTheme} theme={theme} />
+                  )}
+                />
+                <List.Item title="Splash Display" right={splashSelect} />
+              </List.Section>
+              <List.Section>
+                <List.Subheader
+                  style={{
+                    borderTopWidth: 1,
+                    borderColor: theme.colors.primary,
+                    borderStyle: 'solid',
+                  }}
+                />
+                <List.Item
+                  title="Change Email"
                   onPress={() => setShowEmail(true)}
-                >
-                  Change it
-                </Button>
-              )}
-            />
-            <List.Item
-              title="Reset Password"
-              onPress={() => setShowResetPassword(true)}
-              right={() => (
-                <Button
-                  style={[styles.linkButton]}
-                  labelStyle={[styles.linkText]}
+                  right={() => (
+                    <Button
+                      style={[styles.linkButton]}
+                      labelStyle={[styles.linkText]}
+                      onPress={() => setShowEmail(true)}
+                    >
+                      Change it
+                    </Button>
+                  )}
+                />
+                <List.Item
+                  title="Reset Password"
                   onPress={() => setShowResetPassword(true)}
-                >
-                  Reset it
-                </Button>
-              )}
-            />
-            <List.Item
-              title="Logout"
-              onPress={() => setShowLogout(true)}
-              right={() => (
-                <Button
-                  style={[styles.linkButton]}
-                  labelStyle={[styles.linkText]}
+                  right={() => (
+                    <Button
+                      style={[styles.linkButton]}
+                      labelStyle={[styles.linkText]}
+                      onPress={() => setShowResetPassword(true)}
+                    >
+                      Reset it
+                    </Button>
+                  )}
+                />
+                <List.Item
+                  title="Logout"
                   onPress={() => setShowLogout(true)}
-                >
-                  Log out of it
-                </Button>
-              )}
-            />
-          </List.Section>
-          <List.Section>
-            <List.Subheader
-              style={{
-                borderTopWidth: 1,
-                borderColor: theme.colors.primary,
-                borderStyle: 'solid',
-              }}
-            />
-            <List.Item
-              title="Delete Account (forever)"
-              onPress={() => setShowDelete(true)}
-              right={() => (
-                <Button
-                  style={[styles.linkButton]}
-                  labelStyle={[styles.linkText, { color: theme.colors.alert }]}
+                  right={() => (
+                    <Button
+                      style={[styles.linkButton]}
+                      labelStyle={[styles.linkText]}
+                      onPress={() => setShowLogout(true)}
+                    >
+                      Log out of it
+                    </Button>
+                  )}
+                />
+              </List.Section>
+              <List.Section>
+                <List.Subheader
+                  style={{
+                    borderTopWidth: 1,
+                    borderColor: theme.colors.primary,
+                    borderStyle: 'solid',
+                  }}
+                />
+                <List.Item
+                  title="Delete Account (forever)"
                   onPress={() => setShowDelete(true)}
-                >
-                  Remove it
-                </Button>
-              )}
-            />
-          </List.Section>
-          <List.Section>
-            <List.Item
-              title="Contact Us"
-              onPress={setShowContact}
-              right={() => (
-                <Button
-                  style={[styles.linkButton]}
-                  labelStyle={[styles.linkText]}
+                  right={() => (
+                    <Button
+                      style={[styles.linkButton]}
+                      labelStyle={[styles.linkText, { color: theme.colors.alert }]}
+                      onPress={() => setShowDelete(true)}
+                    >
+                      Remove it
+                    </Button>
+                  )}
+                />
+              </List.Section>
+              <List.Section>
+                <List.Item
+                  title="Contact Us"
                   onPress={setShowContact}
-                >
-                  Do it
-                </Button>
-              )}
-            />
-            <List.Item
-              title="Legal & Privacy Policy"
-              onPress={() => setShowLegal(true)}
-              right={() => (
-                <Button
-                  style={[styles.linkButton]}
-                  labelStyle={[styles.linkText]}
+                  right={() => (
+                    <Button
+                      style={[styles.linkButton]}
+                      labelStyle={[styles.linkText]}
+                      onPress={setShowContact}
+                    >
+                      Do it
+                    </Button>
+                  )}
+                />
+                <List.Item
+                  title="Legal & Privacy Policy"
                   onPress={() => setShowLegal(true)}
-                >
-                  View
-                </Button>
-              )}
-            />
-          </List.Section>
-          <List.Section>
-            <List.Subheader
-              style={{
-                borderTopWidth: 1,
-                borderColor: theme.colors.primary,
-                borderStyle: 'solid',
-              }}
-            />
-            <List.Item
-              title="Reset Settings"
-              onPress={handleReset}
-              right={() => (
-                <Button
-                  style={[styles.linkButton]}
-                  labelStyle={[styles.linkText, { color: theme.colors.alert }]}
+                  right={() => (
+                    <Button
+                      style={[styles.linkButton]}
+                      labelStyle={[styles.linkText]}
+                      onPress={() => setShowLegal(true)}
+                    >
+                      View
+                    </Button>
+                  )}
+                />
+              </List.Section>
+              <List.Section>
+                <List.Subheader
+                  style={{
+                    borderTopWidth: 1,
+                    borderColor: theme.colors.primary,
+                    borderStyle: 'solid',
+                  }}
+                />
+                <List.Item
+                  title="Reset Settings"
                   onPress={handleReset}
-                >
-                  Reset it
-                </Button>
-              )}
-            />
-          </List.Section>
-        </View>
-      </CardWithButton>
-      <LegalPrivacyPolicy
-        navigation={navigation}
-        theme={theme}
-        isVisible={showLegal}
-        setIsVisible={setShowLegal}
-      />
-      <DeleteAccount isVisible={showDelete} setIsVisible={setShowDelete} theme={theme} />
-      <ResetPassword
-        isVisible={showResetPassword}
-        setIsVisible={setShowResetPassword}
-        theme={theme}
-      />
-      <Logout isVisible={showLogout} setIsVisible={setShowLogout} theme={theme} />
-      <ChangeEmail isVisible={showEmail} setIsVisible={setShowEmail} theme={theme} />
+                  right={() => (
+                    <Button
+                      style={[styles.linkButton]}
+                      labelStyle={[styles.linkText, { color: theme.colors.alert }]}
+                      onPress={handleReset}
+                    >
+                      Reset it
+                    </Button>
+                  )}
+                />
+              </List.Section>
+            </View>
+          </CardWithButton>
+          <LegalPrivacyPolicy
+            navigation={navigation}
+            theme={theme}
+            isVisible={showLegal}
+            setIsVisible={setShowLegal}
+          />
+          <DeleteAccount isVisible={showDelete} setIsVisible={setShowDelete} theme={theme} />
+          <ResetPassword
+            isVisible={showResetPassword}
+            setIsVisible={setShowResetPassword}
+            theme={theme}
+          />
+          <Logout isVisible={showLogout} setIsVisible={setShowLogout} theme={theme} />
+          <ChangeEmail isVisible={showEmail} setIsVisible={setShowEmail} theme={theme} />
+        </ScrollView>
+      )}
     </>
   );
 };

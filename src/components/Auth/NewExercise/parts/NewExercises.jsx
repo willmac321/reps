@@ -18,6 +18,7 @@ const NewExercisesList = ({
   setNotifyTitle,
   setNotifyMessage,
   setShowNotify,
+  showScrollView,
 }) => {
   const {
     exercises: { exercises, deleteExercise },
@@ -102,6 +103,8 @@ const NewExercisesList = ({
       showTrash
       handleTrash={handleTrash}
       panX={isDelete ? panX : null}
+      showScrollView={showScrollView}
+      showAnimation={false}
     />
   );
 };

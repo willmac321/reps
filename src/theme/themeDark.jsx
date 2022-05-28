@@ -73,10 +73,9 @@ const theme = {
   },
   card: {
     borderStyle: 'solid',
+    borderColor: primary,
     borderTopColor: accent,
     borderLeftColor: accent,
-    borderRightColor: primary,
-    borderBottomColor: primary,
     borderWidth: 0.1,
     borderRightWidth: 6,
     borderBottomWidth: 6,

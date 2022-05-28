@@ -44,7 +44,10 @@ const ExercisesList = ({
         isVisible={showCompletion}
         setIsVisible={setShowCompletion}
         style={{
-          width: 'unset',
+          minWidth: 320,
+          flexGrow: 0,
+          flexShrink: 1,
+          flexBasis: 210,
           margin: 'auto',
           alignItems: 'center',
           alignSelf: 'center',

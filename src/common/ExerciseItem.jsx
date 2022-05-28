@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity, Animated, Easing } from 'react-native';
-import { withTheme, TouchableRipple, Text, Card } from 'react-native-paper';
-import { FontAwesome5 } from '@expo/vector-icons';
+import { IconButton, withTheme, TouchableRipple, Text, Card } from 'react-native-paper';
 import { useIsMounted } from '../utils/useIsMounted';
 
 const ExerciseItem = ({
@@ -13,6 +12,7 @@ const ExerciseItem = ({
   showTrash = false,
   handleProgress,
   OnPressComponent = null,
+  showAnimation = true,
 }) => {
   const styles = StyleSheet.create({
     item: isSelected
@@ -138,20 +138,24 @@ const ExerciseItem = ({
         />
       ) : (
         <Animated.View
-          style={{
-            transform: [
-              {
-                scale: springAnim.interpolate({
-                  inputRange: [1, 100],
-                  outputRange: [0.8, 1],
-                }),
-              },
-            ],
-            opacity: springAnim.interpolate({
-              inputRange: [0, 100],
-              outputRange: [0, 1],
-            }),
-          }}
+          style={
+            showAnimation
+              ? {
+                  transform: [
+                    {
+                      scale: springAnim.interpolate({
+                        inputRange: [1, 100],
+                        outputRange: [0.8, 1],
+                      }),
+                    },
+                  ],
+                  opacity: springAnim.interpolate({
+                    inputRange: [0, 100],
+                    outputRange: [0, 1],
+                  }),
+                }
+              : {}
+          }
         >
           <Card theme={theme} style={styles.item}>
             <TouchableRipple
@@ -216,7 +220,7 @@ const ExerciseItem = ({
                     style={styles.rowButtonContainer}
                     onPress={(e) => handleTrash(e, text.id)}
                   >
-                    <FontAwesome5 name="trash-alt" style={styles.icon} />
+                    <IconButton icon="trash-alt" color={styles.icon.color} style={styles.icon} />
                   </TouchableOpacity>
                 )}
               </View>

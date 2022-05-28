@@ -1,7 +1,8 @@
 import React from 'react';
-import { withTheme, Card } from 'react-native-paper';
+import { withTheme, Card, Text } from 'react-native-paper';
 import { StyleSheet } from 'react-native';
 import ButtonTemplate from './ButtonTemplate';
+import { isMobile } from '../utils/checkPlatform';
 
 const CardWithButton = ({
   children,
@@ -14,15 +15,26 @@ const CardWithButton = ({
   buttonDisabled,
   showButton,
   flex,
+  titleRight,
 }) => {
   const styles = StyleSheet.create({
-    title: theme.title,
+    title: { ...theme.title, paddingTop: 5, flexDirection: 'row', marginRight: 8 },
     card: theme.card,
   });
 
   return (
     <Card theme={theme} style={[styles.card, style]}>
-      {title && <Card.Title theme={theme} titleStyle={styles.title} title={title} />}
+      {title && (
+        <Card.Title
+          theme={theme}
+          titleStyle={styles.title}
+          style={styles.title}
+          titleNumberOfLines={isMobile() ? 2 : 1}
+          title={title}
+          right={titleRight}
+          rightStyle={{ marginTop: 8 }}
+        />
+      )}
       <Card.Content
         style={{
           flexGrow: 1,

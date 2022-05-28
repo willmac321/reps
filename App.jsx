@@ -1,5 +1,6 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
+import { FontAwesome5 } from '@expo/vector-icons';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { LogBox } from 'react-native';
@@ -27,7 +28,8 @@ function App() {
     <StateContextProvider>
       <StateContext.Consumer>
         {({ theme }) => (
-          <PaperProvider theme={theme}>
+          // eslint-disable-next-line
+          <PaperProvider theme={theme} settings={{ icon: (props) => <FontAwesome5 {...props} /> }}>
             <SafeAreaProvider>
               <NavigationContainer theme={theme}>
                 <StateContext.Consumer>

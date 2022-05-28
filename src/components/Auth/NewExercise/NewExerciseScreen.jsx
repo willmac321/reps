@@ -74,65 +74,140 @@ const NewExerciseScreen = ({ navigation, theme }) => {
   }, []);
 
   return (
-    <SafeAreaView style={isMobile() ? { flexGrow: 1 } : {}}>
-      <ScrollView
-        ref={scroll}
-        style={{
-          overflow: 'auto',
-          scrollbarColor: `${theme.colors.primary} ${theme.colors.surface}`,
-        }}
-      >
-        <KeyboardAvoidingView behavior={isApple() ? 'padding' : 'height'}>
-          {selectedWorkout && selectedWorkout.title && (
-            <Header title={`${selectedWorkout.title} - ${selectedWorkout.date}`} theme={theme} />
-          )}
-          <NewExerciseCreator
-            exercises={exercises}
-            addExerciseToList={(val) => {
-              if (val) {
-                setExercises(val);
-                setMarkSelected(val.id || null);
-              } else {
-                setSelectedExercise(null);
-                setMarkSelected(null);
-              }
-            }}
-            workout={selectedWorkout}
-            navigation={navigation}
-            style={{ marginTop: customTopMargin }}
-            user={user}
-            theme={theme}
-            prepopulateData={selectedExercise}
-          />
-          <NewExerciseNext theme={theme} navigation={navigation} />
-          {!keyboardActive && (
-            <NewExercises
-              isLoading={isLoading}
+    <>
+      {isMobile() ? (
+        <SafeAreaView style={{ flexGrow: 1 }}>
+          <ScrollView
+            ref={scroll}
+            style={[
+              {
+                scrollbarColor: `${theme.colors.primary} ${theme.colors.surface}`,
+              },
+              isMobile() ? {} : { overflow: 'auto' },
+            ]}
+          >
+            <KeyboardAvoidingView behavior={isApple() ? 'padding' : 'height'}>
+              {selectedWorkout && selectedWorkout.title && (
+                <Header
+                  title={`${selectedWorkout.title} - ${selectedWorkout.date}`}
+                  theme={theme}
+                />
+              )}
+              <NewExerciseCreator
+                exercises={exercises}
+                addExerciseToList={(val) => {
+                  if (val) {
+                    setExercises(val);
+                    setMarkSelected(val.id || null);
+                  } else {
+                    setSelectedExercise(null);
+                    setMarkSelected(null);
+                  }
+                }}
+                workout={selectedWorkout}
+                navigation={navigation}
+                style={{ marginTop: customTopMargin }}
+                user={user}
+                theme={theme}
+                prepopulateData={selectedExercise}
+              />
+              {!keyboardActive && (
+                <>
+                  <NewExerciseNext theme={theme} navigation={navigation} />
+                  <NewExercises
+                    isLoading={isLoading}
+                    navigation={navigation}
+                    theme={theme}
+                    setShowNotify={setShowNotify}
+                    showEditAndSelect={false}
+                    markSelected={markSelected}
+                    setMarkSelected={setMarkSelected}
+                    setSelectedExercise={setSelectedExercise}
+                    setIsOk={setIsOk}
+                    isOk={isOk}
+                    setNotifyTitle={setNotifyTitle}
+                    setNotifyMessage={setNotifyMessage}
+                    showScrollView={false}
+                  />
+                </>
+              )}
+              <WarnModal
+                title={notifyTitle}
+                buttonText="Yes"
+                theme={theme}
+                content={notifyMessage}
+                visible={showNotify}
+                setVisible={setShowNotify}
+                onPress={() => setIsOk(true)}
+              />
+            </KeyboardAvoidingView>
+          </ScrollView>
+        </SafeAreaView>
+      ) : (
+        <ScrollView
+          ref={scroll}
+          style={[
+            {
+              scrollbarColor: `${theme.colors.primary} ${theme.colors.surface}`,
+            },
+            isMobile() ? {} : { overflow: 'auto' },
+          ]}
+        >
+          <KeyboardAvoidingView behavior={isApple() ? 'padding' : 'height'}>
+            {selectedWorkout && selectedWorkout.title && (
+              <Header title={`${selectedWorkout.title} - ${selectedWorkout.date}`} theme={theme} />
+            )}
+            <NewExerciseCreator
+              exercises={exercises}
+              addExerciseToList={(val) => {
+                if (val) {
+                  setExercises(val);
+                  setMarkSelected(val.id || null);
+                } else {
+                  setSelectedExercise(null);
+                  setMarkSelected(null);
+                }
+              }}
+              workout={selectedWorkout}
               navigation={navigation}
+              style={{ marginTop: customTopMargin }}
+              user={user}
               theme={theme}
-              setShowNotify={setShowNotify}
-              showEditAndSelect={false}
-              markSelected={markSelected}
-              setMarkSelected={setMarkSelected}
-              setSelectedExercise={setSelectedExercise}
-              setIsOk={setIsOk}
-              isOk={isOk}
-              setNotifyTitle={setNotifyTitle}
-              setNotifyMessage={setNotifyMessage}
+              prepopulateData={selectedExercise}
             />
-          )}
-          <WarnModal
-            title={notifyTitle}
-            buttonText="Yes"
-            theme={theme}
-            content={notifyMessage}
-            visible={showNotify}
-            setVisible={setShowNotify}
-            onPress={() => setIsOk(true)}
-          />
-        </KeyboardAvoidingView>
-      </ScrollView>
-    </SafeAreaView>
+            {!keyboardActive && (
+              <>
+                <NewExerciseNext theme={theme} navigation={navigation} />
+                <NewExercises
+                  isLoading={isLoading}
+                  navigation={navigation}
+                  theme={theme}
+                  setShowNotify={setShowNotify}
+                  showEditAndSelect={false}
+                  markSelected={markSelected}
+                  setMarkSelected={setMarkSelected}
+                  setSelectedExercise={setSelectedExercise}
+                  setIsOk={setIsOk}
+                  isOk={isOk}
+                  setNotifyTitle={setNotifyTitle}
+                  setNotifyMessage={setNotifyMessage}
+                  showScrollView={false}
+                />
+              </>
+            )}
+            <WarnModal
+              title={notifyTitle}
+              buttonText="Yes"
+              theme={theme}
+              content={notifyMessage}
+              visible={showNotify}
+              setVisible={setShowNotify}
+              onPress={() => setIsOk(true)}
+            />
+          </KeyboardAvoidingView>
+        </ScrollView>
+      )}
+    </>
   );
 };
 

@@ -1,7 +1,6 @@
-import React from 'react';
-import { FontAwesome5 } from '@expo/vector-icons';
+import React, { useCallback } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { withTheme, TextInput, HelperText, Text } from 'react-native-paper';
+import { withTheme, TextInput, HelperText, Text, IconButton } from 'react-native-paper';
 import API from '../../../../controllers/ExerciseApi';
 import CardWithButton from '../../../../template/CardWithButton';
 
@@ -45,9 +44,7 @@ const NewExercise = ({
       ...theme.title,
     },
     editTitle: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      width: '100%',
+      alignSelf: 'center',
     },
     rowInput: {
       flex: 0,
@@ -82,8 +79,10 @@ const NewExercise = ({
   });
 
   const isNameTaken = () => exercises.map((a) => a.title).includes(newExercise.name);
-  const isEmpty = () =>
-    !(newExercise.title && newExercise.sets && newExercise.rest && newExercise.repRange[1]);
+  const isEmpty = useCallback(
+    () => !(newExercise.title && newExercise.sets && newExercise.rest && newExercise.repRange[1]),
+    [newExercise.title, newExercise.sets, newExercise.rest, newExercise.repRange]
+  );
 
   React.useLayoutEffect(() => {
     if (prepopulateData) {
@@ -179,20 +178,13 @@ const NewExercise = ({
     setIsLoading(false);
   };
 
-  const handleClearForm = React.useCallback(() => {
+  const handleClearForm = () => {
     setNewExercise(EMPTY_EXERCISE);
     // clear the form and deselect in parent
     addExerciseToList(null);
-  }, [setNewExercise]);
+  };
 
-  const title = () => (
-    <View style={styles.editTitle}>
-      <Text>Build-a-Exercise</Text>
-      {!isEmpty() && (
-        <FontAwesome5 name="times-circle" style={styles.icon} onPress={handleClearForm} />
-      )}
-    </View>
-  );
+  const title = () => <Text style={styles.editTitle}>Build-a-Exercise</Text>;
 
   return (
     <View theme={theme}>
@@ -204,6 +196,16 @@ const NewExercise = ({
         onPress={handleOnPress}
         isLoading={isLoading}
         theme={theme}
+        titleRight={() =>
+          !isEmpty() && (
+            <IconButton
+              size={16}
+              icon="times-circle"
+              style={{ ...styles.icon }}
+              onPress={handleClearForm}
+            />
+          )
+        }
       >
         <View>
           <TextInput
