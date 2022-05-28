@@ -159,6 +159,7 @@ const ExerciseOnPressLog = ({ theme, content, onProgress }) => {
                   rippleColor={theme.colors.secondarySelected}
                   underlayColor={theme.colors.secondarySelected}
                   theme={theme}
+                  // FIXME crashes on mobile
                   style={selected === i ? styles.selectedSubItem : styles.subItem}
                   onPress={(e) => onLocalPress(i, e)}
                 >

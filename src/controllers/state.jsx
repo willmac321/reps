@@ -78,8 +78,8 @@ export const StateContextProvider = ({ children }) => {
       unsortedWorkouts.push(w);
       const sorted = () => unsortedWorkouts.sort((a, b) => a.id.localeCompare(b.id));
       setWorkouts(sorted);
-      updateSelectedWorkout(w);
     }
+    updateSelectedWorkout(w);
   };
 
   const setExercises = React.useCallback(

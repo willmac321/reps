@@ -42,7 +42,7 @@ const NewExercise = ({
   const styles = StyleSheet.create({
     input: theme.input,
     icon: {
-      fontSize: '1em',
+      ...theme.title,
     },
     editTitle: {
       flexDirection: 'row',
@@ -188,7 +188,9 @@ const NewExercise = ({
   const title = () => (
     <View style={styles.editTitle}>
       <Text>Build-a-Exercise</Text>
-      <FontAwesome5 name="times-circle" style={styles.icon} onPress={handleClearForm} />
+      {!isEmpty() && (
+        <FontAwesome5 name="times-circle" style={styles.icon} onPress={handleClearForm} />
+      )}
     </View>
   );
 

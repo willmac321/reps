@@ -55,7 +55,7 @@ const Workouts = ({
 
   const setUpdatedWorkout = (id) => {
     if (id) {
-      setSelectedWorkout(workouts.find((a) => a.title === id));
+      setSelectedWorkout(workouts.find((a) => a.id === id.toString()));
     } else {
       setSelectedWorkout();
     }

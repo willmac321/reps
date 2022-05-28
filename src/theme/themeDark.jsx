@@ -1,27 +1,23 @@
 import { DefaultTheme } from 'react-native-paper';
-import { Platform } from 'react-native';
+import { isAndroid, isApple } from '../utils/checkPlatform';
 
 const primary = '#97c2aa';
 const accent = '#2a2b2b';
 const surface = '#414142';
 
 export const dropShadow = () => {
-  switch (Platform.OS) {
-    case 'ios':
-      return {
-        shadowColor: 'black',
-        shadowOffset: { width: 0, height: 4 },
-        shadowRadius: 4,
-        shadowOpacity: 0.25,
-      };
-    case 'android':
-      return { elevation: 8 };
-    default:
-      return {
-        boxSizing: 'border-box',
-        boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-      };
-  }
+  if (isApple())
+    return {
+      shadowColor: 'black',
+      shadowOffset: { width: 0, height: 4 },
+      shadowRadius: 4,
+      shadowOpacity: 0.25,
+    };
+  if (isAndroid()) return { elevation: 8 };
+  return {
+    boxSizing: 'border-box',
+    boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+  };
 };
 
 const theme = {

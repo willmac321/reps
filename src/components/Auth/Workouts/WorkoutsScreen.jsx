@@ -1,7 +1,9 @@
 import React from 'react';
 import { withTheme } from 'react-native-paper';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import WarnModal from '../../../template/WarnModal';
 import Workouts from './parts/Workouts';
+import { isMobile } from '../../../utils/checkPlatform';
 
 const WorkoutsScreen = ({ navigation, theme }) => {
   const [showNotify, setShowNotify] = React.useState(false);
@@ -9,7 +11,7 @@ const WorkoutsScreen = ({ navigation, theme }) => {
   const [notifyMessage, setNotifyMessage] = React.useState('');
   const [notifyTitle, setNotifyTitle] = React.useState('');
   return (
-    <>
+    <SafeAreaView style={isMobile() ? { flexGrow: 1 } : {}}>
       <Workouts
         navigation={navigation}
         setMessage={setNotifyMessage}
@@ -29,7 +31,7 @@ const WorkoutsScreen = ({ navigation, theme }) => {
         }}
         onPress={() => setIsOk(true)}
       />
-    </>
+    </SafeAreaView>
   );
 };
 
