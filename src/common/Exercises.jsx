@@ -150,7 +150,7 @@ const Exercises = ({
         showButton={false}
         flex={1}
         style={{
-          flex: localExercises.length > 0 ? 1 : null,
+          flexGrow: localExercises.length > 0 ? 1 : null,
           marginBottom: 50,
         }}
       >

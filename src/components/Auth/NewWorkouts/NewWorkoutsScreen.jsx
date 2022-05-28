@@ -1,11 +1,13 @@
 import React from 'react';
-import { Platform, LayoutAnimation, Keyboard, KeyboardAvoidingView } from 'react-native';
+import { LayoutAnimation, Keyboard, KeyboardAvoidingView } from 'react-native';
 import { withTheme } from 'react-native-paper';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { StateContext } from '../../../controllers/state';
 import WarnModal from '../../../template/WarnModal';
 import Workouts from '../Workouts/parts/Workouts';
 import NewWorkout from './parts/NewWorkout';
 import { useIsMounted } from '../../../utils/useIsMounted';
+import { isMobile } from '../../../utils/checkPlatform.jsx';
 
 const NewWorkoutsScreen = ({ navigation, theme }) => {
   const [showNotify, setShowNotify] = React.useState(false);
@@ -50,41 +52,43 @@ const NewWorkoutsScreen = ({ navigation, theme }) => {
   }, []);
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={{
-        flex: !isEditWorkout ? 1 : null,
-        flexGrow: !isEditWorkout ? 1 : null,
-      }}
-    >
-      <NewWorkout
-        data={workouts}
-        navigation={navigation}
-        theme={theme}
-        user={user}
-        style={{ flex: !isEditWorkout ? 1 : null }}
-      />
-      {!isEditWorkout && !keyboardActive && (
-        <Workouts
+    <SafeAreaView style={isMobile() ? { flexGrow: 1 } : {}}>
+      <KeyboardAvoidingView
+        behavior={isMobile() ? 'padding' : 'height'}
+        style={{
+          flex: !isEditWorkout ? 1 : null,
+          flexGrow: !isEditWorkout ? 1 : null,
+        }}
+      >
+        <NewWorkout
+          data={workouts}
           navigation={navigation}
-          setMessage={setNotifyMessage}
-          setNotifyTitle={setNotifyTitle}
-          setShowNotify={setShowNotify}
-          showEditAndSelect={false}
-          isOk={isOk}
-          setIsOk={setIsOk}
+          theme={theme}
+          user={user}
+          style={{ flex: !isEditWorkout ? 1 : null }}
         />
-      )}
-      <WarnModal
-        title={notifyTitle}
-        buttonText="Yes"
-        theme={theme}
-        content={notifyMessage}
-        visible={showNotify}
-        setVisible={setShowNotify}
-        onPress={() => setIsOk(true)}
-      />
-    </KeyboardAvoidingView>
+        {!isEditWorkout && !keyboardActive && (
+          <Workouts
+            navigation={navigation}
+            setMessage={setNotifyMessage}
+            setNotifyTitle={setNotifyTitle}
+            setShowNotify={setShowNotify}
+            showEditAndSelect={false}
+            isOk={isOk}
+            setIsOk={setIsOk}
+          />
+        )}
+        <WarnModal
+          title={notifyTitle}
+          buttonText="Yes"
+          theme={theme}
+          content={notifyMessage}
+          visible={showNotify}
+          setVisible={setShowNotify}
+          onPress={() => setIsOk(true)}
+        />
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 

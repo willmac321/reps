@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Platform, View, Animated, Easing, Text, StyleSheet } from 'react-native';
+import { View, Animated, Easing, Text, StyleSheet, Dimensions } from 'react-native';
 import { Card, withTheme, TouchableRipple } from 'react-native-paper';
 import { useIsMounted } from '../../../../utils/useIsMounted';
+import {isMobile} from '../../../../utils/checkPlatform';
 import Button from '../../../../template/ButtonTemplate';
 
 const ExerciseOnPressLog = ({ theme, content, onProgress }) => {
@@ -43,17 +44,17 @@ const ExerciseOnPressLog = ({ theme, content, onProgress }) => {
       borderWidth: 1,
       backgroundColor: theme.colors.primary,
       borderColor: theme.colors.secondarySelected,
-      padding: '.5em',
-      margin: '.1em',
-      minHeight: '4em',
+      padding: 5,
+      margin: 1,
+      minHeight: 40,
     },
     selectedSubItem: {
       ...theme.item,
       borderWidth: 1,
       borderColor: theme.colors.secondarySelected,
-      padding: '.5em',
-      margin: '.1em',
-      minHeight: '4em',
+      padding: 5,
+      margin: 1,
+      minHeight: 40,
       backgroundColor: theme.colors.secondarySelected,
     },
     icon: {
@@ -110,11 +111,11 @@ const ExerciseOnPressLog = ({ theme, content, onProgress }) => {
         goNext();
       }
     };
-    if (isMounted.current === true && Platform.OS === 'web') {
+    if (isMounted.current === true && isMobile()) {
       document.addEventListener('keydown', listener);
     }
     return () => {
-      if (Platform.OS === 'web') {
+      if (isMobile()) {
         document.removeEventListener('keydown', listener);
       }
     };
@@ -159,7 +160,6 @@ const ExerciseOnPressLog = ({ theme, content, onProgress }) => {
                   rippleColor={theme.colors.secondarySelected}
                   underlayColor={theme.colors.secondarySelected}
                   theme={theme}
-                  // FIXME crashes on mobile
                   style={selected === i ? styles.selectedSubItem : styles.subItem}
                   onPress={(e) => onLocalPress(i, e)}
                 >

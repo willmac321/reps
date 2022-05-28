@@ -86,7 +86,11 @@ const NewWorkout = ({ navigation, user, theme, data }) => {
   return (
     <>
       <CardWithButton
-        title={`Editing workout name for "${editWorkout.title}"` || 'Name your workout'}
+        title={
+          editWorkout.title
+            ? `Editing workout name for "${editWorkout.title}"`
+            : 'Name your workout'
+        }
         buttonText="Ok"
         showButton
         buttonDisabled={isDisable}
@@ -96,7 +100,7 @@ const NewWorkout = ({ navigation, user, theme, data }) => {
       >
         <ScrollView
           style={{
-            flex: 1,
+            flexGrow: 1,
             scrollbarColor: `${theme.colors.primary} ${theme.colors.surface}`,
           }}
         >
