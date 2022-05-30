@@ -1,7 +1,7 @@
 import { DefaultTheme } from 'react-native-paper';
 import { isAndroid, isApple } from '../utils/checkPlatform';
 
-const primary = '#97c2aa';
+const primary = '#97c2aae0';
 const accent = '#2a2b2b';
 const surface = '#414142';
 

@@ -155,17 +155,10 @@ export const StateContextProvider = ({ children }) => {
   }, [user]);
 
   React.useEffect(() => {
-    // NOTE debug related might need to take this out
-    if (!debug) {
-      firebase.auth().onAuthStateChanged((res) => {
-        setIsLoading(false);
-        setAuthRes(res);
-      });
-    } else {
-      // FIXME
+    firebase.auth().onAuthStateChanged((res) => {
       setIsLoading(false);
-      setUser({ uid: '123' });
-    }
+      setAuthRes(res);
+    });
   }, []);
 
   React.useEffect(() => {
@@ -190,11 +183,11 @@ export const StateContextProvider = ({ children }) => {
     };
 
     if (authRes && !authRes.emailVerified && !justRegistered) {
+      setUserDetails(defaultUserDetails);
       AuthAPI.logout(() => {});
       // NOTE if statement debug related might take this out
       if (!debug) {
         // if authRes is null -- ie logout then set to default
-        setUserDetails(defaultUserDetails);
         setUser(null);
       }
       return;
@@ -208,11 +201,15 @@ export const StateContextProvider = ({ children }) => {
     setDetails(authRes);
   }, [authRes]);
 
-  const logout = (callback = () => {}) => {
-    setAuthRes({ emailVerified: false });
+  const logout = async (callback = () => {}) => {
+    await AuthAPI.logout(() => {});
+    callback();
+    // NOTE if statement debug related might take this out
     if (isMounted.current) {
-      callback();
-      setIsLoading(false);
+      if (!debug) {
+        // if authRes is null -- ie logout then set to default
+        setUserDetails(defaultUserDetails);
+      }
     }
   };
 

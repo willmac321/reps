@@ -1,6 +1,5 @@
 import React from 'react';
-import { Keyboard, ScrollView, LayoutAnimation } from 'react-native';
-import { useIsFocused } from '@react-navigation/native';
+import { ScrollView } from 'react-native';
 import { withTheme } from 'react-native-paper';
 import NotifyModal from '../../../template/NotifyModal';
 import Login from './parts/Login';

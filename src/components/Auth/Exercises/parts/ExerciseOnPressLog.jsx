@@ -116,11 +116,11 @@ const ExerciseOnPressLog = ({ theme, content, onProgress }) => {
         goNext();
       }
     };
-    if (isMounted.current === true && !isMobile()) {
+    if (isMounted.current && !isMobile()) {
       document.addEventListener('keydown', listener);
     }
     return () => {
-      if (!isMobile()) {
+      if (isMounted.current && !isMobile()) {
         document.removeEventListener('keydown', listener);
       }
     };

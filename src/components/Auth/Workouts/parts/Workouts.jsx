@@ -30,8 +30,6 @@ const Workouts = ({
 
   const isMounted = useIsMounted();
 
-  // FIXME debug -- to null
-  // test1234
   const [selected, setSelected] = React.useState(null);
 
   const [isDelete, setIsDelete] = React.useState(false);
@@ -103,23 +101,6 @@ const Workouts = ({
     setWorkoutToEdit();
     navigation.navigate('Exercises');
   }, [selected, workouts, isDisable]);
-
-  // FIXME debugging reroute
-  React.useEffect(() => {
-    if (workouts) {
-      setSelected('2722ddd');
-    }
-  }, [workouts]);
-  // FIXME debug
-  React.useEffect(() => {
-    if (selected && !isEdit && !isDelete) {
-      setIsDisable(false);
-      setUpdatedWorkout(selected);
-      setWorkoutToEdit();
-      navigation.navigate('Exercises');
-    }
-  }, [workouts]);
-  // /******************
 
   const onPress = (id) => {
     setIsDisable(false);
