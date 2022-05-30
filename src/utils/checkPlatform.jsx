@@ -1,4 +1,4 @@
-import { Platform } from 'react-native';
+import { Platform, Dimensions } from 'react-native';
 
 const isMobile = () => {
   switch (Platform.OS) {
@@ -27,4 +27,9 @@ const isApple = () => {
   }
 };
 
-export { isMobile, isAndroid, isApple };
+const isSmallScreen = () => {
+  const { width } = Dimensions.get('window');
+  return width < 640;
+};
+
+export { isMobile, isAndroid, isApple, isSmallScreen };

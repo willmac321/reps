@@ -1,5 +1,5 @@
 import React from 'react';
-import { withTheme, Card, Text } from 'react-native-paper';
+import { withTheme, Card } from 'react-native-paper';
 import { StyleSheet } from 'react-native';
 import ButtonTemplate from './ButtonTemplate';
 import { isMobile } from '../utils/checkPlatform';
@@ -43,6 +43,7 @@ const CardWithButton = ({
           ...flex,
           overflowY: 'auto',
           marginTop: title ? 'auto' : 20,
+          scrollbarColor: `${theme.colors.primary} ${theme.colors.surface}`,
         }}
       >
         {children}

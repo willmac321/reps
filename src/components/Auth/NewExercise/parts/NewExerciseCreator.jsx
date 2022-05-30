@@ -164,6 +164,7 @@ const NewExercise = ({
       titleChange.flush();
     }
     let newE = {};
+    console.log(prepopulateData, newExercise, workout.id ? workout.id : '');
     if (prepopulateData) {
       newE = {
         ...newExercise,

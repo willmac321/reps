@@ -66,6 +66,7 @@ function AuthNavigator({ theme }) {
     selectedWorkout: { setSelectedWorkout },
     isLoading,
   } = React.useContext(StateContext);
+
   // should only route to new exercises when the page is on a selected workout screen
   return (
     <Portal.Host>
@@ -91,7 +92,6 @@ function AuthNavigator({ theme }) {
           component={NewComponents}
           listeners={({ route, navigation }) => ({
             tabPress: () => {
-              // console.log(getFocusedRouteNameFromRoute(route));
               if (isMounted.current && navigation.isFocused()) {
                 setEditWorkout({});
                 setSelectedWorkout({});

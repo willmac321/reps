@@ -52,15 +52,28 @@ async function newExercise(uid, exercise, workoutId) {
     .catch((e) => console.error(e));
 }
 
-async function getExercises(uid, exerciseArr) {
-  if (!exerciseArr || exerciseArr.length === 0) return [];
+async function getExercises(uid, workoutId) {
+  if (!workoutId) return [];
   return db
     .collection('users')
     .doc(uid)
-    .collection('exercises')
-    .where(fieldPath.documentId(), 'in', exerciseArr)
+    .collection('workouts')
+    .doc(workoutId)
     .get()
-    .then((res) => res.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+    .then(async (r) => {
+      if (r.exists) {
+        const workoutData = r.data();
+        return db
+          .collection('users')
+          .doc(uid)
+          .collection('exercises')
+          .where(fieldPath.documentId(), 'in', workoutData.exercises)
+          .get()
+          .then((res) => res.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+          .catch((e) => e);
+      }
+      throw Error('No exercise data exists');
+    })
     .catch((e) => e);
 }
 

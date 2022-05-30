@@ -1,5 +1,4 @@
 import React from 'react';
-import { isEqual } from 'lodash';
 import { firebase } from '../firebase/config';
 import AuthAPI from './AuthApi';
 import UserSettingsAPI from './UserSettingsApi';
@@ -7,6 +6,7 @@ import WorkoutAPI from './WorkoutApi';
 import ExerciseApi from './ExerciseApi';
 import themeDark from '../theme/themeDark';
 import themeLight from '../theme/themeLight';
+import { getLocalData, storeLocalData, USER_STORE_KEY } from '../firebase/localStorage';
 
 export const StateContext = React.createContext();
 
@@ -26,6 +26,7 @@ export const StateContextProvider = ({ children }) => {
   const [justRegistered, setJustRegistered] = React.useState(false);
   const [authRes, setAuthRes] = React.useState(null);
   const [user, setUser] = React.useState(null);
+  const [theme, setTheme] = React.useState(themeLight);
 
   // default user state, use this on account create and overwrite after login
   const [defaultUserDetails] = React.useState({
@@ -35,16 +36,18 @@ export const StateContextProvider = ({ children }) => {
     contactEmail: 'help@loblollysoftware.com',
   });
 
-  // TODO use saved state for init
-  // may need to have seperate collection by a device uid that isn't tied to user id
-  const [userDetails, setUserDetails] = React.useState({
-    theme: 'light',
-    splashScreenIcon: 'aphrodite',
-    timeout: false,
-    contactEmail: 'help@loblollysoftware.com',
-  });
+  const [userDetails, updateUserDetails] = React.useState({});
 
-  const theme = userDetails.theme !== 'light' ? themeDark : themeLight;
+  const setUserDetails = (details) => {
+    storeLocalData(details && details !== {} ? details : defaultUserDetails, USER_STORE_KEY);
+    updateUserDetails(details);
+  };
+
+  React.useEffect(() => {
+    if (userDetails) {
+      setTheme(userDetails.theme === 'light' ? themeLight : themeDark);
+    }
+  }, [userDetails.theme]);
 
   const [workouts, setWorkouts] = React.useState([]);
 
@@ -82,33 +85,13 @@ export const StateContextProvider = ({ children }) => {
     updateSelectedWorkout(w);
   };
 
-  const setExercises = React.useCallback(
-    (ex) => {
-      // if ex for set is an array of exercises, just set these and return
-      if (isMounted.current && Array.isArray(ex)) {
-        updateExercises(ex);
-        return;
-      }
-      // for local state
-      // add exercise to list
-      // add exercise uid to workout
-      if (exercises.some((v) => v.id === ex.id)) {
-        const tempExercises = [...exercises];
-        tempExercises[tempExercises.findIndex((e) => e.id === ex.id)] = ex;
-        updateExercises(tempExercises);
-      } else {
-        updateExercises([...exercises, ex]);
-      }
-    },
-    [selectedWorkout, exercises, workouts]
-  );
-
   const getExercises = React.useCallback(
     (setLoading = true, selectedW = null) => {
       const localSelectedWorkout = selectedW || selectedWorkout;
       const getStuff = async () => {
-        const exs = await ExerciseApi.getExercises(user.uid, localSelectedWorkout.exercises);
-        setExercises([...exs]);
+        const exs = await ExerciseApi.getExercises(user.uid, localSelectedWorkout.id);
+        // set locally
+        updateExercises([...exs]);
         if (setLoading) setIsLoading(false);
       };
 
@@ -148,10 +131,7 @@ export const StateContextProvider = ({ children }) => {
             const localSelectedWorkout = { ...selectedWorkout, exercises: localExercises };
             updateSelectedWorkout(localSelectedWorkout);
             const getStuff = async () => {
-              const exs = await ExerciseApi.getExercises(user.uid, localSelectedWorkout.exercises);
-              if (isMounted.current && !isEqual(exs, exercises)) {
-                setExercises([...exs]);
-              }
+              getExercises(false, selectedWorkout.id);
             };
 
             if (
@@ -202,7 +182,9 @@ export const StateContextProvider = ({ children }) => {
             setUserDetails(defaultUserDetails);
           }
         } else {
-          setUserDetails(defaultUserDetails);
+          // this is hit on program load and when logged out, set logged out user local when logout endpoint i scalled
+          const localData = await getLocalData(USER_STORE_KEY);
+          setUserDetails(localData || defaultUserDetails);
         }
       }
     };
@@ -226,6 +208,14 @@ export const StateContextProvider = ({ children }) => {
     setDetails(authRes);
   }, [authRes]);
 
+  const logout = (callback = () => {}) => {
+    setAuthRes({ emailVerified: false });
+    if (isMounted.current) {
+      callback();
+      setIsLoading(false);
+    }
+  };
+
   return (
     <StateContext.Provider
       value={{
@@ -238,10 +228,11 @@ export const StateContextProvider = ({ children }) => {
         setUserDetails,
         setJustRegistered,
         workouts: { workouts, setWorkouts },
-        exercises: { exercises, setExercises, getExercises, deleteExercise },
+        exercises: { exercises, getExercises, deleteExercise },
         selectedWorkout: { selectedWorkout, setSelectedWorkout },
         editWorkout: { editWorkout, setEditWorkout },
         theme,
+        logout,
       }}
     >
       {children}

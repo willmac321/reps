@@ -1,7 +1,7 @@
 import React from 'react';
 import { LayoutAnimation, Keyboard, KeyboardAvoidingView } from 'react-native';
 import { withTheme } from 'react-native-paper';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import SafeArea from '../../../template/SafeAreaWrapper';
 import { StateContext } from '../../../controllers/state';
 import WarnModal from '../../../template/WarnModal';
 import Workouts from '../Workouts/parts/Workouts';
@@ -52,9 +52,8 @@ const NewWorkoutsScreen = ({ navigation, theme }) => {
   }, []);
 
   return (
-    <SafeAreaView style={isMobile() ? { flexGrow: 1 } : {}}>
+    <SafeArea>
       <KeyboardAvoidingView
-        behavior={isMobile() ? 'padding' : 'height'}
         style={{
           flex: !isEditWorkout ? 1 : null,
           flexGrow: !isEditWorkout ? 1 : null,
@@ -88,7 +87,7 @@ const NewWorkoutsScreen = ({ navigation, theme }) => {
           onPress={() => setIsOk(true)}
         />
       </KeyboardAvoidingView>
-    </SafeAreaView>
+    </SafeArea>
   );
 };
 

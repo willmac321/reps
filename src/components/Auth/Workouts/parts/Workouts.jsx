@@ -104,15 +104,22 @@ const Workouts = ({
     navigation.navigate('Exercises');
   }, [selected, workouts, isDisable]);
 
+  // FIXME debugging reroute
+  React.useEffect(() => {
+    if (workouts) {
+      setSelected('2722ddd');
+    }
+  }, [workouts]);
   // FIXME debug
   React.useEffect(() => {
-    if (selected) {
+    if (selected && !isEdit && !isDelete) {
       setIsDisable(false);
       setUpdatedWorkout(selected);
       setWorkoutToEdit();
       navigation.navigate('Exercises');
     }
   }, [workouts]);
+  // /******************
 
   const onPress = (id) => {
     setIsDisable(false);

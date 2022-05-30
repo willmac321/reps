@@ -11,7 +11,8 @@ function login(email, password, callback) {
       callback(error);
     });
 }
-function logout(callback) {
+
+async function logout(callback) {
   firebase
     .auth()
     .signOut()
@@ -22,6 +23,7 @@ function logout(callback) {
       callback(error);
     });
 }
+
 function forgot(email, callback) {
   firebase
     .auth()
@@ -33,6 +35,7 @@ function forgot(email, callback) {
       callback(error);
     });
 }
+
 function register(email, password, callback) {
   firebase
     .auth()

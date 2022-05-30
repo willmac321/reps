@@ -3,23 +3,20 @@ import { withTheme } from 'react-native-paper';
 import { StateContext } from '../../../../controllers/state';
 import WarnModal from '../../../../template/WarnModal';
 import NotifyModal from '../../../../template/NotifyModal';
-import API from '../../../../controllers/AuthApi';
-
-const { logout } = API;
+import { removeLocalData } from '../../../../firebase/localStorage';
+import { useIsMounted } from '../../../../utils/useIsMounted';
 
 const Logout = ({ theme, setIsVisible, isVisible }) => {
-  const { setIsLoading } = React.useContext(StateContext);
+  const isMounted = useIsMounted();
+  const { setIsLoading, logout } = React.useContext(StateContext);
   const [showErrorModal, setShowErrorModal] = React.useState(null);
-  const changePasswordOk = () => {
+  const changePasswordOk = async () => {
     setIsLoading(true);
-    logout((e) => {
-      if (!e) {
-        setIsVisible(false);
-      } else {
-        setIsLoading(false);
-        setShowErrorModal(e);
-      }
-    });
+    await removeLocalData();
+    logout();
+    if (isMounted.current) {
+      setIsVisible(false);
+    }
   };
 
   return (

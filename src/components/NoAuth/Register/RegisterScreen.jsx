@@ -1,58 +1,67 @@
 import React from 'react';
-import { Keyboard, KeyboardAvoidingView, Platform, LayoutAnimation, UIManager } from 'react-native';
+import { ScrollView, Keyboard, LayoutAnimation } from 'react-native';
+import { useIsFocused } from '@react-navigation/native';
 import { withTheme } from 'react-native-paper';
 import NotifyModal from '../../../template/NotifyModal';
 import Register from './parts/Register';
-
-if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
-  UIManager.setLayoutAnimationEnabledExperimental(true);
-}
+import SafeArea from '../../../template/SafeAreaWrapper';
+import { useIsMounted } from '../../../utils/useIsMounted';
 
 const RegisterScreen = ({ theme, navigation }) => {
-  const [customTopMargin, setCustomTopMargin] = React.useState(theme.card.marginTop);
+  const isMounted = useIsMounted();
+  const isFocused = useIsFocused();
   const [showNotify, setShowNotify] = React.useState(false);
   const [notifyMessage, setNotifyMessage] = React.useState('');
   const [notifyTitle, setNotifyTitle] = React.useState('');
 
   const keyboardEventShow = () => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
-    setCustomTopMargin(50);
+    if (isFocused) {
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
+    }
   };
 
   const keyboardEventHide = () => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
-    setCustomTopMargin(theme.card.marginTop);
+    if (isFocused) {
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
+    }
   };
 
   React.useEffect(() => {
-    Keyboard.addListener('keyboardDidShow', keyboardEventShow);
-    Keyboard.addListener('keyboardDidHide', keyboardEventHide);
+    const didShow = Keyboard.addListener('keyboardDidShow', keyboardEventShow);
+    const didHide = Keyboard.addListener('keyboardDidHide', keyboardEventHide);
 
     // cleanup function
     return () => {
-      Keyboard.removeListener('keyboardDidShow', keyboardEventShow);
-      Keyboard.removeListener('keyboardDidHide', keyboardEventHide);
+      if (isMounted.current) {
+        didShow.remove();
+        didHide.remove();
+      }
     };
   }, []);
-
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-      <Register
-        setShowNotify={setShowNotify}
-        setNotifyMessage={setNotifyMessage}
-        setNotifyTitle={setNotifyTitle}
-        style={{ marginTop: customTopMargin }}
+    <SafeArea theme={theme}>
+      <ScrollView
+        style={{
+          scrollbarColor: `${theme.colors.primary} ${theme.colors.surface}`,
+        }}
         theme={theme}
-        navigation={navigation}
-      />
-      <NotifyModal
-        title={notifyTitle}
-        theme={theme}
-        content={notifyMessage}
-        isVisible={showNotify}
-        setIsVisible={setShowNotify}
-      />
-    </KeyboardAvoidingView>
+      >
+        <Register
+          setShowNotify={setShowNotify}
+          setNotifyMessage={setNotifyMessage}
+          setNotifyTitle={setNotifyTitle}
+          theme={theme}
+          navigation={navigation}
+        />
+        <NotifyModal
+          title={notifyTitle}
+          theme={theme}
+          content={notifyMessage}
+          isVisible={showNotify}
+          setIsVisible={setShowNotify}
+        />
+      </ScrollView>
+    </SafeArea>
   );
 };
 

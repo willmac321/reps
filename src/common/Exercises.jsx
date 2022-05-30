@@ -155,6 +155,7 @@ const Exercises = ({
         style={{
           flexGrow: localExercises.length > 0 ? 1 : null,
           marginBottom: 50,
+          scrollbarColor: `${theme.colors.primary} ${theme.colors.surface}`,
         }}
       >
         <ScrollList

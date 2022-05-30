@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Pressable } from 'react-native';
 import { withTheme, Text, Menu } from 'react-native-paper';
 import NotifyModal from '../../../template/NotifyModal';
+import SafeArea from '../../../template/SafeAreaWrapper';
 
 const LegalPrivacyPolicy = ({ navigation, theme, isVisible = true, setIsVisible }) => {
   const [innercontent, setContent] = React.useState('');
@@ -30,24 +31,30 @@ const LegalPrivacyPolicy = ({ navigation, theme, isVisible = true, setIsVisible 
   }, [isVisible]);
 
   return (
-    <NotifyModal
-      title={title}
-      theme={theme}
-      onPress={handleClick}
-      isVisible={isVisible}
-      setIsVisible={setIsVisible}
-      showButton={false}
-    >
-      {!innercontent ? (
-        <View>
-          <Menu.Item style={{ width: 500 }} onPress={() => showPrivacy()} title="Privacy Policy" />
-          <Menu.Item onPress={() => showTerms()} title="End User License Agreement" />
-          <Menu.Item onPress={() => showOpenSource()} title="Open Source & 3rd Party" />
-        </View>
-      ) : (
-        innercontent
-      )}
-    </NotifyModal>
+    <SafeArea theme={theme}>
+      <NotifyModal
+        title={title}
+        theme={theme}
+        onPress={handleClick}
+        isVisible={isVisible}
+        setIsVisible={setIsVisible}
+        showButton={false}
+      >
+        {!innercontent ? (
+          <View>
+            <Menu.Item
+              style={{ width: 500 }}
+              onPress={() => showPrivacy()}
+              title="Privacy Policy"
+            />
+            <Menu.Item onPress={() => showTerms()} title="End User License Agreement" />
+            <Menu.Item onPress={() => showOpenSource()} title="Open Source & 3rd Party" />
+          </View>
+        ) : (
+          innercontent
+        )}
+      </NotifyModal>
+    </SafeArea>
   );
 };
 

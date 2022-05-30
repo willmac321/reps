@@ -32,7 +32,13 @@ const ScrollList = ({
         {data ? (
           <>
             {data.map((item, index) => (
-              <View key={keyExtractor(item)} theme={theme}>
+              <View
+                key={keyExtractor(item)}
+                theme={theme}
+                style={{
+                  scrollbarColor: `${theme.colors.primary} ${theme.colors.surface}`,
+                }}
+              >
                 <RenderItem item={item} />
                 {index < data.length - 1 && <ItemSeparatorComponent />}
               </View>

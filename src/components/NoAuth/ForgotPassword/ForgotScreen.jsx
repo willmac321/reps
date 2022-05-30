@@ -1,13 +1,16 @@
 import React from 'react';
-import { Keyboard, KeyboardAvoidingView, Platform, LayoutAnimation, UIManager } from 'react-native';
+import { Keyboard, Platform, LayoutAnimation, UIManager } from 'react-native';
 import { withTheme } from 'react-native-paper';
 import Forgot from './parts/Forgot';
+import SafeArea from '../../../template/SafeAreaWrapper';
+import { useIsMounted } from '../../../utils/useIsMounted';
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
   UIManager.setLayoutAnimationEnabledExperimental(true);
 }
 
 const ForgotScreen = ({ theme, navigation }) => {
+  const isMounted = useIsMounted();
   const [customTopMargin, setCustomTopMargin] = React.useState(theme.card.marginTop);
 
   const keyboardEventShow = () => {
@@ -26,15 +29,17 @@ const ForgotScreen = ({ theme, navigation }) => {
 
     // cleanup function
     return () => {
-      Keyboard.removeListener('keyboardDidShow', keyboardEventShow);
-      Keyboard.removeListener('keyboardDidHide', keyboardEventHide);
+      if (isMounted.current) {
+        Keyboard.removeListener('keyboardDidShow', keyboardEventShow);
+        Keyboard.removeListener('keyboardDidHide', keyboardEventHide);
+      }
     };
   }, []);
 
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+    <SafeArea theme={theme}>
       <Forgot style={{ marginTop: customTopMargin }} theme={theme} />
-    </KeyboardAvoidingView>
+    </SafeArea>
   );
 };
 

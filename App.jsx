@@ -10,47 +10,61 @@ import { StateContextProvider, StateContext } from './src/controllers/state';
 import NoAuthNavigator from './src/components/NoAuth/NoAuthNavigator';
 import AuthNavigator from './src/components/Auth/AuthNavigator.jsx';
 import SplashScreen from './src/components/Splash/SplashScreen';
+import { isMobile } from './src/utils/checkPlatform';
 
 const Stack = createStackNavigator();
 
-// const styles = StyleSheet.create({
-//   // input: {
-//   //   outline: 'none !important',
-//   // },
-//   root: {
-//     overflow: 'hidden',
-//   },
-// });
-
 function App() {
+  React.useEffect(() => {
+    if (!isMobile()) {
+      const root = document.getElementById('root');
+      if (root) {
+        root.style.overflowY = 'hidden';
+      } else {
+        console.error("Couldn't get root view to fix web ScrollView.");
+      }
+    }
+  });
+
   LogBox.ignoreLogs(['Setting a timer']);
   return (
     <StateContextProvider>
       <StateContext.Consumer>
         {({ theme }) => (
           // eslint-disable-next-line
-          <PaperProvider theme={theme} settings={{ icon: (props) => <FontAwesome5 {...props} /> }}>
+          <PaperProvider theme={theme} settings={{ icon: (props) => <FontAwesome5 {...props} /> }} >
             <SafeAreaProvider>
               <NavigationContainer theme={theme}>
                 <StateContext.Consumer>
-                  {({ user, isLoading, debug }) => {
-                    if (!user && isLoading) {
-                      return (
-                        <Stack.Navigator>
+                  {({ user, isLoading }) => (
+                    <Stack.Navigator>
+                      <>
+                        {!user && isLoading ? (
                           <Stack.Screen
                             name="Reps"
                             component={SplashScreen}
                             options={{ headerShown: false }}
                           />
-                        </Stack.Navigator>
-                      );
-                    }
-                    // NOTE debug related might take this out
-                    if (debug) {
-                      return <AuthNavigator />;
-                    }
-                    return user ? <AuthNavigator /> : <NoAuthNavigator />;
-                  }}
+                        ) : (
+                          <>
+                            {user ? (
+                              <Stack.Screen
+                                name="AuthNav"
+                                component={AuthNavigator}
+                                options={{ headerShown: false }}
+                              />
+                            ) : (
+                              <Stack.Screen
+                                name="NoAuthNav"
+                                component={NoAuthNavigator}
+                                options={{ headerShown: false }}
+                              />
+                            )}
+                          </>
+                        )}
+                      </>
+                    </Stack.Navigator>
+                  )}
                 </StateContext.Consumer>
               </NavigationContainer>
             </SafeAreaProvider>

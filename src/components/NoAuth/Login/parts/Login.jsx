@@ -4,8 +4,10 @@ import { withTheme, TextInput, HelperText } from 'react-native-paper';
 import { Link } from '@react-navigation/native';
 import CardWithButton from '../../../../template/CardWithButton';
 import API from '../../../../controllers/AuthApi';
+import { useIsMounted } from '../../../../utils/useIsMounted';
 
 const Login = ({ theme, style, setShowNotify, setNotifyMessage, setNotifyTitle }) => {
+  const isMounted = useIsMounted();
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(false);
@@ -21,28 +23,32 @@ const Login = ({ theme, style, setShowNotify, setNotifyMessage, setNotifyTitle }
     },
   });
 
-  const emailError = () => email && !email.includes('@');
+  const emailError = () => isMounted.current && email && !email.includes('@');
 
   React.useEffect(() => {
-    if (!password || !email || emailError()) {
-      setIsDisable(true);
-    } else {
-      setIsDisable(false);
+    if (isMounted.current) {
+      if (!password || !email || emailError()) {
+        setIsDisable(true);
+      } else {
+        setIsDisable(false);
+      }
     }
   }, [password, email]);
 
   const callbackHandlePress = (err, user) => {
-    setIsLoading(false);
-    if (err) {
-      setNotifyTitle('Uhoh Brobro!');
-      setNotifyMessage(err.message.toString());
-      setShowNotify(true);
-      return;
-    }
-    if (!user.emailVerified) {
-      setNotifyTitle('But really...');
-      setNotifyMessage('Please verify your email to continue using REPS.');
-      setShowNotify(true);
+    if (isMounted.current) {
+      setIsLoading(false);
+      if (err) {
+        setNotifyTitle('Uhoh Brobro!');
+        setNotifyMessage(err.message.toString());
+        setShowNotify(true);
+        return;
+      }
+      if (!user.emailVerified) {
+        setNotifyTitle('But really...');
+        setNotifyMessage('Please verify your email to continue using REPS.');
+        setShowNotify(true);
+      }
     }
   };
 
