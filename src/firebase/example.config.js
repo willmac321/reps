@@ -1,5 +1,3 @@
-import 'expo-firestore-offline-persistence';
-
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';

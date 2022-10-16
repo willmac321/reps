@@ -25,16 +25,19 @@ const Exercises = ({
   showAnimation = true,
 }) => {
   const [localExercises, setLocalExercises] = React.useState([]);
+  const [idIndexMap] = React.useState([]);
   const isMounted = useIsMounted();
+  const [scrollToIndex, setScrollToIndex] = React.useState(null);
 
   React.useEffect(() => {
     if (isMounted.current) {
       setLocalExercises(
-        exercises.map((v) => {
+        exercises.map((v, i) => {
           const rv = { ...v };
           if (v.sets !== '' && v.sets !== null) {
             rv.sets = parseInt(v.sets, 10);
           }
+          idIndexMap[v.id] = i;
           return rv;
         })
       );
@@ -64,6 +67,7 @@ const Exercises = ({
       const index = localExercises.findIndex((a) => a.id === selected);
       if (index > -1 && localExercises.length > index + 1) {
         setSelected(localExercises[index + 1].id);
+        setScrollToIndex(index + 1);
       } else if (localExercises.length === index + 1) {
         setSelected(null);
         setShowCompletion(true);
@@ -166,6 +170,7 @@ const Exercises = ({
           theme={theme}
           ItemSeparatorComponent={ItemSeparator}
           ListEmptyComponent={EmptyComponent}
+          scrollToIndex={scrollToIndex}
           showScrollView={showScrollView}
         />
         <LoadingOverlay theme={theme} isVisible={isLoading} />
