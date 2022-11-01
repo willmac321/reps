@@ -19,8 +19,8 @@ const ScrollList = ({
     if (scrollToIndex) {
       if (showScrollView) {
         // TODO why doesnt this work
-        console.log(scrollToIndex, ref.current);
-        ref.current.scrollToIndex({ item: scrollToIndex, animated: true });
+        // console.log(scrollToIndex, ref.current);
+        ref.current.scrollToIndex({ index: scrollToIndex, animated: true });
       }
     }
   }, [scrollToIndex]);
