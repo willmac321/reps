@@ -1,7 +1,6 @@
 import React, { useCallback } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { withTheme, TextInput, HelperText, Text, IconButton } from 'react-native-paper';
-import API from '../../../../controllers/ExerciseApi';
 import CardWithButton from '../../../../template/CardWithButton';
 
 const EMPTY_EXERCISE = {
@@ -159,23 +158,19 @@ const NewExercise = ({
   };
 
   const handleOnPress = async () => {
+    let newE = {};
     setIsLoading(true);
     if (titleChange) {
       titleChange.flush();
     }
-    let newE = {};
-    console.log(prepopulateData, newExercise, workout.id ? workout.id : '');
     if (prepopulateData) {
-      newE = {
-        ...newExercise,
-        id: prepopulateData.id,
-      };
-      await API.updateExercise(user.uid, newExercise);
+      // updating exercise
+      newE = await addExerciseToList(newExercise, prepopulateData.id, workout.id);
     } else {
-      newE = await API.newExercise(user.uid, newExercise, workout.id);
+      // new exercise
+      newE = await addExerciseToList(newExercise, null, workout.id);
     }
     setNewExercise(newE);
-    addExerciseToList(newE);
     setIsLoading(false);
   };
 

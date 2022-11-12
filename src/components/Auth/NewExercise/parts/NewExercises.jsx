@@ -2,7 +2,7 @@ import React from 'react';
 import { withTheme } from 'react-native-paper';
 import { Animated, Easing } from 'react-native';
 import { StateContext } from '../../../../controllers/state';
-import Exercises from '../../../../common/Exercises';
+import ExercisesCommon from '../../../../common/ExercisesCommon';
 import { useIsMounted } from '../../../../utils/useIsMounted';
 
 const NewExercisesList = ({
@@ -91,7 +91,7 @@ const NewExercisesList = ({
   }, [isOk]);
 
   return (
-    <Exercises
+    <ExercisesCommon
       isLoading={isLoading}
       navigation={navigation}
       exercises={exercises}
@@ -105,6 +105,7 @@ const NewExercisesList = ({
       panX={isDelete ? panX : null}
       showScrollView={showScrollView}
       showAnimation={false}
+      isDraggable
     />
   );
 };

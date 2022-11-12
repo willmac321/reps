@@ -63,18 +63,31 @@ async function getExercises(uid, workoutId) {
     .then(async (r) => {
       if (r.exists) {
         const workoutData = r.data();
-        return db
-          .collection('users')
-          .doc(uid)
-          .collection('exercises')
-          .where(fieldPath.documentId(), 'in', workoutData.exercises)
-          .get()
-          .then((res) => res.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
-          .catch((e) => e);
+        if (!workoutData || workoutData.exercises.length === 0) return [];
+        const { exercises } = { ...workoutData };
+        const rvExercises = [];
+        const limit = 10;
+        while (exercises.length > 0) {
+          // eslint-disable-next-line
+          const res = await db
+            .collection('users')
+            .doc(uid)
+            .collection('exercises')
+            .where(fieldPath.documentId(), 'in', exercises.slice(0, limit))
+            .get();
+          // eslint-disable-next-line
+          const _rvExercises = res.docs.map((doc) => ({
+            ...doc.data(),
+            id: doc.id,
+          }));
+          exercises.splice(0, limit);
+          rvExercises.push(..._rvExercises);
+        }
+        return rvExercises;
       }
       throw Error('No exercise data exists');
     })
-    .catch((e) => e);
+    .catch((e) => Error(e));
 }
 
 async function deleteExercise(uid, exercise, workoutId, newExerciseList) {

@@ -1,12 +1,15 @@
 import React from 'react';
-import { withTheme, Text, List, Portal } from 'react-native-paper';
-import { View, Animated } from 'react-native';
+import { withTheme, List, Portal } from 'react-native-paper';
+import { ScaleDecorator } from 'react-native-draggable-flatlist';
+import { Text, View, Animated } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import CardWithButton from '../template/CardWithButton';
 import ScrollList from '../template/ScrollList';
+import DraggableScrollList from '../template/DraggableScrollList';
 import LoadingOverlay from '../template/LoadingOverlay';
 import { useIsMounted } from '../utils/useIsMounted';
 import ExerciseItem from './ExerciseItem';
+import ExerciseItemDraggable from './ExerciseItemDraggable';
 
 const Exercises = ({
   isLoading,
@@ -14,7 +17,7 @@ const Exercises = ({
   selected,
   setSelected,
   theme,
-  showScrollView,
+  isDraggable = false,
   showTrash = false,
   handleNew = null,
   handleTrash = () => {},
@@ -25,7 +28,6 @@ const Exercises = ({
   showAnimation = true,
 }) => {
   const [localExercises, setLocalExercises] = React.useState([]);
-  const [idIndexMap] = React.useState([]);
   const isMounted = useIsMounted();
   const [scrollToIndex, setScrollToIndex] = React.useState(null);
 
@@ -37,7 +39,6 @@ const Exercises = ({
           if (v.sets !== '' && v.sets !== null) {
             rv.sets = parseInt(v.sets, 10);
           }
-          idIndexMap[v.id] = i;
           return rv;
         })
       );
@@ -62,6 +63,14 @@ const Exercises = ({
     [isMounted, selected, localExercises]
   );
 
+const handleNewDragOrder = React.useCallback((event) => {
+  const {from, to, data} = event;
+  // const newExercise = localExercises[from];
+  // const newExerciseOrder = [...localExercises];
+  // newExerciseOrder.splice(to, 0, newExercise);
+  setLocalExercises(data);
+},[localExercises]);
+
   const onHandleProgress = React.useCallback(() => {
     if (isMounted.current && selected) {
       const index = localExercises.findIndex((a) => a.id === selected);
@@ -75,17 +84,13 @@ const Exercises = ({
     }
   }, [selected, localExercises, isMounted]);
 
-  // // TODO remove was in here for debugging
-  // React.useLayoutEffect(() => {
-  //   handleNew();
-  // }, []);
-
-  const Item = ({ item }) => (
+  const Item = ({ item, isActive }) => (
     <Animated.View
       style={item && panX && item.id === selected ? { transform: [{ translateX: panX }] } : null}
     >
       <ExerciseItem
         onPress={() => handleSetSelected(item.id)}
+        disabled={isActive}
         isSelected={item.id === selected}
         text={item}
         OnPressComponent={OnPressExerciseComponent}
@@ -96,6 +101,26 @@ const Exercises = ({
         showAnimation={showAnimation}
       />
     </Animated.View>
+  );
+
+  const DraggableItem = ({ item, drag, isActive }) => (
+    <ScaleDecorator>
+      <ExerciseItemDraggable
+        onPress={() => handleSetSelected(item.id)}
+        onLongPress={(event) => {
+          drag(event);
+        }}
+        disabled={isActive}
+        isSelected={item.id === selected}
+        text={item}
+        OnPressComponent={OnPressExerciseComponent}
+        handleProgress={onHandleProgress}
+        totalExercises={localExercises.length}
+        showTrash={showTrash}
+        handleTrash={() => handleTrash(item.id)}
+        showAnimation={showAnimation}
+      />
+    </ScaleDecorator>
   );
 
   const EmptyComponent = () => (
@@ -162,17 +187,30 @@ const Exercises = ({
           scrollbarColor: `${theme.colors.primary} ${theme.colors.surface}`,
         }}
       >
-        <ScrollList
-          data={localExercises}
-          renderItem={Item}
-          keyExtractor={(item) => item.id}
-          extraData={selected}
-          theme={theme}
-          ItemSeparatorComponent={ItemSeparator}
-          ListEmptyComponent={EmptyComponent}
-          scrollToIndex={scrollToIndex}
-          showScrollView={showScrollView}
-        />
+        {isDraggable ? (
+          <DraggableScrollList
+            data={localExercises}
+            renderItem={DraggableItem}
+            onDragEnd={handleNewDragOrder}
+            keyExtractor={(item) => item.id}
+            extraData={selected}
+            theme={theme}
+            ItemSeparatorComponent={ItemSeparator}
+            ListEmptyComponent={EmptyComponent}
+          />
+        ) : (
+          <ScrollList
+            data={localExercises}
+            renderItem={Item}
+            onDragEnd={() => {}}
+            keyExtractor={(item) => item.id}
+            extraData={selected}
+            theme={theme}
+            ItemSeparatorComponent={ItemSeparator}
+            ListEmptyComponent={EmptyComponent}
+            scrollToIndex={scrollToIndex}
+          />
+        )}
         <LoadingOverlay theme={theme} isVisible={isLoading} />
       </CardWithButton>
     </Portal.Host>

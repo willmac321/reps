@@ -19,7 +19,7 @@ const NewExerciseScreen = ({ navigation, theme }) => {
     isLoading,
     user = null,
     selectedWorkout: { selectedWorkout },
-    exercises: { exercises, setExercises, getExercises },
+    exercises: { exercises, addExercise, getExercises },
   } = React.useContext(StateContext);
   const scroll = React.useRef(null);
   const keyboardShow = React.useRef(null);
@@ -67,6 +67,8 @@ const NewExerciseScreen = ({ navigation, theme }) => {
     };
   }, []);
 
+  console.log(exercises);
+
   return (
     <SafeArea>
       <ScrollView
@@ -83,14 +85,15 @@ const NewExerciseScreen = ({ navigation, theme }) => {
         )}
         <NewExerciseCreator
           exercises={exercises}
-          addExerciseToList={(val) => {
+          addExerciseToList={async (val, id = null, workoutId = null) => {
             if (val) {
-              setExercises(val);
+              const newE = await addExercise(val, id, workoutId);
               setMarkSelected(val.id || null);
-            } else {
-              setSelectedExercise(null);
-              setMarkSelected(null);
+              return newE;
             }
+            setSelectedExercise(null);
+            setMarkSelected(null);
+            return {};
           }}
           workout={selectedWorkout}
           navigation={navigation}

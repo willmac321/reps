@@ -17,7 +17,14 @@ const ExercisesScreen = ({ navigation, theme }) => {
   } = useContext(StateContext);
 
   // react navigation version of use effect, called when tab is activated -> ie onMount and when props change
-  useFocusEffect(useCallback(() => getExercises(false, selectedWorkout), [selectedWorkout]));
+  useFocusEffect(
+    useCallback(() => {
+      const gettem = async () => {
+        await getExercises(false, selectedWorkout);
+      };
+      gettem();
+    }, [selectedWorkout])
+  );
 
   return (
     <SafeArea theme={theme}>

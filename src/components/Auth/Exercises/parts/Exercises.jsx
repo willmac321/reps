@@ -2,7 +2,7 @@ import React from 'react';
 import { withTheme } from 'react-native-paper';
 import NotifyModal from '../../../../template/NotifyModal';
 import { StateContext } from '../../../../controllers/state';
-import Exercises from '../../../../common/Exercises';
+import ExercisesCommon from '../../../../common/ExercisesCommon';
 
 const ExercisesList = ({
   isLoading,
@@ -24,7 +24,7 @@ const ExercisesList = ({
 
   return (
     <>
-      <Exercises
+      <ExercisesCommon
         isLoading={isLoading}
         navigation={navigation}
         exercises={exercises}
@@ -35,6 +35,7 @@ const ExercisesList = ({
         handleNew={handleNew}
         OnPressExerciseComponent={OnPressExerciseComponent}
         setSelectedExercise={setSelectedExercise}
+        isDraggable={false}
       />
       <NotifyModal
         title="🐎🐎🐎 Yesssss  🐎🐎🐎"

@@ -85,27 +85,45 @@ export const StateContextProvider = ({ children }) => {
     updateSelectedWorkout(w);
   };
 
-  const getExercises = React.useCallback(
-    (setLoading = true, selectedW = null) => {
-      const localSelectedWorkout = selectedW || selectedWorkout;
-      const getStuff = async () => {
-        const exs = await ExerciseApi.getExercises(user.uid, localSelectedWorkout.id);
-        // set locally
-        updateExercises([...exs]);
-        if (setLoading) setIsLoading(false);
-      };
+  const getExercises = async (setLoading = true, selectedW = null) => {
+    const localSelectedWorkout = selectedW || selectedWorkout;
 
-      if (
-        localSelectedWorkout &&
-        localSelectedWorkout !== {} &&
-        localSelectedWorkout.exercises !== null
-      ) {
-        if (setLoading) setIsLoading(true);
-        getStuff();
-      }
-    },
-    [selectedWorkout, exercises]
-  );
+    if (
+      localSelectedWorkout &&
+      localSelectedWorkout !== {} &&
+      localSelectedWorkout.exercises !== null
+    ) {
+      if (setLoading) setIsLoading(true);
+      const exs = await ExerciseApi.getExercises(user.uid, localSelectedWorkout.id);
+      // set locally
+      if (exs.length > 0) {
+        updateExercises([...exs].sort((a, b) => a.index - b.index));
+      } else updateExercises([]);
+      if (setLoading) setIsLoading(false);
+    }
+  };
+
+  const addExercise = async (newExercise, id = null, workoutId) => {
+    let localExercise = {};
+    if (id) {
+      await ExerciseApi.updateExercise(user.uid, newExercise);
+      localExercise = {
+        ...newExercise,
+        id,
+      };
+    } else {
+      localExercise = await ExerciseApi.newExercise(user.uid, newExercise, workoutId);
+    }
+    const localSelectedWorkout = {
+      ...selectedWorkout,
+      exercises: [localExercise, ...exercises],
+    };
+    updateSelectedWorkout(localSelectedWorkout);
+
+    await getExercises(false, workoutId);
+
+    return localExercise;
+  };
 
   const getWorkouts = React.useCallback((uid, setLoading = true) => {
     if (setLoading) setIsLoading(true);
@@ -128,7 +146,10 @@ export const StateContextProvider = ({ children }) => {
         const localExercises = exercises.map((e) => e.id).filter((e) => e !== exUid);
         await ExerciseApi.deleteExercise(user.uid, exUid, selectedWorkout.id, localExercises)
           .then(async () => {
-            const localSelectedWorkout = { ...selectedWorkout, exercises: localExercises };
+            const localSelectedWorkout = {
+              ...selectedWorkout,
+              exercises: localExercises,
+            };
             updateSelectedWorkout(localSelectedWorkout);
             const getStuff = async () => {
               getExercises(false, selectedWorkout.id);
@@ -225,7 +246,7 @@ export const StateContextProvider = ({ children }) => {
         setUserDetails,
         setJustRegistered,
         workouts: { workouts, setWorkouts },
-        exercises: { exercises, getExercises, deleteExercise },
+        exercises: { exercises, getExercises, deleteExercise, addExercise },
         selectedWorkout: { selectedWorkout, setSelectedWorkout },
         editWorkout: { editWorkout, setEditWorkout },
         theme,

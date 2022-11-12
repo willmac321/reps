@@ -32,7 +32,10 @@ function App() {
       <StateContext.Consumer>
         {({ theme }) => (
           // eslint-disable-next-line
-          <PaperProvider theme={theme} settings={{ icon: (props) => <FontAwesome5 {...props} /> }} >
+          <PaperProvider
+            theme={theme}
+            settings={{ icon: (props) => <FontAwesome5 {...props} /> }}
+          >
             <SafeAreaProvider>
               <NavigationContainer theme={theme}>
                 <StateContext.Consumer>
