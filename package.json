@@ -2,6 +2,7 @@
   "name": "reps",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
+    "postinstall": "cd ./node_modules/react-native-markdown-view && npm i",
     "test": "jest --coverage",
     "start": "expo start",
     "android": "expo start --android",
@@ -29,14 +30,14 @@
     "react-native": "0.69.6",
     "react-native-draggable-flatlist": "^3.1.2",
     "react-native-gesture-handler": "2.5.0",
+    "react-native-markdown-display-updated": "^7.0.0",
+    "react-native-markdown-view": "https://github.com/willmac321/react-native-markdown-display.git",
     "react-native-paper": "^4.12.5",
     "react-native-reanimated": "~2.9.1",
-    "react-native-render-html": "^6.3.4",
     "react-native-safe-area-context": "4.3.1",
     "react-native-screens": "3.15.0",
     "react-native-svg": "12.3.0",
     "react-native-web": "0.18.7",
-    "react-native-webview": "11.23.0",
     "react-redux": "^7.2.6"
   },
   "devDependencies": {
