@@ -3,6 +3,10 @@ import { View, Pressable } from 'react-native';
 import { withTheme, Text, Menu } from 'react-native-paper';
 import NotifyModal from '../../../template/NotifyModal';
 import SafeArea from '../../../template/SafeAreaWrapper';
+import PrivacyPolicy from './PrivacyPolicy';
+import EULA from './EULA';
+import Attribution from './Attribution';
+import ScrollView from '../../../template/ScrollViewWrapper';
 
 const LegalPrivacyPolicy = ({ navigation, theme, isVisible = true, setIsVisible }) => {
   const [innercontent, setContent] = React.useState('');
@@ -10,18 +14,20 @@ const LegalPrivacyPolicy = ({ navigation, theme, isVisible = true, setIsVisible 
 
   const showPrivacy = () => {
     setTitle('Privacy Policy');
-    setContent(() => <Text> aaaaaaaaaaa</Text>);
-  };
-  const showTerms = () => {
-    setTitle('EULA');
-    setContent(() => <Text> ssssss</Text>);
-  };
-  const showOpenSource = () => {
-    setTitle('Open Source & 3rd Party Attribution');
-    setContent(() => <Text> iiiiiii</Text>);
+    setContent(<PrivacyPolicy />);
   };
 
-  const handleClick = () => {
+  const showTerms = () => {
+    setTitle('EULA');
+    setContent(<EULA />);
+  };
+
+  const showOpenSource = () => {
+    setTitle('Open Source & 3rd Party Attribution');
+    setContent(<Attribution/>);
+  };
+
+  const handleClick = (e) => {
     setTitle('Legal & Privacy');
     setContent('');
   };
@@ -38,7 +44,7 @@ const LegalPrivacyPolicy = ({ navigation, theme, isVisible = true, setIsVisible 
         onPress={handleClick}
         isVisible={isVisible}
         setIsVisible={setIsVisible}
-        showButton={false}
+        showButton={!!innercontent}
       >
         {!innercontent ? (
           <View>
@@ -51,7 +57,9 @@ const LegalPrivacyPolicy = ({ navigation, theme, isVisible = true, setIsVisible 
             <Menu.Item onPress={() => showOpenSource()} title="Open Source & 3rd Party" />
           </View>
         ) : (
-          innercontent
+          <View style={{ maxHeight: '70vh' }}>
+            <ScrollView>{innercontent}</ScrollView>
+          </View>
         )}
       </NotifyModal>
     </SafeArea>

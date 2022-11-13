@@ -20,6 +20,7 @@ const Workouts = ({
 }) => {
   const {
     user,
+    setIsFromEditButton,
     selectedWorkout: { setSelectedWorkout },
     editWorkout: { setEditWorkout },
     workouts: { workouts, setWorkouts },
@@ -104,6 +105,7 @@ const Workouts = ({
 
   const onPress = React.useCallback(
     (id) => {
+      setIsFromEditButton(false);
       setIsDisable(false);
       if (selected === id) {
         setSelected(null);
@@ -118,6 +120,7 @@ const Workouts = ({
   );
 
   const handleEdit = (_, id) => {
+    setIsFromEditButton(true);
     setIsDelete(false);
     setSelected(id);
     setIsDisable(true);
@@ -130,6 +133,7 @@ const Workouts = ({
   };
 
   const handleTrash = (_, id) => {
+    setIsFromEditButton(false);
     setIsEdit(false);
     setIsDisable(true);
     setSelected(id);
@@ -142,6 +146,7 @@ const Workouts = ({
   };
 
   const handleNew = () => {
+    setIsFromEditButton(false);
     navigation.navigate('Create');
   };
 

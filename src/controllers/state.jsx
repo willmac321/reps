@@ -27,6 +27,7 @@ export const StateContextProvider = ({ children }) => {
   const [authRes, setAuthRes] = React.useState(null);
   const [user, setUser] = React.useState(null);
   const [theme, setTheme] = React.useState(themeLight);
+  const [isFromEditButton, setIsFromEditButton] = React.useState(false);
 
   // default user state, use this on account create and overwrite after login
   const [defaultUserDetails] = React.useState({
@@ -277,6 +278,8 @@ export const StateContextProvider = ({ children }) => {
         editWorkout: { editWorkout, setEditWorkout },
         theme,
         logout,
+        isFromEditButton,
+        setIsFromEditButton,
       }}
     >
       {children}

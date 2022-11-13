@@ -1,6 +1,5 @@
 import React from 'react';
 import { LayoutAnimation, Keyboard, KeyboardAvoidingView } from 'react-native';
-import {
 import { withTheme } from 'react-native-paper';
 import SafeArea from '../../../template/SafeAreaWrapper';
 import { StateContext } from '../../../controllers/state';
@@ -21,6 +20,8 @@ const NewWorkoutsScreen = ({ navigation, theme }) => {
     workouts: { workouts },
     user,
     editWorkout: { editWorkout },
+    isFromEditButton,
+    setIsFromEditButton,
   } = React.useContext(StateContext);
 
   const [isEditWorkout, setIsEditWorkout] = React.useState(false);
@@ -56,8 +57,8 @@ const NewWorkoutsScreen = ({ navigation, theme }) => {
     <SafeArea>
       <KeyboardAvoidingView
         style={{
-          flex: !isEditWorkout ? 1 : null,
-          flexGrow: !isEditWorkout ? 1 : null,
+          flex: !isFromEditButton || !isEditWorkout ? 1 : null,
+          flexGrow: !isFromEditButton || !isEditWorkout ? 1 : null,
         }}
       >
         <NewWorkout
@@ -65,9 +66,9 @@ const NewWorkoutsScreen = ({ navigation, theme }) => {
           navigation={navigation}
           theme={theme}
           user={user}
-          style={{ flex: !isEditWorkout ? 1 : null }}
+          style={{ flex: !isFromEditButton || !isEditWorkout ? 1 : null }}
         />
-        {!isEditWorkout && !keyboardActive && (
+        {(!isFromEditButton || !isEditWorkout) && !keyboardActive && (
           <Workouts
             navigation={navigation}
             setMessage={setNotifyMessage}
@@ -86,6 +87,7 @@ const NewWorkoutsScreen = ({ navigation, theme }) => {
           visible={showNotify}
           setVisible={setShowNotify}
           onPress={() => setIsOk(true)}
+          setIsCancel={()=>setIsFromEditButton(false)}
         />
       </KeyboardAvoidingView>
     </SafeArea>
