@@ -1,5 +1,6 @@
 import React from 'react';
 import { LayoutAnimation, Keyboard, KeyboardAvoidingView } from 'react-native';
+import {
 import { withTheme } from 'react-native-paper';
 import SafeArea from '../../../template/SafeAreaWrapper';
 import { StateContext } from '../../../controllers/state';
@@ -23,7 +24,6 @@ const NewWorkoutsScreen = ({ navigation, theme }) => {
   } = React.useContext(StateContext);
 
   const [isEditWorkout, setIsEditWorkout] = React.useState(false);
-  const [editSelected, handleEditSelected] = React.useState({});
 
   const keyboardEventShow = () => {
     setKeyboardActive(true);
@@ -66,11 +66,9 @@ const NewWorkoutsScreen = ({ navigation, theme }) => {
           theme={theme}
           user={user}
           style={{ flex: !isEditWorkout ? 1 : null }}
-          editSelected={editSelected}
         />
         {!isEditWorkout && !keyboardActive && (
           <Workouts
-            handleEditSelect={handleEditSelected}
             navigation={navigation}
             setMessage={setNotifyMessage}
             setNotifyTitle={setNotifyTitle}

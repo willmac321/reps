@@ -17,7 +17,6 @@ const Workouts = ({
   isOk,
   setIsOk,
   showEditAndSelect = true,
-  handleEditSelect = () => {},
 }) => {
   const {
     user,
@@ -108,11 +107,11 @@ const Workouts = ({
       setIsDisable(false);
       if (selected === id) {
         setSelected(null);
-        handleEditSelect({});
+        setEditWorkout({});
       } else {
         setSelected(id);
         const workout = workouts.filter((d) => d.id === id)[0];
-        handleEditSelect(workout || {});
+        setEditWorkout(workout || {});
       }
     },
     [selected]
