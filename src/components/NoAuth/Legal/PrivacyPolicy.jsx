@@ -1,9 +1,11 @@
 import React from 'react';
+import { View } from 'react-native';
 import Markdown from 'react-native-markdown-view';
 
 const PrivacyPolicy = () => (
-  <Markdown>
-    {`
+  <View style={{ backgroundColor: 'white', color: 'black' }}>
+    <Markdown>
+      {`
 **PRIVACY NOTICE**
 
 **Last updated November 13, 2022**
@@ -345,7 +347,8 @@ You have the right to request access to the personal information we collect from
 
 This privacy policy was created using Termly's [Privacy Policy Generator](https://termly.io/products/privacy-policy-generator/).
     `}
-  </Markdown>
+    </Markdown>
+  </View>
 );
 
 export default PrivacyPolicy;

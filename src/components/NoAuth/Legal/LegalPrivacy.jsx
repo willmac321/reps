@@ -8,33 +8,44 @@ import EULA from './EULA';
 import Attribution from './Attribution';
 import ScrollView from '../../../template/ScrollViewWrapper';
 
+const Eula = 'EULA';
+const PrivayPolicy = 'Privacy Policy';
+const ThirdParty = 'Open Source & 3rd Party Attribution';
+const LegalPrivacy = 'Legal & Privacy';
+
+const LegalJargon = ({ switchTerm }) => {
+  switch (switchTerm) {
+    case Eula:
+      return <EULA />;
+    case PrivayPolicy:
+      return <PrivacyPolicy />;
+    case ThirdParty:
+      return <Attribution />;
+    default:
+      return null;
+  }
+};
+
 const LegalPrivacyPolicy = ({ navigation, theme, isVisible = true, setIsVisible }) => {
-  const [innercontent, setContent] = React.useState('');
-  const [title, setTitle] = React.useState('Legal & Privacy');
+  const [title, setTitle] = React.useState(LegalPrivacy);
 
   const showPrivacy = () => {
-    setTitle('Privacy Policy');
-    setContent(<PrivacyPolicy />);
+    setTitle(PrivayPolicy);
   };
 
   const showTerms = () => {
-    setTitle('EULA');
-    setContent(<EULA />);
+    setTitle(Eula);
   };
 
   const showOpenSource = () => {
-    setTitle('Open Source & 3rd Party Attribution');
-    setContent(<Attribution/>);
+    setTitle(ThirdParty);
   };
 
   const handleClick = (e) => {
-    setTitle('Legal & Privacy');
-    setContent('');
+    setTitle(LegalPrivacy);
   };
 
-  React.useEffect(() => {
-    setContent('');
-  }, [isVisible]);
+  const isLegalJargon = title !== LegalPrivacy;
 
   return (
     <SafeArea theme={theme}>
@@ -44,26 +55,24 @@ const LegalPrivacyPolicy = ({ navigation, theme, isVisible = true, setIsVisible 
         onPress={handleClick}
         isVisible={isVisible}
         setIsVisible={setIsVisible}
-        showButton={!!innercontent}
+        showButton={isLegalJargon === undefined ? false : isLegalJargon}
+        content={null}
       >
-        {!innercontent ? (
+        {!isLegalJargon ? (
           <View>
-            <Menu.Item
-              style={{ width: 500 }}
-              onPress={() => showPrivacy()}
-              title="Privacy Policy"
-            />
-            <Menu.Item onPress={() => showTerms()} title="End User License Agreement" />
-            <Menu.Item onPress={() => showOpenSource()} title="Open Source & 3rd Party" />
+            <Menu.Item style={{ width: 500 }} onPress={showPrivacy} title={PrivayPolicy} />
+            <Menu.Item onPress={() => showTerms()} title={Eula} />
+            <Menu.Item onPress={() => showOpenSource()} title={ThirdParty} />
           </View>
         ) : (
-          <View style={{ maxHeight: '70vh' }}>
-            <ScrollView>{innercontent}</ScrollView>
+          <View style={{ maxHeight: 500 }}>
+            <ScrollView isForceScroll>
+              <LegalJargon switchTerm={title} />
+            </ScrollView>
           </View>
         )}
       </NotifyModal>
     </SafeArea>
   );
 };
-
 export default withTheme(LegalPrivacyPolicy);

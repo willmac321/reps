@@ -1,9 +1,11 @@
 import React from 'react';
+import { View } from 'react-native';
 import Markdown from 'react-native-markdown-view';
 
-const PrivacyPolicy = () => (
-  <Markdown>
-    {`
+const EULA = () => (
+  <View style={{ backgroundColor: 'white', color: 'black' }}>
+    <Markdown>
+      {`
 **END USER LICENSE AGREEMENT**
 
   
@@ -355,7 +357,9 @@ This License Agreement is governed by the laws of the State of New York excludin
 17.1  If any of the terms of this agreement should be or become invalid, the validity of the remaining provisions shall not be affected. Invalid terms will be replaced by valid ones formulated in a way that will achieve the primary purpose.               17.2  Collateral agreements, changes and amendments are only valid if laid down in writing. The preceding clause can only be waived in writing.
 
 This EULA was created using Termly's [EULA Generator](https://termly.io/products/eula-generator/).
-`}</Markdown>
+`}
+    </Markdown>
+  </View>
 );
 
-export default PrivacyPolicy;
+export default EULA;
