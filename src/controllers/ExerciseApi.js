@@ -11,6 +11,15 @@ async function updateExercise(uid, exercise) {
     .catch((e) => console.error(e));
 }
 
+async function batchUpdateExercises(uid, exercises) {
+  const batch = db.batch();
+  exercises.forEach((exercise) => {
+    const updEx = db.collection('users').doc(uid).collection('exercises').doc(exercise.id);
+    batch.update(updEx, exercise);
+  });
+  await batch.commit();
+}
+
 // auth is handled by firebase
 async function newExercise(uid, exercise, workoutId) {
   return db
@@ -112,6 +121,7 @@ async function deleteExercise(uid, exercise, workoutId, newExerciseList) {
 }
 
 export default {
+  batchUpdateExercises,
   updateExercise,
   newExercise,
   deleteExercise,

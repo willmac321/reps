@@ -85,7 +85,7 @@ export const StateContextProvider = ({ children }) => {
     updateSelectedWorkout(w);
   };
 
-  const getExercises = async (setLoading = true, selectedW = null) => {
+  const getExercises = async (setLoading = null, selectedW = null) => {
     const localSelectedWorkout = selectedW || selectedWorkout;
 
     if (
@@ -103,7 +103,8 @@ export const StateContextProvider = ({ children }) => {
     }
   };
 
-  const addExercise = async (newExercise, id = null, workoutId) => {
+  const addExercise = async (newExercise, id = null, workoutId, setLoading = null) => {
+    if (setLoading) setIsLoading(true);
     let localExercise = {};
     if (id) {
       await ExerciseApi.updateExercise(user.uid, newExercise);
@@ -121,11 +122,12 @@ export const StateContextProvider = ({ children }) => {
     updateSelectedWorkout(localSelectedWorkout);
 
     await getExercises(false, workoutId);
+    if (setLoading) setIsLoading(false);
 
     return localExercise;
   };
 
-  const getWorkouts = React.useCallback((uid, setLoading = true) => {
+  const getWorkouts = React.useCallback((uid, setLoading = null) => {
     if (setLoading) setIsLoading(true);
     if (uid && isMounted.current) {
       WorkoutAPI.getWorkouts(uid)
@@ -139,6 +141,24 @@ export const StateContextProvider = ({ children }) => {
         .catch(() => setLoading && setIsLoading(false));
     }
   }, []);
+
+  const updateExerciseOrder = async (newExercises, setLoading = null) => {
+    if (setLoading) setIsLoading(true);
+    const sortedExercises = newExercises.reduce((acc, curr, i) => {
+      const temp = curr;
+      temp.index = i;
+      return [...acc, temp];
+    }, []);
+
+    const sortedWorkout = {
+      ...selectedWorkout,
+      exercises: sortedExercises.map((e) => e.id),
+    };
+    await ExerciseApi.batchUpdateExercises(user.uid, sortedExercises);
+    await WorkoutAPI.updateWorkout(user.uid, sortedWorkout);
+    updateSelectedWorkout(sortedWorkout);
+    if (setLoading) setIsLoading(false);
+  };
 
   const deleteExercise = React.useCallback(
     async (exUid) => {
@@ -171,7 +191,7 @@ export const StateContextProvider = ({ children }) => {
 
   React.useMemo(() => {
     if (isMounted.current && user && user.uid) {
-      getWorkouts(user.uid);
+      getWorkouts(user.uid, true);
     }
   }, [user]);
 
@@ -246,7 +266,13 @@ export const StateContextProvider = ({ children }) => {
         setUserDetails,
         setJustRegistered,
         workouts: { workouts, setWorkouts },
-        exercises: { exercises, getExercises, deleteExercise, addExercise },
+        exercises: {
+          exercises,
+          getExercises,
+          deleteExercise,
+          addExercise,
+          updateExerciseOrder,
+        },
         selectedWorkout: { selectedWorkout, setSelectedWorkout },
         editWorkout: { editWorkout, setEditWorkout },
         theme,

@@ -19,6 +19,7 @@ const NewExercisesList = ({
   setNotifyMessage,
   setShowNotify,
   showScrollView,
+  setIsReload = () => {},
 }) => {
   const {
     exercises: { exercises, deleteExercise },
@@ -105,6 +106,7 @@ const NewExercisesList = ({
       panX={isDelete ? panX : null}
       showScrollView={showScrollView}
       showAnimation={false}
+      setIsReload={setIsReload}
       isDraggable
     />
   );

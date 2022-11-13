@@ -31,9 +31,11 @@ const NewExerciseScreen = ({ navigation, theme }) => {
   const [notifyMessage, setNotifyMessage] = React.useState('');
   const [notifyTitle, setNotifyTitle] = React.useState('');
   const [selectedExercise, setSelectedExercise] = React.useState(null);
+  const [isReloadWorkout, setIsReloadWorkout] = React.useState(true);
 
   useEffect(() => {
-    if (selectedWorkout) getExercises(true, selectedWorkout);
+    if (selectedWorkout) getExercises(isReloadWorkout, selectedWorkout);
+    setIsReloadWorkout(true);
   }, [selectedWorkout]);
 
   React.useLayoutEffect(() => {
@@ -67,8 +69,6 @@ const NewExerciseScreen = ({ navigation, theme }) => {
     };
   }, []);
 
-  console.log(exercises);
-
   return (
     <SafeArea>
       <ScrollView
@@ -87,7 +87,7 @@ const NewExerciseScreen = ({ navigation, theme }) => {
           exercises={exercises}
           addExerciseToList={async (val, id = null, workoutId = null) => {
             if (val) {
-              const newE = await addExercise(val, id, workoutId);
+              const newE = await addExercise(val, id, workoutId, true);
               setMarkSelected(val.id || null);
               return newE;
             }
@@ -119,6 +119,7 @@ const NewExerciseScreen = ({ navigation, theme }) => {
               setNotifyTitle={setNotifyTitle}
               setNotifyMessage={setNotifyMessage}
               showScrollView={false}
+              setIsReload={setIsReloadWorkout}
             />
           </>
         )}

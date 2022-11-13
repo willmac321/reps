@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { withTheme, List, Portal } from 'react-native-paper';
 import { ScaleDecorator } from 'react-native-draggable-flatlist';
 import { Text, View, Animated } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
+import State from '../controllers/state';
 import CardWithButton from '../template/CardWithButton';
 import ScrollList from '../template/ScrollList';
 import DraggableScrollList from '../template/DraggableScrollList';
@@ -26,7 +27,11 @@ const Exercises = ({
   setSelectedExercise = () => {},
   panX = null,
   showAnimation = true,
+  setIsReload = () => {},
 }) => {
+  const {
+    exercises: { updateExerciseOrder },
+  } = useContext(State);
   const [localExercises, setLocalExercises] = React.useState([]);
   const isMounted = useIsMounted();
   const [scrollToIndex, setScrollToIndex] = React.useState(null);
@@ -34,7 +39,7 @@ const Exercises = ({
   React.useEffect(() => {
     if (isMounted.current) {
       setLocalExercises(
-        exercises.map((v, i) => {
+        exercises.map((v) => {
           const rv = { ...v };
           if (v.sets !== '' && v.sets !== null) {
             rv.sets = parseInt(v.sets, 10);
@@ -63,13 +68,15 @@ const Exercises = ({
     [isMounted, selected, localExercises]
   );
 
-const handleNewDragOrder = React.useCallback((event) => {
-  const {from, to, data} = event;
-  // const newExercise = localExercises[from];
-  // const newExerciseOrder = [...localExercises];
-  // newExerciseOrder.splice(to, 0, newExercise);
-  setLocalExercises(data);
-},[localExercises]);
+  const handleNewDragOrder = React.useCallback(
+    (event) => {
+      setIsReload(false);
+      const { data } = event;
+      updateExerciseOrder(data, false);
+      setLocalExercises(data);
+    },
+    [localExercises]
+  );
 
   const onHandleProgress = React.useCallback(() => {
     if (isMounted.current && selected) {

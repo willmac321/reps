@@ -98,7 +98,7 @@ const NewExercise = ({
   }, [workout, exercises, newExercise]);
 
   const isValidNumber = (v) => {
-    if (v.match(/^[0-9]+$/) !== null) {
+    if (v === '' || v.match(/^[0-9]+$/) !== null) {
       return true;
     }
     return false;
