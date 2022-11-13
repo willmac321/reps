@@ -20,7 +20,7 @@ const ExercisesScreen = ({ navigation, theme }) => {
   useFocusEffect(
     useCallback(() => {
       const gettem = async () => {
-        await getExercises(false, selectedWorkout);
+        await getExercises(true, selectedWorkout);
       };
       gettem();
     }, [selectedWorkout])

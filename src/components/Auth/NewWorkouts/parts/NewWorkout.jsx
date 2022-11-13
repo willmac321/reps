@@ -6,7 +6,8 @@ import CardWithButton from '../../../../template/CardWithButton';
 import { StateContext } from '../../../../controllers/state';
 import { useIsMounted } from '../../../../utils/useIsMounted';
 
-const NewWorkout = ({ navigation, user, theme, data }) => {
+const NewWorkout = ({ editSelected, navigation, user, theme, data }) => {
+  console.log(editSelected);
   const isMounted = useIsMounted();
   const [isDisable, setIsDisable] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
@@ -19,20 +20,19 @@ const NewWorkout = ({ navigation, user, theme, data }) => {
 
   const {
     workouts: { workouts },
-    editWorkout: { editWorkout },
     selectedWorkout: { setSelectedWorkout },
   } = React.useContext(StateContext);
 
   const isNameTaken = () =>
     workoutName &&
-    editWorkout.title !== workoutName &&
+    editSelected.title !== workoutName &&
     data.map((a) => a.title).includes(workoutName);
 
   React.useEffect(() => {
-    if (isMounted.current && editWorkout && Object.keys(editWorkout).length > 0) {
-      setWorkoutName(editWorkout.title);
+    if (isMounted.current && editSelected && Object.keys(editSelected).length > 0) {
+      setWorkoutName(editSelected.title);
     }
-  }, [editWorkout, isMounted]);
+  }, [editSelected, isMounted]);
 
   React.useEffect(() => {
     setIsError(false);
@@ -55,23 +55,23 @@ const NewWorkout = ({ navigation, user, theme, data }) => {
 
     // copy context workout version for local use
     let newWorkouts = [...workouts];
-    if (editWorkout && editWorkout.id) {
+    if (editSelected && editSelected.id) {
       // filter newWorkouts to all but the one that is being edited.  This is done because
       // the addWorkoutToList func updates local store to use that filtered list and adds the workout to it
-      newWorkouts = newWorkouts.filter((d) => d.title !== editWorkout.title);
+      newWorkouts = newWorkouts.filter((d) => d.title !== editSelected.title);
       workout = newWorkouts.length > 0 ? newWorkouts[0] : workout;
       workout = {
         ...workout,
         id: workoutName,
         title: workoutName,
-        date: editWorkout.date,
-        exercises: editWorkout.exercises,
+        date: editSelected.date,
+        exercises: editSelected.exercises,
       };
     }
 
     // if it is an existing workout delete it in the db and readd it
     // TODO change to update func instead of delete and replace
-    API.deleteWorkout(user.uid, editWorkout.id || workoutName)
+    API.deleteWorkout(user.uid, editSelected.id || workoutName)
       .then(() => {
         API.newWorkout(user.uid, workout);
       })
@@ -81,21 +81,21 @@ const NewWorkout = ({ navigation, user, theme, data }) => {
         setIsLoading(false);
         navigation.navigate('NewExercises');
       });
-  }, [workoutName, workouts, editWorkout, user]);
+  }, [workoutName, workouts, editSelected, user]);
 
   return (
     <>
       <CardWithButton
         title={
           <Text theme={theme} style={theme.title}>
-            {editWorkout.title
-              ? `Editing workout name for "${editWorkout.title}"`
+            {editSelected && editSelected.title
+              ? `Editing workout name for "${editSelected.title}"`
               : 'Name your workout'}
           </Text>
         }
         buttonText="Ok"
         showButton
-        buttonDisabled={isDisable}
+        buttonDisabled={isDisable || isNameTaken()}
         onPress={handleOnPress}
         isLoading={isLoading}
         theme={theme}

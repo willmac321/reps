@@ -17,6 +17,7 @@ const Workouts = ({
   isOk,
   setIsOk,
   showEditAndSelect = true,
+  handleEditSelect = () => {},
 }) => {
   const {
     user,
@@ -102,12 +103,23 @@ const Workouts = ({
     navigation.navigate('Exercises');
   }, [selected, workouts, isDisable]);
 
-  const onPress = (id) => {
-    setIsDisable(false);
-    setSelected(id);
-  };
+  const onPress = React.useCallback(
+    (id) => {
+      setIsDisable(false);
+      if (selected === id) {
+        setSelected(null);
+        handleEditSelect({});
+      } else {
+        setSelected(id);
+        const workout = workouts.filter((d) => d.id === id)[0];
+        handleEditSelect(workout || {});
+      }
+    },
+    [selected]
+  );
 
   const handleEdit = (_, id) => {
+    setIsDelete(false);
     setSelected(id);
     setIsDisable(true);
     setNotifyTitle('You wanna change this?');
@@ -119,6 +131,7 @@ const Workouts = ({
   };
 
   const handleTrash = (_, id) => {
+    setIsEdit(false);
     setIsDisable(true);
     setSelected(id);
     setNotifyTitle('Woah, you sure...');
@@ -168,7 +181,7 @@ const Workouts = ({
 
   const EmptyComponent = () => (
     <List.Item
-      title="Do you even lift?   Try making a workout!"
+      title="Do you even lift? Try making a workout!"
       titleStyle={{
         ...theme.buttonText,
         color: theme.colors.primary,
@@ -190,7 +203,6 @@ const Workouts = ({
             icon="plus-square"
             color={theme.colors.primary}
             style={{
-              paddingRight: 20,
               marginVertical: 20,
               ...theme.title,
             }}
