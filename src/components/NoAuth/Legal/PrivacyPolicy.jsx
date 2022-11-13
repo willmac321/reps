@@ -5172,7 +5172,6 @@ const PrivacyPolicy = () => (
                                                                         }}
                                                                       >
                                                                         <span className="question">
-                                                                          Apt 4b
                                                                           <span data-custom-class="body_text">
                                                                             <span
                                                                               style={{
