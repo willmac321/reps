@@ -3,7 +3,7 @@ import { withTheme, List } from 'react-native-paper';
 import { StyleSheet } from 'react-native';
 import CardWithButton from './CardWithButton';
 
-const Header = ({ theme, title }) => {
+const Header = ({ theme, title, subTitle }) => {
   const styles = StyleSheet.create({
     text: { ...theme.buttonText, color: theme.colors.primary },
     item: {
@@ -25,6 +25,7 @@ const Header = ({ theme, title }) => {
         theme={theme}
         titleStyle={styles.text}
         style={styles.item}
+        description={subTitle}
       />
     </CardWithButton>
   );

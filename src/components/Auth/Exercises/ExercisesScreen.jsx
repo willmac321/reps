@@ -20,16 +20,20 @@ const ExercisesScreen = ({ navigation, theme }) => {
   useFocusEffect(
     useCallback(() => {
       const gettem = async () => {
-        await getExercises(true, selectedWorkout);
+        await getExercises(true);
       };
       gettem();
-    }, [selectedWorkout])
+    }, [])
   );
 
   return (
     <SafeArea theme={theme}>
       {selectedWorkout && selectedWorkout.title && (
-        <Header title={`${selectedWorkout.title} - ${selectedWorkout.date}`} theme={theme} />
+        <Header
+          title={`${selectedWorkout.title}`}
+          subTitle={`Created: ${selectedWorkout.date}`}
+          theme={theme}
+        />
       )}
       <ScrollViewWrapper theme={theme}>
         <Exercises

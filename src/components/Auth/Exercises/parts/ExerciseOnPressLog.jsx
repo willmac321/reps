@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Animated, Easing, Text, StyleSheet, Dimensions } from 'react-native';
 import { Card, withTheme, TouchableRipple } from 'react-native-paper';
 import { useIsMounted } from '../../../../utils/useIsMounted';
-import { isMobile } from '../../../../utils/checkPlatform';
+import { isMobile, useIsSmallScreen } from '../../../../utils/checkPlatform';
 import Button from '../../../../template/ButtonTemplate';
 
 const ExerciseOnPressLog = ({ theme, content, onProgress }) => {
@@ -10,6 +10,7 @@ const ExerciseOnPressLog = ({ theme, content, onProgress }) => {
   const isMounted = useIsMounted();
   const animColor = React.useRef(new Animated.Value(0)).current;
   const [selected, setSelected] = useState(0);
+  const isScreenSmall = useIsSmallScreen();
 
   const styles = StyleSheet.create({
     item: {
@@ -161,6 +162,7 @@ const ExerciseOnPressLog = ({ theme, content, onProgress }) => {
               </View>
               {[...Array(content.sets)].map((_, i) => (
                 <TouchableRipple
+                  // eslint-disable-next-line
                   key={`selected_${Date.now()}_${i}`}
                   rippleColor={theme.colors.secondarySelected}
                   underlayColor={theme.colors.secondarySelected}
@@ -180,7 +182,7 @@ const ExerciseOnPressLog = ({ theme, content, onProgress }) => {
                         : {},
                     ]}
                   >
-                    {windowWidth >= 640 ? (
+                    {isScreenSmall ? (
                       <>
                         <View style={styles.subItemText}>
                           <Text
@@ -239,7 +241,12 @@ const ExerciseOnPressLog = ({ theme, content, onProgress }) => {
                         </View>
                       </>
                     ) : (
-                      <View style={{ ...styles.subItemText, flexDirection: 'column' }}>
+                      <View
+                        style={{
+                          ...styles.subItemText,
+                          flexDirection: 'column',
+                        }}
+                      >
                         <View style={styles.subItemText}>
                           <Text
                             theme={theme}
@@ -253,7 +260,11 @@ const ExerciseOnPressLog = ({ theme, content, onProgress }) => {
                             theme={theme}
                             style={
                               selected === i
-                                ? { ...styles.selectedText, ...theme.paragraph, paddingTop: 3 }
+                                ? {
+                                    ...styles.selectedText,
+                                    ...theme.paragraph,
+                                    paddingTop: 3,
+                                  }
                                 : styles.text
                             }
                           >
