@@ -87,7 +87,12 @@ export const StateContextProvider = ({ children }) => {
   };
 
   const getExercises = async (setLoading = null, selectedW = null) => {
-    const localSelectedWorkout = selectedW || selectedWorkout;
+    let localSelectedWorkout = selectedW || selectedWorkout;
+
+    if (typeof localSelectedWorkout === 'string' && workouts) {
+      localSelectedWorkout =
+        workouts.find((workout) => workout.id === localSelectedWorkout) || null;
+    }
 
     if (
       localSelectedWorkout &&
@@ -95,11 +100,15 @@ export const StateContextProvider = ({ children }) => {
       localSelectedWorkout.exercises !== null
     ) {
       if (setLoading) setIsLoading(true);
-      const exs = await ExerciseApi.getExercises(user.uid, localSelectedWorkout.id);
-      // set locally
-      if (exs.length > 0) {
-        updateExercises(exs);
-      } else updateExercises([]);
+      try {
+        const exs = await ExerciseApi.getExercises(user.uid, localSelectedWorkout.id);
+        // set locally
+        if (exs.length > 0) {
+          updateExercises(exs);
+        } else updateExercises([]);
+      } catch (e) {
+        console.error(e);
+      }
       if (setLoading) setIsLoading(false);
     }
   };

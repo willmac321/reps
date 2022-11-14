@@ -92,11 +92,12 @@ async function getExercises(uid, workoutId) {
           exercises.splice(0, limit);
           rvExercises.push(..._rvExercises);
         }
+        rvExercises.sort((a, b) => a.index - b.index);
         return rvExercises;
       }
       throw Error('No exercise data exists');
     })
-    .catch((e) => Error(e));
+    .catch((e) => console.error(e));
 }
 
 async function deleteExercise(uid, exercise, workoutId, newExerciseList) {

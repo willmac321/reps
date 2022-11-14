@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { withTheme, List, IconButton } from 'react-native-paper';
 import { View, Animated, Easing } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { StateContext } from '../../../../controllers/state';
 import CardWithButton from '../../../../template/CardWithButton';
 import ScrollList from '../../../../template/ScrollList';
 import WorkoutItem from './WorkoutItem';
 import WorkoutAPI from '../../../../controllers/WorkoutApi';
 import { useIsMounted } from '../../../../utils/useIsMounted';
+// remove
 
 const Workouts = ({
   theme,
@@ -149,6 +151,21 @@ const Workouts = ({
     setIsFromEditButton(false);
     navigation.navigate('Create');
   };
+
+  // TODO for quick nav to workout screen remove
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     if (isMounted.current && !isLoading && workouts && showEditAndSelect && workouts.length > 0) {
+  //       onPress('Day 1');
+  //     }
+  //   }, [workouts, isLoading, showEditAndSelect])
+  // );
+  // React.useEffect(() => {
+  //   if (selected) {
+  //     handleOnSubmit();
+  //   }
+  // }, [selected]);
+  // ^^
 
   React.useLayoutEffect(() => {
     if (isMounted.current) {

@@ -2,6 +2,7 @@ import React from 'react';
 import { View, StyleSheet, TouchableOpacity, Animated, Easing } from 'react-native';
 import { IconButton, withTheme, TouchableRipple, Text, Card } from 'react-native-paper';
 import { useIsMounted } from '../utils/useIsMounted';
+import { useIsSmallScreen } from '../utils/checkPlatform';
 
 const ExerciseItem = ({
   theme,
@@ -56,31 +57,48 @@ const ExerciseItem = ({
       flexGrow: 3,
       minWidth: 50,
     },
-    rowTextHeader: {
+    rowTextTitle: {
       alignSelf: 'flex-start',
       textAlign: 'left',
       fontWeight: 'bold',
+      fontSize: 18,
+      marginHorizontal: 4,
+    },
+    rowTextHeader: {
+      alignSelf: 'flex-start',
+      textAlign: 'left',
+    },
+    rowTextContainer: {
+      flexGrow: 1,
+      flex: 0,
+      marginHorizontal: 4,
+      paddingVertical: 4,
+      paddingHorizontal: 4,
+      borderRadius: 8,
+      backgroundColor: `${theme.colors.primary}1a`,
     },
     rowText: {
+      fontWeight: 'bold',
       flexGrow: 1,
       flex: 0,
-      marginTop: 5,
-      paddingHorizontal: 2,
+      paddingHorizontal: 4,
+      alignContent: 'end',
+      textAlign: 'right',
+      fontSize: 16,
     },
     rowSubText: {
+      fontWeight: 'bold',
       flexGrow: 1,
       flex: 0,
-      alignSelf: 'center',
-      textAlign: 'center',
-      marginTop: 5,
+      alignSelf: 'end',
+      textAlign: 'right',
       paddingHorizontal: 2,
+      fontSize: 16,
     },
     rowContainer: {
       flexDirection: 'row',
       flexWrap: 'wrap',
       flexGrow: 1,
-      marginHorizontal: 10,
-      marginTop: 10,
     },
     rowButtonContainer: {
       flex: 0,
@@ -94,12 +112,11 @@ const ExerciseItem = ({
       flexDirection: 'row',
       flexWrap: 'wrap',
       flexGrow: 10,
-      marginHorizontal: 10,
       marginTop: 10,
       justifyContent: 'space-around',
     },
     rowSubContainer: {
-      alignSelf: 'flex-start',
+      alignSelf: 'flex-end',
       flexDirection: 'row',
       flexWrap: 'wrap',
       justifyContent: 'space-around',
@@ -108,6 +125,8 @@ const ExerciseItem = ({
 
   const isMounted = useIsMounted();
   const springAnim = React.useRef(new Animated.Value(0)).current;
+
+  const isScreenSmall = useIsSmallScreen();
 
   React.useEffect(() => {
     if (isMounted.current && !isSelected) {
@@ -140,7 +159,12 @@ const ExerciseItem = ({
           onPress={onLocalPress}
         />
       ) : (
-        <TouchableOpacity onPress={onPress} onLongPress={onLongPress} disabled={disabled}>
+        <TouchableOpacity
+          activeOpacity={0.5}
+          onPress={onPress}
+          onLongPress={onLongPress}
+          disabled={disabled}
+        >
           <Animated.View
             style={
               showAnimation
@@ -174,16 +198,24 @@ const ExerciseItem = ({
                 <View style={{ flexDirection: 'row' }}>
                   <View style={{ flexDirection: 'column', flexGrow: 10 }}>
                     <View theme={theme}>
-                      <Text
-                        theme={theme}
-                        style={[styles.rowTextHeader, theme.buttonText, styles.text]}
-                      >
+                      <Text theme={theme} style={[styles.rowTextTitle]}>
                         {text.title}
                       </Text>
                     </View>
                     <View theme={theme} style={styles.rowContainer}>
-                      <View theme={theme} style={styles.rowItemContainer}>
-                        <View style={styles.rowText}>
+                      <View
+                        theme={theme}
+                        style={[
+                          styles.rowItemContainer,
+                          { flexDirection: isScreenSmall ? 'column' : 'row' },
+                        ]}
+                      >
+                        <View
+                          style={[
+                            styles.rowTextContainer,
+                            isScreenSmall ? { marginVertical: 4 } : {},
+                          ]}
+                        >
                           <Text theme={theme} style={[styles.rowTextHeader, styles.text]}>
                             Sets
                           </Text>
@@ -191,7 +223,12 @@ const ExerciseItem = ({
                             {text.sets}
                           </Text>
                         </View>
-                        <View style={styles.rowText}>
+                        <View
+                          style={[
+                            styles.rowTextContainer,
+                            isScreenSmall ? { marginVertical: 4 } : {},
+                          ]}
+                        >
                           <Text theme={theme} style={[styles.rowTextHeader, styles.text]}>
                             Rep Range
                           </Text>
@@ -207,7 +244,12 @@ const ExerciseItem = ({
                             </Text>
                           </View>
                         </View>
-                        <View style={styles.rowText}>
+                        <View
+                          style={[
+                            styles.rowTextContainer,
+                            isScreenSmall ? { marginVertical: 4 } : {},
+                          ]}
+                        >
                           <Text theme={theme} style={[styles.rowTextHeader, styles.text]}>
                             Rest (mm:ss)
                           </Text>
@@ -221,7 +263,7 @@ const ExerciseItem = ({
                   {showTrash && (
                     <TouchableOpacity
                       theme={theme}
-                      style={styles.rowButtonContainer}
+                      style={[styles.rowButtonContainer, { flexGrow: 5 }]}
                       onPress={(e) => {
                         handleTrash(e, text.id);
                       }}

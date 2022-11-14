@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Keyboard, LayoutAnimation, UIManager, ScrollView } from 'react-native';
 import { withTheme } from 'react-native-paper';
+import { NestableScrollContainer } from 'react-native-draggable-flatlist';
 import SafeArea from '../../../template/SafeAreaWrapper';
 import { StateContext } from '../../../controllers/state';
 import WarnModal from '../../../template/WarnModal';
@@ -32,11 +33,13 @@ const NewExerciseScreen = ({ navigation, theme }) => {
   const [notifyTitle, setNotifyTitle] = React.useState('');
   const [selectedExercise, setSelectedExercise] = React.useState(null);
   const [isReloadWorkout, setIsReloadWorkout] = React.useState(true);
+  const [lastWorkoutId, setLastWorkoutId] = React.useState(null);
 
   useEffect(() => {
-    if (selectedWorkout) getExercises(isReloadWorkout, selectedWorkout);
-    setIsReloadWorkout(true);
-  }, [selectedWorkout]);
+    if (selectedWorkout && selectedWorkout.id !== lastWorkoutId)
+      getExercises(isReloadWorkout, selectedWorkout);
+    setLastWorkoutId(selectedWorkout.id || null);
+  }, [selectedWorkout, lastWorkoutId]);
 
   React.useLayoutEffect(() => {
     if (selectedExercise && scroll.current) {
@@ -69,9 +72,88 @@ const NewExerciseScreen = ({ navigation, theme }) => {
     };
   }, []);
 
+  const innerContent = (
+    <>
+      {selectedWorkout && selectedWorkout.title && (
+        <Header
+          title={`${selectedWorkout.title}`}
+          subTitle={`Created: ${selectedWorkout.date}`}
+          theme={theme}
+        />
+      )}
+      <NewExerciseCreator
+        exercises={exercises}
+        addExerciseToList={async (val, id = null, workoutId = null) => {
+          if (val) {
+            const newE = await addExercise(val, id, workoutId, true);
+            setMarkSelected(val.id || null);
+            return newE;
+          }
+          setSelectedExercise(null);
+          setMarkSelected(null);
+          return {};
+        }}
+        workout={selectedWorkout}
+        navigation={navigation}
+        style={{ marginTop: customTopMargin }}
+        user={user}
+        theme={theme}
+        prepopulateData={selectedExercise}
+      />
+      {!keyboardActive && (
+        <>
+          <NewExerciseNext theme={theme} navigation={navigation} />
+          <NewExercises
+            isLoading={isLoading}
+            navigation={navigation}
+            theme={theme}
+            setShowNotify={setShowNotify}
+            showEditAndSelect={false}
+            markSelected={markSelected}
+            setMarkSelected={setMarkSelected}
+            setSelectedExercise={setSelectedExercise}
+            setIsOk={setIsOk}
+            isOk={isOk}
+            setNotifyTitle={setNotifyTitle}
+            setNotifyMessage={setNotifyMessage}
+            showScrollView={false}
+            setIsReload={setIsReloadWorkout}
+          />
+        </>
+      )}
+      <WarnModal
+        title={notifyTitle}
+        buttonText="Yes"
+        theme={theme}
+        content={notifyMessage}
+        visible={showNotify}
+        setVisible={setShowNotify}
+        onPress={() => setIsOk(true)}
+      />
+    </>
+  );
+
+  if (!isMobile()) {
+    return (
+      <SafeArea>
+        <ScrollView
+          ref={scroll}
+          style={[
+            {
+              scrollbarColor: `${theme.colors.primary} ${theme.colors.surface}`,
+            },
+            isMobile() ? {} : { overflow: 'auto' },
+          ]}
+        >
+          {innerContent}
+        </ScrollView>
+      </SafeArea>
+    );
+  }
+
   return (
     <SafeArea>
-      <ScrollView
+      <NestableScrollContainer
         ref={scroll}
         style={[
           {
@@ -80,59 +162,8 @@ const NewExerciseScreen = ({ navigation, theme }) => {
           isMobile() ? {} : { overflow: 'auto' },
         ]}
       >
-        {selectedWorkout && selectedWorkout.title && (
-          <Header title={`${selectedWorkout.title} - ${selectedWorkout.date}`} theme={theme} />
-        )}
-        <NewExerciseCreator
-          exercises={exercises}
-          addExerciseToList={async (val, id = null, workoutId = null) => {
-            if (val) {
-              const newE = await addExercise(val, id, workoutId, true);
-              setMarkSelected(val.id || null);
-              return newE;
-            }
-            setSelectedExercise(null);
-            setMarkSelected(null);
-            return {};
-          }}
-          workout={selectedWorkout}
-          navigation={navigation}
-          style={{ marginTop: customTopMargin }}
-          user={user}
-          theme={theme}
-          prepopulateData={selectedExercise}
-        />
-        {!keyboardActive && (
-          <>
-            <NewExerciseNext theme={theme} navigation={navigation} />
-            <NewExercises
-              isLoading={isLoading}
-              navigation={navigation}
-              theme={theme}
-              setShowNotify={setShowNotify}
-              showEditAndSelect={false}
-              markSelected={markSelected}
-              setMarkSelected={setMarkSelected}
-              setSelectedExercise={setSelectedExercise}
-              setIsOk={setIsOk}
-              isOk={isOk}
-              setNotifyTitle={setNotifyTitle}
-              setNotifyMessage={setNotifyMessage}
-              showScrollView={false}
-              setIsReload={setIsReloadWorkout}
-            />
-          </>
-        )}
-        <WarnModal
-          title={notifyTitle}
-          buttonText="Yes"
-          theme={theme}
-          content={notifyMessage}
-          visible={showNotify}
-          setVisible={setShowNotify}
-          onPress={() => setIsOk(true)}
-        />
-      </ScrollView>
+        {innerContent}
+      </NestableScrollContainer>
     </SafeArea>
   );
 };
