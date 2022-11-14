@@ -103,7 +103,7 @@ export const StateContextProvider = ({ children }) => {
       try {
         const exs = await ExerciseApi.getExercises(user.uid, localSelectedWorkout.id);
         // set locally
-        if (exs.length > 0) {
+        if (exs && exs.length > 0) {
           updateExercises(exs);
         } else updateExercises([]);
       } catch (e) {

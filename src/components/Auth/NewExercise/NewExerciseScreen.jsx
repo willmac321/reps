@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import { Keyboard, LayoutAnimation, UIManager, ScrollView } from 'react-native';
 import { withTheme } from 'react-native-paper';
 import { NestableScrollContainer } from 'react-native-draggable-flatlist';
@@ -33,13 +34,12 @@ const NewExerciseScreen = ({ navigation, theme }) => {
   const [notifyTitle, setNotifyTitle] = React.useState('');
   const [selectedExercise, setSelectedExercise] = React.useState(null);
   const [isReloadWorkout, setIsReloadWorkout] = React.useState(true);
-  const [lastWorkoutId, setLastWorkoutId] = React.useState(null);
 
-  useEffect(() => {
-    if (selectedWorkout && selectedWorkout.id !== lastWorkoutId)
-      getExercises(isReloadWorkout, selectedWorkout);
-    setLastWorkoutId(selectedWorkout.id || null);
-  }, [selectedWorkout, lastWorkoutId]);
+  useFocusEffect(
+    React.useCallback(() => {
+      if (selectedWorkout) getExercises(isReloadWorkout, selectedWorkout);
+    }, [selectedWorkout])
+  );
 
   React.useLayoutEffect(() => {
     if (selectedExercise && scroll.current) {
@@ -154,7 +154,6 @@ const NewExerciseScreen = ({ navigation, theme }) => {
   return (
     <SafeArea>
       <NestableScrollContainer
-        ref={scroll}
         style={[
           {
             scrollbarColor: `${theme.colors.primary} ${theme.colors.surface}`,

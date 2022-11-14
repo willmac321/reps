@@ -98,7 +98,7 @@ const ExerciseItem = ({
       flexGrow: 1,
     },
     rowButtonContainer: {
-      flex: 0,
+      flex: 1,
       flexGrow: 1,
       alignItems: 'flex-end',
       padding: 0,
@@ -113,6 +113,7 @@ const ExerciseItem = ({
       justifyContent: 'space-around',
     },
     rowSubContainer: {
+      flex: 1,
       alignSelf: 'flex-end',
       flexDirection: 'row',
       flexWrap: 'wrap',
@@ -188,7 +189,7 @@ const ExerciseItem = ({
             >
               <View style={{ flexDirection: 'row' }}>
                 <View style={{ flexDirection: 'column', flexGrow: 10 }}>
-                  <View theme={theme}>
+                  <View theme={theme} style={styles.rowTextContainer}>
                     <Text theme={theme} style={[styles.rowTextTitle]}>
                       {text.title}
                     </Text>

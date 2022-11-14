@@ -90,7 +90,7 @@ const ExerciseItem = ({
       fontWeight: 'bold',
       flexGrow: 1,
       flex: 0,
-      alignSelf: 'end',
+      alignSelf: 'flex-end',
       textAlign: 'right',
       paddingHorizontal: 2,
       fontSize: 16,
@@ -101,7 +101,7 @@ const ExerciseItem = ({
       flexGrow: 1,
     },
     rowButtonContainer: {
-      flex: 0,
+      flex: 1,
       flexGrow: 1,
       alignItems: 'flex-end',
       padding: 0,
@@ -116,6 +116,7 @@ const ExerciseItem = ({
       justifyContent: 'space-around',
     },
     rowSubContainer: {
+      flex: 1,
       alignSelf: 'flex-end',
       flexDirection: 'row',
       flexWrap: 'wrap',
