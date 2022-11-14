@@ -75,7 +75,7 @@ const ExerciseItem = ({
       paddingVertical: 4,
       paddingHorizontal: 4,
       borderRadius: 8,
-      backgroundColor: `${theme.colors.primary}1a`,
+      backgroundColor: `${theme.colors.backgroundShadow}`,
     },
     rowText: {
       fontWeight: 'bold',
@@ -198,7 +198,7 @@ const ExerciseItem = ({
               >
                 <View style={{ flexDirection: 'row' }}>
                   <View style={{ flexDirection: 'column', flexGrow: 10 }}>
-                    <View theme={theme}>
+                    <View theme={theme} style={[styles.rowTextContainer, { minHeight: 26 }]}>
                       <Text theme={theme} style={[styles.rowTextTitle]}>
                         {text.title}
                       </Text>

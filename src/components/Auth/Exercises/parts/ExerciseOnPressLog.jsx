@@ -69,9 +69,17 @@ const ExerciseOnPressLog = ({ theme, content, onProgress }) => {
       color: theme.buttonText.color,
     },
     rowTextHeader: {
-      alignSelf: 'flex-start',
-      textAlign: 'left',
+      fontSize: 24,
       fontWeight: 'bold',
+      color: `${theme.colors.accent}`,
+    },
+    rowTextContainer: {
+      marginHorizontal: 4,
+      paddingHorizontal: 4,
+      textAlignVertical: 'middle',
+      borderStyle: 'solid',
+      borderBottomWidth: 1,
+      borderBottomColor: `${theme.colors.accent}`,
     },
   });
 
@@ -82,8 +90,6 @@ const ExerciseOnPressLog = ({ theme, content, onProgress }) => {
       duration: 300,
     }).start();
   }, []);
-
-  const windowWidth = Dimensions.get('window').width;
 
   const onLocalPress = (index) => {
     if (isMounted.current) {
@@ -146,173 +152,101 @@ const ExerciseOnPressLog = ({ theme, content, onProgress }) => {
         }}
       >
         <Card theme={theme} style={styles.item}>
-          <TouchableRipple
-            style={{
-              padding: 10,
-              borderRadius: theme.item.borderRadius,
-              borderWidth: 0,
-            }}
+          <Card.Title
+            style={styles.rowTextContainer}
             theme={theme}
-          >
-            <View>
-              <View theme={theme}>
-                <Text theme={theme} style={[styles.rowTextHeader, theme.buttonText, styles.text]}>
-                  {content.title}
-                </Text>
-              </View>
-              {[...Array(content.sets)].map((_, i) => (
-                <TouchableRipple
-                  // eslint-disable-next-line
-                  key={`selected_${Date.now()}_${i}`}
-                  rippleColor={theme.colors.secondarySelected}
-                  underlayColor={theme.colors.secondarySelected}
+            title={
+              <Text theme={theme} style={[styles.rowTextHeader]}>
+                {content.title}
+              </Text>
+            }
+          />
+          <Card.Content style={{ paddingTop: 8 }}>
+            {[...Array(content.sets)].map((_, i) => (
+              <TouchableRipple
+                // eslint-disable-next-line
+                key={`selected_${Date.now()}_${i}`}
+                rippleColor={theme.colors.secondarySelected}
+                underlayColor={theme.colors.secondarySelected}
+                theme={theme}
+                style={[{ marginTop: 4 }, selected === i ? styles.selectedSubItem : styles.subItem]}
+                onPress={(e) => onLocalPress(i, e)}
+              >
+                <View
                   theme={theme}
-                  style={selected === i ? styles.selectedSubItem : styles.subItem}
-                  onPress={(e) => onLocalPress(i, e)}
+                  style={[
+                    {
+                      ...styles.subItemText,
+                      flexDirection: 'column',
+                    },
+                    styles.subItemView,
+                    selected
+                      ? {
+                          flexDirection: 'row',
+                          flexGrow: 1,
+                        }
+                      : {},
+                  ]}
                 >
-                  <View
-                    theme={theme}
-                    style={[
-                      styles.subItemView,
-                      selected
-                        ? {
-                            flexDirection: 'row',
-                            flexGrow: 1,
-                          }
-                        : {},
-                    ]}
-                  >
-                    {isScreenSmall ? (
-                      <>
-                        <View style={styles.subItemText}>
-                          <Text
-                            theme={theme}
-                            style={selected === i ? styles.selectedText : styles.text}
-                          >
-                            Set {i + 1}
-                          </Text>
-                        </View>
-                        <View style={styles.subItemText}>
-                          <Text
-                            theme={theme}
-                            style={selected === i ? styles.selectedText : styles.text}
-                          >
-                            Rep Range: {content.repRange[0]} to {content.repRange[1]}
-                          </Text>
-                        </View>
-                        <View
-                          theme={theme}
-                          style={[styles.subItemText, { alignItems: 'flex-end' }]}
-                        >
-                          {selected === i ? (
-                            <View
-                              theme={theme}
-                              style={[styles.subItemText, { alignItems: 'flex-end' }]}
-                            >
-                              <Text
-                                theme={theme}
-                                style={[styles.selectedText, theme.paragraph, { margin: 'auto' }]}
-                              >
-                                Rest Target:{' '}
-                                {new Date(content.rest * 1000).toISOString().substring(14, 19)}
-                              </Text>
-                              <Button
-                                theme={{
-                                  button: {
-                                    ...theme.button,
-                                    width: 100,
-                                    marginLeft: 10,
-                                    marginRight: 10,
-                                  },
-                                }}
-                                variant="secondary"
-                                onPress={goNext}
-                                // isLoading={isLoading}
-                              >
-                                Next
-                              </Button>
-                            </View>
-                          ) : (
-                            <Text theme={theme} style={[styles.text]}>
-                              Rest Target:{' '}
-                              {new Date(content.rest * 1000).toISOString().substring(14, 19)}
-                            </Text>
-                          )}
-                        </View>
-                      </>
-                    ) : (
-                      <View
-                        style={{
-                          ...styles.subItemText,
-                          flexDirection: 'column',
-                        }}
-                      >
-                        <View style={styles.subItemText}>
-                          <Text
-                            theme={theme}
-                            style={selected === i ? styles.selectedText : styles.text}
-                          >
-                            Set {i + 1}
-                          </Text>
-                        </View>
-                        <View style={styles.subItemText}>
-                          <Text
-                            theme={theme}
-                            style={
-                              selected === i
-                                ? {
-                                    ...styles.selectedText,
-                                    ...theme.paragraph,
-                                    paddingTop: 3,
-                                  }
-                                : styles.text
+                  <View style={styles.subItemText}>
+                    <Text theme={theme} style={selected === i ? styles.selectedText : styles.text}>
+                      Set {i + 1}
+                    </Text>
+                  </View>
+                  <View style={styles.subItemText}>
+                    <Text
+                      theme={theme}
+                      style={
+                        selected === i
+                          ? {
+                              ...styles.selectedText,
+                              ...theme.paragraph,
+                              paddingTop: 3,
                             }
+                          : styles.text
+                      }
+                    >
+                      Rep Range: {content.repRange[0]} to {content.repRange[1]}
+                    </Text>
+                  </View>
+                  <View theme={theme} style={[styles.subItemText, { paddingTop: 5 }]}>
+                    {selected === i ? (
+                      <View theme={theme} style={styles.subItemText}>
+                        <Text
+                          theme={theme}
+                          style={[styles.selectedText, theme.paragraph, { margin: 'auto' }]}
+                        >
+                          Rest Target:{' '}
+                          {new Date(content.rest * 1000).toISOString().substring(14, 19)}
+                        </Text>
+                        <View theme={theme} style={{ alignItems: 'flex-end' }}>
+                          <Button
+                            theme={{
+                              button: {
+                                ...theme.button,
+                                width: 100,
+                                marginLeft: 10,
+                                marginRight: 10,
+                              },
+                            }}
+                            variant="secondary"
+                            onPress={goNext}
+                            // isLoading={isLoading}
                           >
-                            Rep Range: {content.repRange[0]} to {content.repRange[1]}
-                          </Text>
-                        </View>
-                        <View theme={theme} style={[styles.subItemText, { paddingTop: 5 }]}>
-                          {selected === i ? (
-                            <View theme={theme} style={styles.subItemText}>
-                              <Text
-                                theme={theme}
-                                style={[styles.selectedText, theme.paragraph, { margin: 'auto' }]}
-                              >
-                                Rest Target:{' '}
-                                {new Date(content.rest * 1000).toISOString().substring(14, 19)}
-                              </Text>
-                              <View theme={theme} style={{ alignItems: 'flex-end' }}>
-                                <Button
-                                  theme={{
-                                    button: {
-                                      ...theme.button,
-                                      width: 100,
-                                      marginLeft: 10,
-                                      marginRight: 10,
-                                    },
-                                  }}
-                                  variant="secondary"
-                                  onPress={goNext}
-                                  // isLoading={isLoading}
-                                >
-                                  Next
-                                </Button>
-                              </View>
-                            </View>
-                          ) : (
-                            <Text theme={theme} style={[styles.text]}>
-                              Rest Target:{' '}
-                              {new Date(content.rest * 1000).toISOString().substring(14, 19)}
-                            </Text>
-                          )}
+                            Next
+                          </Button>
                         </View>
                       </View>
+                    ) : (
+                      <Text theme={theme} style={[styles.text]}>
+                        Rest Target: {new Date(content.rest * 1000).toISOString().substring(14, 19)}
+                      </Text>
                     )}
                   </View>
-                </TouchableRipple>
-              ))}
-            </View>
-          </TouchableRipple>
+                </View>
+              </TouchableRipple>
+            ))}
+          </Card.Content>
         </Card>
       </Animated.View>
     </>

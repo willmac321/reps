@@ -39,6 +39,7 @@ const theme = {
     secondarySelected: `${accent}CA`,
     backdrop: 'rgba(0,0,0,0.2)',
     underlineColor: 'transparent',
+    backgroundShadow: `${primary}1A`,
   },
   marginHorizontal: 20,
   title: {
