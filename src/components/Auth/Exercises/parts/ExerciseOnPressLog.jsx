@@ -1,15 +1,41 @@
 import React, { useState } from 'react';
 import { View, Animated, Easing, Text, StyleSheet, Dimensions } from 'react-native';
-import { Card, withTheme, TouchableRipple } from 'react-native-paper';
+import { IconButton, Card, withTheme, TouchableRipple } from 'react-native-paper';
 import { useIsMounted } from '../../../../utils/useIsMounted';
 import { isMobile, useIsSmallScreen } from '../../../../utils/checkPlatform';
 import Button from '../../../../template/ButtonTemplate';
+
+const nextButtonIconArr = [
+  'check',
+  'heart',
+  'cheese',
+  'trophy',
+  'hat-cowboy',
+  'fire',
+  'skull',
+  'arrow-down',
+  'cookie-bite',
+  'crown',
+  'candy-cane',
+  'meteor',
+  'dog',
+  'star',
+  'horse',
+  'hippo',
+  'sun',
+  'rocket',
+  'snowman',
+  'gem',
+  'cat',
+  'carrot',
+];
 
 const ExerciseOnPressLog = ({ theme, content, onProgress }) => {
   const springAnim = React.useRef(new Animated.Value(0)).current;
   const isMounted = useIsMounted();
   const animColor = React.useRef(new Animated.Value(0)).current;
   const [selected, setSelected] = useState(0);
+  const [icon, setIcon] = useState('check');
   const isScreenSmall = useIsSmallScreen();
 
   const styles = StyleSheet.create({
@@ -23,6 +49,8 @@ const ExerciseOnPressLog = ({ theme, content, onProgress }) => {
     selectedText: {
       ...theme.buttonTextSecondary,
       color: theme.buttonTextSecondary.color,
+      verticalAlign: 'middle',
+      marginVertical: 'auto',
     },
     subItemView: {
       flex: 0,
@@ -32,10 +60,19 @@ const ExerciseOnPressLog = ({ theme, content, onProgress }) => {
       flexWrap: 'wrap',
       justifyContent: 'space-around',
     },
-    subItemText: {
-      marginVertical: 'auto',
+    selectedSubItemText: {
+      margin: 4,
+      padding: 4,
+      borderRadius: 8,
+      backgroundColor: `${theme.colors.backgroundShadow}`,
       flex: 0,
       flexGrow: 1,
+    },
+    subItemText: {
+      marginVertical: 'auto',
+      flex: 1,
+      flexGrow: 1,
+      padding: 4,
     },
     subItem: {
       ...theme.item,
@@ -105,6 +142,7 @@ const ExerciseOnPressLog = ({ theme, content, onProgress }) => {
 
   const goNext = React.useCallback(() => {
     if (isMounted.current) {
+      setIcon(nextButtonIconArr[Math.floor(Math.random() * nextButtonIconArr.length)]);
       if (parseInt(content.sets, 10) - 1 > selected) {
         onLocalPress(selected + 1);
       } else {
@@ -176,7 +214,6 @@ const ExerciseOnPressLog = ({ theme, content, onProgress }) => {
                   theme={theme}
                   style={[
                     {
-                      ...styles.subItemText,
                       flexDirection: 'column',
                     },
                     styles.subItemView,
@@ -188,61 +225,37 @@ const ExerciseOnPressLog = ({ theme, content, onProgress }) => {
                       : {},
                   ]}
                 >
-                  <View style={styles.subItemText}>
+                  <View style={selected === i ? styles.selectedSubItemText : styles.subItemText}>
                     <Text theme={theme} style={selected === i ? styles.selectedText : styles.text}>
                       Set {i + 1}
                     </Text>
                   </View>
-                  <View style={styles.subItemText}>
-                    <Text
-                      theme={theme}
-                      style={
-                        selected === i
-                          ? {
-                              ...styles.selectedText,
-                              ...theme.paragraph,
-                              paddingTop: 3,
-                            }
-                          : styles.text
-                      }
-                    >
+                  <View style={selected === i ? styles.selectedSubItemText : styles.subItemText}>
+                    <Text theme={theme} style={selected === i ? styles.selectedText : styles.text}>
                       Rep Range: {content.repRange[0]} to {content.repRange[1]}
                     </Text>
                   </View>
-                  <View theme={theme} style={[styles.subItemText, { paddingTop: 5 }]}>
-                    {selected === i ? (
-                      <View theme={theme} style={styles.subItemText}>
-                        <Text
-                          theme={theme}
-                          style={[styles.selectedText, theme.paragraph, { margin: 'auto' }]}
-                        >
-                          Rest Target:{' '}
-                          {new Date(content.rest * 1000).toISOString().substring(14, 19)}
-                        </Text>
-                        <View theme={theme} style={{ alignItems: 'flex-end' }}>
-                          <Button
-                            theme={{
-                              button: {
-                                ...theme.button,
-                                width: 100,
-                                marginLeft: 10,
-                                marginRight: 10,
-                              },
-                            }}
-                            variant="secondary"
-                            onPress={goNext}
-                            // isLoading={isLoading}
-                          >
-                            Next
-                          </Button>
-                        </View>
-                      </View>
-                    ) : (
-                      <Text theme={theme} style={[styles.text]}>
-                        Rest Target: {new Date(content.rest * 1000).toISOString().substring(14, 19)}
-                      </Text>
-                    )}
+                  <View style={[selected === i ? styles.selectedSubItemText : styles.subItemText]}>
+                    <Text theme={theme} style={selected === i ? styles.selectedText : styles.text}>
+                      Rest Target: {new Date(content.rest * 1000).toISOString().substring(14, 19)}
+                    </Text>
                   </View>
+                  {selected === i && (
+                    <View theme={theme} style={{ alignItems: 'flex-end' }}>
+                      <IconButton
+                        icon={icon}
+                        color={theme.buttonTextSecondary.color}
+                        style={[
+                          {
+                            marginVertical: 'auto',
+                            backgroundColor: theme.colors.backgroundShadow,
+                          },
+                        ]}
+                        size={24}
+                        onPress={goNext}
+                      />
+                    </View>
+                  )}
                 </View>
               </TouchableRipple>
             ))}

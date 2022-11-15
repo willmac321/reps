@@ -34,7 +34,7 @@ const NewExercise = ({
     repRange: [false, false],
     rest: false,
   });
-  // FIXME
+
   const [newExercise, setNewExercise] = React.useState(EMPTY_EXERCISE);
 
   const styles = StyleSheet.create({

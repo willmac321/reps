@@ -156,7 +156,7 @@ const Workouts = ({
   // useFocusEffect(
   //   useCallback(() => {
   //     if (isMounted.current && !isLoading && workouts && showEditAndSelect && workouts.length > 0) {
-  //       onPress('Day 1');
+  //       onPress('r');
   //     }
   //   }, [workouts, isLoading, showEditAndSelect])
   // );
@@ -221,6 +221,7 @@ const Workouts = ({
       right={() => (
         <>
           <IconButton
+                size={16}
             icon="plus-square"
             color={theme.colors.primary}
             style={{

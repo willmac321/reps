@@ -18,8 +18,6 @@ const ScrollList = ({
   React.useEffect(() => {
     if (scrollToIndex) {
       if (showScrollView) {
-        // TODO why doesnt this work
-        // console.log(scrollToIndex, ref.current);
         ref.current.scrollToIndex({ index: scrollToIndex, animated: true });
       }
     }
