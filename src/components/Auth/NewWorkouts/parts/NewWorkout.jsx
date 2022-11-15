@@ -1,6 +1,6 @@
 import React from 'react';
-import { StyleSheet, ScrollView } from 'react-native';
-import { Text, withTheme, TextInput, HelperText } from 'react-native-paper';
+import { View, StyleSheet, ScrollView } from 'react-native';
+import { IconButton, Text, withTheme, TextInput, HelperText } from 'react-native-paper';
 import API from '../../../../controllers/WorkoutApi';
 import CardWithButton from '../../../../template/CardWithButton';
 import { StateContext } from '../../../../controllers/state';
@@ -114,6 +114,16 @@ const NewWorkout = ({ navigation, user, theme, data }) => {
             value={workoutName}
             onChangeText={(val) => setWorkoutName(val)}
             style={[styles.input, { paddingTop: 10 }]}
+            right={
+              workoutName && (
+                <TextInput.Icon
+                  fontSize={16}
+                  style={{ marginVertical: 'auto' }}
+                  name="backspace"
+                  onPress={() => setWorkoutName('')}
+                />
+              )
+            }
           />
           {!!isNameTaken() && (
             <HelperText type="error" visible={isError || (editWorkout && isNameTaken())}>

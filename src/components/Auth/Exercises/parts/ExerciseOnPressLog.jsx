@@ -49,7 +49,6 @@ const ExerciseOnPressLog = ({ theme, content, onProgress }) => {
     selectedText: {
       ...theme.buttonTextSecondary,
       color: theme.buttonTextSecondary.color,
-      verticalAlign: 'middle',
       marginVertical: 'auto',
     },
     subItemView: {

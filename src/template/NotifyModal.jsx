@@ -42,14 +42,19 @@ const NotifyModal = ({
             </Paragraph>
           )}
         </Dialog.Content>
-        <Dialog.ScrollArea>
+        <Dialog.ScrollArea
+          style={!children && {
+            borderTopWidth: 0,
+            borderBottomWidth: 0,
+          }}
+        >
           <ScrollView>{children}</ScrollView>
         </Dialog.ScrollArea>
         <Dialog.Actions>
           {showButton && (
             <Button
               theme={{
-                button: { ...theme.button, marginRight: 10 },
+                button: { ...theme.button },
               }}
               onPress={hideDialog}
             >

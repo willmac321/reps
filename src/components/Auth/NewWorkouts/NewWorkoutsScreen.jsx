@@ -73,7 +73,10 @@ const NewWorkoutsScreen = ({ navigation, theme }) => {
             navigation={navigation}
             setMessage={setNotifyMessage}
             setNotifyTitle={setNotifyTitle}
-            setShowNotify={setShowNotify}
+            setShowNotify={(v) => {
+              setIsFromEditButton(false);
+              setShowNotify(v);
+            }}
             showEditAndSelect
             isOk={isOk}
             setIsOk={setIsOk}
@@ -87,7 +90,7 @@ const NewWorkoutsScreen = ({ navigation, theme }) => {
           visible={showNotify}
           setVisible={setShowNotify}
           onPress={() => setIsOk(true)}
-          setIsCancel={()=>setIsFromEditButton(false)}
+          setIsCancel={() => setIsFromEditButton(false)}
         />
       </KeyboardAvoidingView>
     </SafeArea>

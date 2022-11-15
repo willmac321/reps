@@ -195,7 +195,7 @@ const NewExercise = ({
         titleRight={() =>
           !isEmpty() && (
             <IconButton
-              size={16}
+              size={24}
               icon="times-circle"
               style={{ ...styles.icon }}
               onPress={handleClearForm}
@@ -214,6 +214,16 @@ const NewExercise = ({
             value={newExercise.title}
             onChangeText={(val) => setTitleChange(setVal(val, 'title'))}
             style={[styles.input, { marginHorizontal: 10 }]}
+            right={
+               newExercise.title && (
+                <TextInput.Icon
+                  fontSize={16}
+                  style={{ marginVertical: 'auto' }}
+                  name="backspace"
+                  onPress={() => setTitleChange(setVal('', 'title'))}
+                />
+              )
+            }
           />
           {!!isNameTaken() && (
             <HelperText type="error" visible={isNameTaken()}>

@@ -1,5 +1,6 @@
 import React from 'react';
-import { withTheme } from 'react-native-paper';
+import { Icon, Text, List, withTheme } from 'react-native-paper';
+import { FontAwesome5 } from '@expo/vector-icons';
 import NotifyModal from '../../../../template/NotifyModal';
 import { StateContext } from '../../../../controllers/state';
 import ExercisesCommon from '../../../../common/ExercisesCommon';
@@ -38,18 +39,41 @@ const ExercisesList = ({
         isDraggable={false}
       />
       <NotifyModal
-        title="🐎🐎🐎 Yesssss  🐎🐎🐎"
-        buttonText="👍"
+        title={
+          <Text style={{ marginHorizontal: 16 }}>
+            <Text style={{ padding: 4 }}>
+              {[...Array(3).keys()].map((v) => (
+                <FontAwesome5 key={v} name="horse" style={{ fontSize: 24, marginHorizontal: 4 }} />
+              ))}
+              {'  '}
+            </Text>
+            Yesssss
+            <Text style={{ padding: 4 }}>
+              {'  '}
+              {[...Array(3).keys()].map((v) => (
+                <FontAwesome5 key={v} name="horse" style={{ fontSize: 24, marginHorizontal: 4 }} />
+              ))}
+            </Text>
+          </Text>
+        }
+        buttonText={
+          <FontAwesome5
+            name="thumbs-up"
+            color={theme.colors.secondary}
+            style={{ color: theme.colors.secondary, fontSize: 24 }}
+          />
+        }
         theme={theme}
-        content="Nice workout!  Cool it down now."
         isVisible={showCompletion}
         setIsVisible={setShowCompletion}
+        content={
+          <Text style={{ marginTop: 24, marginBottom: 4 }}>Nice workout! Cool it down now.</Text>
+        }
         style={{
           minWidth: 320,
           flexGrow: 0,
           flexShrink: 1,
           flexBasis: 210,
-          margin: 'auto',
           alignItems: 'center',
           alignSelf: 'center',
         }}

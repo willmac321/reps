@@ -35,7 +35,11 @@ function App() {
           // eslint-disable-next-line
           <PaperProvider
             theme={theme}
-            settings={{ icon: (props) => <FontAwesome5 {...props} /> }}
+            settings={{
+              icon: (props) => <FontAwesome5 {...props} />,
+
+              name: (props) => <FontAwesome5 {...props} />,
+            }}
           >
             <SafeAreaProvider>
               <NavigationContainer theme={theme}>

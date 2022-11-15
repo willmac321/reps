@@ -112,6 +112,7 @@ const Workouts = ({
       if (selected === id) {
         setSelected(null);
         setEditWorkout({});
+        setIsDisable(true);
       } else {
         setSelected(id);
         const workout = workouts.filter((d) => d.id === id)[0];
@@ -149,6 +150,7 @@ const Workouts = ({
 
   const handleNew = () => {
     setIsFromEditButton(false);
+    setIsLoading(true);
     navigation.navigate('Create');
   };
 
@@ -221,7 +223,7 @@ const Workouts = ({
       right={() => (
         <>
           <IconButton
-                size={16}
+            size={16}
             icon="plus-square"
             color={theme.colors.primary}
             style={{

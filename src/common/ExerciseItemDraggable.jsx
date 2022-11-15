@@ -263,7 +263,7 @@ const ExerciseItem = ({
                   {showTrash && (
                     <TouchableOpacity
                       theme={theme}
-                      style={[styles.rowButtonContainer, { flexGrow: 5 }]}
+                      style={[styles.rowButtonContainer, { flexGrow: 2 }]}
                       onPress={(e) => {
                         handleTrash(e, text.id);
                       }}
