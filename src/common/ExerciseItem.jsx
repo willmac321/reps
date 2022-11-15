@@ -1,4 +1,5 @@
 import React from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import { View, StyleSheet, TouchableOpacity, Animated, Easing } from 'react-native';
 import { IconButton, withTheme, TouchableRipple, Text, Card } from 'react-native-paper';
 import { useIsMounted } from '../utils/useIsMounted';
@@ -147,6 +148,12 @@ const ExerciseItem = ({
       }).start(onPress);
     }
   };
+  // TODO for quick nav to workout screen remove
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     if (text && text.id === 'A7u3rt8tneINe1uyhzVQ') onPress();
+  //   }, [text])
+  // );
 
   return (
     <View>
@@ -259,7 +266,12 @@ const ExerciseItem = ({
                     style={[styles.rowButtonContainer, { flexGrow: 10 }]}
                     onPress={(e) => handleTrash(e, text.id)}
                   >
-                    <IconButton icon="trash-alt" color={styles.icon.color} style={styles.icon} />
+                    <IconButton
+                      icon="trash-alt"
+                      color={styles.icon.color}
+                      style={styles.icon}
+                      size={16}
+                    />
                   </TouchableOpacity>
                 )}
               </View>

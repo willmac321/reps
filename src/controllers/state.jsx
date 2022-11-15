@@ -52,8 +52,6 @@ export const StateContextProvider = ({ children }) => {
 
   const [workouts, setWorkouts] = React.useState([]);
 
-  // TODO set this on get from api
-  // and sort it based on name or something
   const [exercises, updateExercises] = React.useState([]);
 
   const [selectedWorkout, updateSelectedWorkout] = React.useState({

@@ -270,6 +270,7 @@ const ExerciseItem = ({
                       }}
                     >
                       <IconButton
+                        size={16}
                         icon="trash-alt"
                         color={styles.icon.color}
                         onPress={(e) => {
