@@ -59,14 +59,12 @@ const WorkoutItem = ({
           {showEditAndTrash && (
             <>
               <IconButton
-                size={16}
                 icon="pen"
                 color={isSelected ? theme.buttonText.color : theme.colors.primary}
                 style={styles.icon}
                 onPress={(e) => handleEdit(e, text.id)}
               />
               <IconButton
-                size={16}
                 color={isSelected ? theme.buttonText.color : theme.colors.primary}
                 icon="trash-alt"
                 style={styles.icon}

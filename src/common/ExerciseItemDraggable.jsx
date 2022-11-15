@@ -82,7 +82,6 @@ const ExerciseItem = ({
       flexGrow: 1,
       flex: 0,
       paddingHorizontal: 4,
-      alignContent: 'end',
       textAlign: 'right',
       fontSize: 16,
     },
@@ -199,7 +198,7 @@ const ExerciseItem = ({
                 <View style={{ flexDirection: 'row' }}>
                   <View style={{ flexDirection: 'column', flexGrow: 10 }}>
                     <View theme={theme} style={[styles.rowTextContainer, { minHeight: 26 }]}>
-                      <Text theme={theme} style={[styles.rowTextTitle]}>
+                      <Text theme={theme} style={[styles.rowTextTitle, styles.text]}>
                         {text.title}
                       </Text>
                     </View>
@@ -270,7 +269,6 @@ const ExerciseItem = ({
                       }}
                     >
                       <IconButton
-                        size={16}
                         icon="trash-alt"
                         color={styles.icon.color}
                         onPress={(e) => {
