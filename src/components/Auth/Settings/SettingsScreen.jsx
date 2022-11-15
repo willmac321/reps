@@ -102,7 +102,7 @@ const SettingsScreen = ({ navigation, theme }) => {
   );
 
   React.useEffect(() => {
-    updateDetails(userDetails, user.uid);
+    if (user && user.uid) updateDetails(userDetails, user.uid);
   }, [userDetails]);
 
   // Settings for app, excluding reset/change password, email, delete account

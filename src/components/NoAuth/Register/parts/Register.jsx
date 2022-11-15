@@ -26,24 +26,19 @@ const Register = ({
   const styles = StyleSheet.create({
     input: theme.input,
     text: {
-      marginTop: 20,
-      marginBottom: 10,
-      display: 'flex',
-      alignSelf: 'flex-start',
-      textAlignVertical: 'center',
-      flexDirection: 'row',
+      flex: 1,
+      flexGrow: 1,
       flexWrap: 'wrap',
+      wordBreak: 'break-word',
+      margin: 'auto',
+      flexDirection: 'row',
     },
     link: {
-      margin: 'auto',
       fontSize: 16,
-      marginLeft: 5,
     },
     link_text: {
-      margin: 'auto',
       color: theme.colors.link,
       fontSize: 16,
-      marginLeft: 5,
     },
   });
 
@@ -154,11 +149,13 @@ const Register = ({
                   color={theme.colors.text}
                   status={acceptedEULA ? 'checked' : 'unchecked'}
                   onPress={() => setAcceptedEULA(!acceptedEULA)}
-                  style={styles.link}
+                  style={[styles.link, {}]}
                 />
-                <Text style={styles.link}>I agree to the</Text>
-                <Text onPress={() => setEulaVis(!eulaVis)} style={styles.link_text}>
-                  privacy policy and terms of service.
+                <Text style={{ margin: 'auto', flex: 10 }}>
+                  <Text style={styles.link}>I agree to the</Text>{' '}
+                  <Text onPress={() => setEulaVis(!eulaVis)} style={styles.link_text}>
+                    privacy policy and terms of service.
+                  </Text>
                 </Text>
               </View>
             </CardWithButton>

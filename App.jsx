@@ -10,16 +10,17 @@ import { StateContextProvider, StateContext } from './src/controllers/state';
 import NoAuthNavigator from './src/components/NoAuth/NoAuthNavigator';
 import AuthNavigator from './src/components/Auth/AuthNavigator.jsx';
 import SplashScreen from './src/components/Splash/SplashScreen';
-import { isMobile } from './src/utils/checkPlatform';
+import { useIsSmallScreen, isMobile } from './src/utils/checkPlatform';
 
 const Stack = createStackNavigator();
 
 function App() {
+  const isScreenSmall = useIsSmallScreen();
   React.useEffect(() => {
     if (!isMobile()) {
       const root = document.getElementById('root');
       if (root) {
-        root.style.overflowY = 'hidden';
+        if (!isScreenSmall) root.style.overflowY = 'hidden';
       } else {
         console.error("Couldn't get root view to fix web ScrollView.");
       }
