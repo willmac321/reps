@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
-import Markdown from 'react-native-markdown-view';
+import Markdown from 'react-native-markdown-display-updated';
 
 const EULA = () => (
   <View style={{ backgroundColor: 'white', color: 'black' }}>
