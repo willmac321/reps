@@ -36,5 +36,9 @@ yarn-error.log*
 
 secrets
 
+.easignore
+
+### EASINCLUDE ###
+
 */config/
 config.js

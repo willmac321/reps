@@ -1,7 +1,8 @@
-{
+{;
   "name": "reps",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
+    "build": "node ./src/script/generate-easignore.js && eas build",
     "test": "jest --coverage",
     "start": "expo start",
     "android": "expo start --android",
