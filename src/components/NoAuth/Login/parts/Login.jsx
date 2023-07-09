@@ -10,6 +10,7 @@ const Login = ({ theme, style, setShowNotify, setNotifyMessage, setNotifyTitle }
   const isMounted = useIsMounted();
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
+  const [isPasswordVisible, setPasswordVisible] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
   const [isDisable, setIsDisable] = React.useState(false);
   const styles = StyleSheet.create({
@@ -91,11 +92,14 @@ const Login = ({ theme, style, setShowNotify, setNotifyMessage, setNotifyTitle }
           theme={theme}
           autoCompleteType="password"
           textContentType="password"
-          secureTextEntry
+          secureTextEntry={!isPasswordVisible}
           label="Password"
           value={password}
           onChangeText={(val) => setPassword(val)}
           style={styles.input}
+          right={
+            <TextInput.Icon icon="eye" onPress={() => setPasswordVisible(!isPasswordVisible)} />
+          }
         />
         <Link style={styles.link} to="/Forgot">
           Forgot Password?

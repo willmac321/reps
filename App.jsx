@@ -2,7 +2,7 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { createStackNavigator } from '@react-navigation/stack';
-import { Provider as PaperProvider } from 'react-native-paper';
+import { Provider as PaperProvider, useTheme } from 'react-native-paper';
 import { LogBox } from 'react-native';
 
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -15,12 +15,14 @@ import { useIsSmallScreen, isMobile } from './src/utils/checkPlatform';
 const Stack = createStackNavigator();
 
 function App() {
+  const themeh = useTheme();
   const isScreenSmall = useIsSmallScreen();
   React.useEffect(() => {
     if (!isMobile()) {
       const root = document.getElementById('root');
       if (root) {
         if (!isScreenSmall) root.style.overflowY = 'hidden';
+        root.style.backgroundColor = themeh.colors.background;
       } else {
         console.error("Couldn't get root view to fix web ScrollView.");
       }
@@ -32,12 +34,13 @@ function App() {
     <StateContextProvider>
       <StateContext.Consumer>
         {({ theme }) => (
-          // eslint-disable-next-line
           <PaperProvider
             theme={theme}
             settings={{
+              // eslint-disable-next-line
               icon: (props) => <FontAwesome5 {...props} />,
 
+              // eslint-disable-next-line
               name: (props) => <FontAwesome5 {...props} />,
             }}
           >

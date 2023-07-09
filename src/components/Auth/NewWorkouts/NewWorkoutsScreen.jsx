@@ -7,7 +7,6 @@ import WarnModal from '../../../template/WarnModal';
 import Workouts from '../Workouts/parts/Workouts';
 import NewWorkout from './parts/NewWorkout';
 import { useIsMounted } from '../../../utils/useIsMounted';
-import { isMobile } from '../../../utils/checkPlatform';
 
 const NewWorkoutsScreen = ({ navigation, theme }) => {
   const [showNotify, setShowNotify] = React.useState(false);

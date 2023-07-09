@@ -170,8 +170,8 @@ const Exercises = ({
   const ItemSeparator = () => (
     <View
       style={{
-        marginTop: 5,
-        marginBottom: 5,
+        marginTop: 16,
+        marginBottom: 16,
         marginRight: 'auto',
         marginLeft: 'auto',
         borderColor: theme.colors.primary,

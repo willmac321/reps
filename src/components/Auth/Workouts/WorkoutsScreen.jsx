@@ -1,7 +1,5 @@
 import React from 'react';
-import { Portal, List, Dialog, withTheme, Text } from 'react-native-paper';
-import { FontAwesome5 } from '@expo/vector-icons';
-import Button from '../../../template/ButtonTemplate';
+import { withTheme } from 'react-native-paper';
 import SafeArea from '../../../template/SafeAreaWrapper';
 import WarnModal from '../../../template/WarnModal';
 import Workouts from './parts/Workouts';

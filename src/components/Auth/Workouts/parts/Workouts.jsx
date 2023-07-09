@@ -27,6 +27,7 @@ const Workouts = ({
     editWorkout: { setEditWorkout },
     workouts: { workouts, setWorkouts },
     isLoading,
+    setIsLoading,
   } = React.useContext(StateContext);
 
   const [isDisable, setIsDisable] = React.useState(true);
@@ -92,18 +93,24 @@ const Workouts = ({
     [user, workouts]
   );
 
-  const editWorkout = React.useCallback(() => {
-    setWorkoutToEdit(selected);
-    setUpdatedWorkout({});
-    navigation.navigate('Create', { screen: 'NewWorkout' });
-    setModalOnOkSelected(null);
-  }, [selected, user, workouts]);
+  const editWorkout = React.useCallback(
+    (id) => {
+      setWorkoutToEdit(id);
+      setUpdatedWorkout({});
+      navigation.navigate('Create', { screen: 'NewWorkout' });
+      setModalOnOkSelected(null);
+    },
+    [user, workouts]
+  );
 
-  const handleOnSubmit = React.useCallback(() => {
-    setUpdatedWorkout(selected);
-    setWorkoutToEdit();
-    navigation.navigate('Exercises');
-  }, [selected, workouts, isDisable]);
+  const handleOnSubmit = React.useCallback(
+    (id) => {
+      setUpdatedWorkout(id);
+      setWorkoutToEdit();
+      navigation.navigate('Exercises');
+    },
+    [workouts, isDisable]
+  );
 
   const onPress = React.useCallback(
     (id) => {
@@ -240,8 +247,8 @@ const Workouts = ({
   const ItemSeparator = () => (
     <View
       style={{
-        marginTop: 5,
-        marginBottom: 5,
+        marginTop: 16,
+        marginBottom: 16,
         marginRight: 'auto',
         marginLeft: 'auto',
         borderColor: theme.colors.primary,
@@ -258,7 +265,7 @@ const Workouts = ({
       showButton={showEditAndSelect && workouts && workouts.length > 0}
       theme={theme}
       buttonDisabled={isDisable}
-      onPress={handleOnSubmit}
+      onPress={() => handleOnSubmit(selected)}
       isLoading={isLoading}
       flex={1}
       style={{

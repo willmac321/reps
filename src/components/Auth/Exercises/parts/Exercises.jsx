@@ -1,9 +1,10 @@
 import React from 'react';
-import { Icon, Text, List, withTheme } from 'react-native-paper';
+import { Text, withTheme } from 'react-native-paper';
 import { FontAwesome5 } from '@expo/vector-icons';
 import NotifyModal from '../../../../template/NotifyModal';
 import { StateContext } from '../../../../controllers/state';
 import ExercisesCommon from '../../../../common/ExercisesCommon';
+import { View } from 'react-native';
 
 const ExercisesList = ({
   isLoading,
@@ -11,6 +12,7 @@ const ExercisesList = ({
   theme,
   OnPressExerciseComponent = null,
   setSelectedExercise = () => {},
+  isDraggable = false,
 }) => {
   const {
     exercises: { exercises },
@@ -24,7 +26,7 @@ const ExercisesList = ({
   };
 
   return (
-    <>
+    <View flex={0} flexGrow={1}>
       <ExercisesCommon
         isLoading={isLoading}
         navigation={navigation}
@@ -36,7 +38,7 @@ const ExercisesList = ({
         handleNew={handleNew}
         OnPressExerciseComponent={OnPressExerciseComponent}
         setSelectedExercise={setSelectedExercise}
-        isDraggable={false}
+        isDraggable={isDraggable}
       />
       <NotifyModal
         title={
@@ -78,7 +80,7 @@ const ExercisesList = ({
           alignSelf: 'center',
         }}
       />
-    </>
+    </View>
   );
 };
 

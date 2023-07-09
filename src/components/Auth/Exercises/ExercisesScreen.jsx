@@ -43,6 +43,7 @@ const ExercisesScreen = ({ navigation, theme }) => {
           setIsOk={setIsOk}
           theme={theme}
           OnPressExerciseComponent={ExerciseOnPressLog}
+          isDraggable={false}
         />
       </ScrollViewWrapper>
     </SafeArea>
