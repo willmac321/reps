@@ -15,7 +15,7 @@ const SplashScreen = ({ theme }) => {
     <View
       flex={1}
       style={{
-        height: '150%',
+        height: isMobile() ? '120%' : '100%',
         width: '100%',
         position: 'absolute',
         top: mT,
