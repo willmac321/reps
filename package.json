@@ -3,6 +3,8 @@
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "build": "node ./src/script/generate-easignore.js && eas build",
+    "build:android": "npm run build -- --platform android",
+    "deploy:android": "eas submit --platform android",
     "test": "jest --coverage",
     "start": "expo start",
     "android": "expo start --android",

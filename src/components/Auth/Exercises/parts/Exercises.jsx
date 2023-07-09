@@ -1,10 +1,10 @@
 import React from 'react';
 import { Text, withTheme } from 'react-native-paper';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { View } from 'react-native';
 import NotifyModal from '../../../../template/NotifyModal';
 import { StateContext } from '../../../../controllers/state';
 import ExercisesCommon from '../../../../common/ExercisesCommon';
-import { View } from 'react-native';
 
 const ExercisesList = ({
   isLoading,
