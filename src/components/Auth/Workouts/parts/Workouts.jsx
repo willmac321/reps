@@ -1,7 +1,6 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { withTheme, List, IconButton } from 'react-native-paper';
 import { View, Animated, Easing } from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';
 import { StateContext } from '../../../../controllers/state';
 import CardWithButton from '../../../../template/CardWithButton';
 import ScrollList from '../../../../template/ScrollList';
@@ -27,7 +26,6 @@ const Workouts = ({
     editWorkout: { setEditWorkout },
     workouts: { workouts, setWorkouts },
     isLoading,
-    setIsLoading,
   } = React.useContext(StateContext);
 
   const [isDisable, setIsDisable] = React.useState(true);
@@ -157,7 +155,6 @@ const Workouts = ({
 
   const handleNew = () => {
     setIsFromEditButton(false);
-    setIsLoading(true);
     navigation.navigate('Create');
   };
 

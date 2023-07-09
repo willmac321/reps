@@ -7,7 +7,7 @@ import { StateContext } from '../../../../controllers/state';
 import ExercisesCommon from '../../../../common/ExercisesCommon';
 
 const ExercisesList = ({
-  isLoading,
+  setIsLoading,
   navigation,
   theme,
   OnPressExerciseComponent = null,
@@ -28,7 +28,7 @@ const ExercisesList = ({
   return (
     <View flex={0} flexGrow={1}>
       <ExercisesCommon
-        isLoading={isLoading}
+        setIsLoading={setIsLoading}
         navigation={navigation}
         exercises={exercises}
         selected={selected}

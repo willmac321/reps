@@ -37,7 +37,6 @@ const SplashScreen = ({ theme }) => {
       theme={theme}
       style={[
         styles.parentView,
-        styles.container,
         {
           backgroundColor: isAdonis() ? theme.colors.primary : theme.colors.background,
         },

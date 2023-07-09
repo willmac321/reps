@@ -13,7 +13,7 @@ const ExercisesScreen = ({ navigation, theme }) => {
   const {
     exercises: { getExercises },
     selectedWorkout: { selectedWorkout },
-    isLoading,
+    setIsLoading,
   } = useContext(StateContext);
 
   // react navigation version of use effect, called when tab is activated -> ie onMount and when props change
@@ -38,7 +38,7 @@ const ExercisesScreen = ({ navigation, theme }) => {
       <ScrollViewWrapper theme={theme}>
         <Exercises
           navigation={navigation}
-          isLoading={isLoading}
+          setIsLoading={setIsLoading}
           isOk={isOk}
           setIsOk={setIsOk}
           theme={theme}

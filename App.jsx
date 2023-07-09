@@ -3,14 +3,13 @@ import { NavigationContainer } from '@react-navigation/native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Provider as PaperProvider, useTheme } from 'react-native-paper';
-import { LogBox } from 'react-native';
+import { LogBox, SafeAreaView, StatusBar } from 'react-native';
 
-import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StateContextProvider, StateContext } from './src/controllers/state';
 import NoAuthNavigator from './src/components/NoAuth/NoAuthNavigator';
 import AuthNavigator from './src/components/Auth/AuthNavigator.jsx';
 import SplashScreen from './src/components/Splash/SplashScreen';
-import { useIsSmallScreen, isMobile } from './src/utils/checkPlatform';
+import { useIsSmallScreen, isMobile, isAndroid } from './src/utils/checkPlatform';
 
 const Stack = createStackNavigator();
 
@@ -32,29 +31,42 @@ function App() {
   LogBox.ignoreLogs(['Setting a timer']);
   return (
     <StateContextProvider>
-      <StateContext.Consumer>
-        {({ theme }) => (
-          <PaperProvider
-            theme={theme}
-            settings={{
-              // eslint-disable-next-line
-              icon: (props) => <FontAwesome5 {...props} />,
-
-              // eslint-disable-next-line
-              name: (props) => <FontAwesome5 {...props} />,
-            }}
-          >
-            <SafeAreaProvider>
+      <SafeAreaView
+        style={{
+          flex: 1,
+          flexGrow: 1,
+          paddingTop: isAndroid() ? StatusBar.currentHeight : 'unset',
+        }}
+      >
+        <StateContext.Consumer>
+          {({ theme }) => (
+            <PaperProvider
+              theme={theme}
+              settings={{
+                // eslint-disable-next-line
+                icon: (props) => <FontAwesome5 {...props} />,
+                // eslint-disable-next-line
+                name: (props) => <FontAwesome5 {...props} />,
+              }}
+            >
               <NavigationContainer theme={theme}>
                 <StateContext.Consumer>
                   {({ user, isLoading }) => (
-                    <Stack.Navigator>
+                    <Stack.Navigator
+                      options={{
+                        statusuBarStyle: theme.userTheme,
+                      }}
+                    >
                       <>
                         {!user && isLoading ? (
                           <Stack.Screen
                             name="Reps"
                             component={SplashScreen}
-                            options={{ headerShown: false }}
+                            options={{
+                              headerShown: false,
+                              presentation: 'transparentModal',
+                              cardOverlayEnabled: true,
+                            }}
                           />
                         ) : (
                           <>
@@ -78,10 +90,10 @@ function App() {
                   )}
                 </StateContext.Consumer>
               </NavigationContainer>
-            </SafeAreaProvider>
-          </PaperProvider>
-        )}
-      </StateContext.Consumer>
+            </PaperProvider>
+          )}
+        </StateContext.Consumer>
+      </SafeAreaView>
     </StateContextProvider>
   );
 }

@@ -7,13 +7,12 @@ import State from '../controllers/state';
 import CardWithButton from '../template/CardWithButton';
 import ScrollList from '../template/ScrollList';
 import DraggableScrollList from '../template/DraggableScrollList';
-import LoadingOverlay from '../template/LoadingOverlay';
 import { useIsMounted } from '../utils/useIsMounted';
 import ExerciseItem from './ExerciseItem';
 import ExerciseItemDraggable from './ExerciseItemDraggable';
 
 const Exercises = ({
-  isLoading,
+  setIsLoading,
   exercises,
   selected,
   setSelected,
@@ -218,7 +217,6 @@ const Exercises = ({
             scrollToIndex={scrollToIndex}
           />
         )}
-        <LoadingOverlay theme={theme} isVisible={isLoading} />
       </CardWithButton>
     </Portal.Host>
   );
