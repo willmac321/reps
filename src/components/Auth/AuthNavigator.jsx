@@ -79,6 +79,7 @@ function AuthNavigator({ theme }) {
           inactiveBackgroundColor: theme.colors.background,
           activeBackgroundColor: theme.colors.secondary,
           keyboardHidesTabBar: true,
+          headerShown: false,
           showLabel: false,
           tabStyle: {},
           style: {

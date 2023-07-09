@@ -3,18 +3,21 @@ import { NavigationContainer } from '@react-navigation/native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Provider as PaperProvider, useTheme } from 'react-native-paper';
-import { LogBox, SafeAreaView, StatusBar } from 'react-native';
+import { LogBox, SafeAreaView, StatusBar, useColorScheme } from 'react-native';
 
 import { StateContextProvider, StateContext } from './src/controllers/state';
 import NoAuthNavigator from './src/components/NoAuth/NoAuthNavigator';
 import AuthNavigator from './src/components/Auth/AuthNavigator.jsx';
 import SplashScreen from './src/components/Splash/SplashScreen';
 import { useIsSmallScreen, isMobile, isAndroid } from './src/utils/checkPlatform';
+import themeDark from './src/theme/themeDark';
+import themeLight from './src/theme/themeLight';
 
 const Stack = createStackNavigator();
 
 function App() {
   const themeh = useTheme();
+  const colorScheme = useColorScheme();
   const isScreenSmall = useIsSmallScreen();
   React.useEffect(() => {
     if (!isMobile()) {
@@ -35,9 +38,14 @@ function App() {
         style={{
           flex: 1,
           flexGrow: 1,
-          paddingTop: isAndroid() ? StatusBar.currentHeight : 'unset',
         }}
       >
+        <StatusBar
+          hidden={false}
+          backgroundColor={
+            colorScheme === 'dark' ? themeDark.colors.background : themeLight.colors.background
+          }
+        />
         <StateContext.Consumer>
           {({ theme }) => (
             <PaperProvider
