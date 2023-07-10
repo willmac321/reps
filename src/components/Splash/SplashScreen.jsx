@@ -13,7 +13,6 @@ const SplashScreen = ({ theme }) => {
   const insets = useSafeAreaInsets();
   return (
     <View
-      flex={1}
       style={{
         height: '100%',
         width: '100%',
