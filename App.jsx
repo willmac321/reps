@@ -9,7 +9,7 @@ import { StateContextProvider, StateContext } from './src/controllers/state';
 import NoAuthNavigator from './src/components/NoAuth/NoAuthNavigator';
 import AuthNavigator from './src/components/Auth/AuthNavigator.jsx';
 import SplashScreen from './src/components/Splash/SplashScreen';
-import { useIsSmallScreen, isMobile, isAndroid } from './src/utils/checkPlatform';
+import { useIsSmallScreen, isMobile } from './src/utils/checkPlatform';
 import themeDark from './src/theme/themeDark';
 import themeLight from './src/theme/themeLight';
 
@@ -34,29 +34,31 @@ function App() {
   LogBox.ignoreLogs(['Setting a timer']);
   return (
     <StateContextProvider>
-      <SafeAreaView
-        style={{
-          flex: 1,
-          flexGrow: 1,
-        }}
-      >
-        <StatusBar
-          hidden={false}
-          backgroundColor={
-            colorScheme === 'dark' ? themeDark.colors.background : themeLight.colors.background
-          }
-        />
-        <StateContext.Consumer>
-          {({ theme }) => (
-            <PaperProvider
-              theme={theme}
-              settings={{
-                // eslint-disable-next-line
-                icon: (props) => <FontAwesome5 {...props} />,
-                // eslint-disable-next-line
-                name: (props) => <FontAwesome5 {...props} />,
+      <StateContext.Consumer>
+        {({ theme }) => (
+          <PaperProvider
+            theme={theme}
+            settings={{
+              // eslint-disable-next-line
+              icon: (props) => <FontAwesome5 {...props} />,
+              // eslint-disable-next-line
+              name: (props) => <FontAwesome5 {...props} />,
+            }}
+          >
+            <SafeAreaView
+              style={{
+                flex: 1,
+                flexGrow: 1,
               }}
             >
+              <StatusBar
+                hidden={false}
+                backgroundColor={
+                  colorScheme === 'dark'
+                    ? themeDark.colors.background
+                    : themeLight.colors.background
+                }
+              />
               <NavigationContainer theme={theme}>
                 <StateContext.Consumer>
                   {({ user, isLoading }) => (
@@ -72,8 +74,6 @@ function App() {
                             component={SplashScreen}
                             options={{
                               headerShown: false,
-                              presentation: 'transparentModal',
-                              cardOverlayEnabled: true,
                             }}
                           />
                         ) : (
@@ -98,10 +98,10 @@ function App() {
                   )}
                 </StateContext.Consumer>
               </NavigationContainer>
-            </PaperProvider>
-          )}
-        </StateContext.Consumer>
-      </SafeAreaView>
+            </SafeAreaView>
+          </PaperProvider>
+        )}
+      </StateContext.Consumer>
     </StateContextProvider>
   );
 }

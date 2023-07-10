@@ -4,13 +4,17 @@
   },
   "build": {
     "development": {
+      "node": "16.18.1",
       "developmentClient": true,
       "distribution": "internal"
     },
     "preview": {
+      "node": "16.18.1",
       "distribution": "internal"
     },
-    "production": {}
+    "production": {
+      "node": "16.18.1"
+    }
   },
   "submit": {
     "production": {
