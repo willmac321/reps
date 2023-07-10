@@ -11,15 +11,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "updates": {
-      "fallbackToCacheTimeout": 0
-    },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "supportsTablet": true
-    },
+    "updates": { "fallbackToCacheTimeout": 0 },
+    "assetBundlePatterns": ["**/*"],
+    "ios": { "supportsTablet": true },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
@@ -28,13 +22,7 @@
       "package": "com.willmac.reps",
       "versionCode": 5
     },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    },
-    "extra": {
-      "eas": {
-        "projectId": "d6d4b204-e9d3-466a-874c-b4401b303173"
-      }
-    }
+    "web": { "favicon": "./assets/favicon.png" },
+    "extra": { "eas": { "projectId": "d6d4b204-e9d3-466a-874c-b4401b303173" } }
   }
 }

@@ -2,7 +2,7 @@
   "name": "reps",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
-    "build": "node ./src/script/generate-easignore.js && eas build",
+    "build": "node ./src/script/auto-increment.js && node ./src/script/generate-easignore.js && eas build",
     "build:android": "npm run build -- --platform android",
     "deploy:android": "eas submit --platform android",
     "test": "jest --coverage",
@@ -10,7 +10,8 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "eject": "expo eject"
+    "eject": "expo eject",
+    "pretty": "npx prettier"
   },
   "dependencies": {
     "@expo/webpack-config": "^0.17.2",
