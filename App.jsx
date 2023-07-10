@@ -3,7 +3,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Provider as PaperProvider, useTheme } from 'react-native-paper';
-import { LogBox, SafeAreaView, StatusBar, useColorScheme } from 'react-native';
+import { LogBox, StatusBar, useColorScheme } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { StateContextProvider, StateContext } from './src/controllers/state';
 import NoAuthNavigator from './src/components/NoAuth/NoAuthNavigator';
@@ -34,21 +35,16 @@ function App() {
   LogBox.ignoreLogs(['Setting a timer']);
   return (
     <StateContextProvider>
-      <StateContext.Consumer>
-        {({ theme }) => (
-          <PaperProvider
-            theme={theme}
-            settings={{
-              // eslint-disable-next-line
-              icon: (props) => <FontAwesome5 {...props} />,
-              // eslint-disable-next-line
-              name: (props) => <FontAwesome5 {...props} />,
-            }}
-          >
-            <SafeAreaView
-              style={{
-                flex: 1,
-                flexGrow: 1,
+      <SafeAreaProvider>
+        <StateContext.Consumer>
+          {({ theme }) => (
+            <PaperProvider
+              theme={theme}
+              settings={{
+                // eslint-disable-next-line
+                icon: (props) => <FontAwesome5 {...props} />,
+                // eslint-disable-next-line
+                name: (props) => <FontAwesome5 {...props} />,
               }}
             >
               <StatusBar
@@ -98,10 +94,10 @@ function App() {
                   )}
                 </StateContext.Consumer>
               </NavigationContainer>
-            </SafeAreaView>
-          </PaperProvider>
-        )}
-      </StateContext.Consumer>
+            </PaperProvider>
+          )}
+        </StateContext.Consumer>
+      </SafeAreaProvider>
     </StateContextProvider>
   );
 }
