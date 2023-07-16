@@ -5,7 +5,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import SplashLight from './parts/SplashLight';
 import SplashDark from './parts/SplashDark';
 import { StateContext } from '../../controllers/state';
-import { isMobile } from '../../utils/checkPlatform';
 
 const SplashScreen = ({ theme }) => {
   const {
@@ -15,8 +14,7 @@ const SplashScreen = ({ theme }) => {
   return (
     <View
       style={{
-        height: isMobile() ? '130%' : '100%',
-        width: '100%',
+        height: '100%',
         paddingTop: insets.top,
         paddingBottom: insets.bottom,
         paddingLeft: insets.left,

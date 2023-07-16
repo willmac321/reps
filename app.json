@@ -2,14 +2,14 @@
   "expo": {
     "name": "reps",
     "slug": "reps",
-    "version": "1.0.8",
+    "version": "1.0.9",
     "orientation": "portrait",
     "icon": "./assets/appIcon.png",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "resizeMode": "cover",
+      "backgroundColor": "#c6e9ed"
     },
     "updates": { "fallbackToCacheTimeout": 0 },
     "assetBundlePatterns": ["**/*"],
@@ -19,8 +19,9 @@
         "foregroundImage": "./assets/adaptiveIcon.png",
         "backgroundColor": "#c6e9ed"
       },
+      "permissions": ["com.google.android.gms.permission.AD_ID"],
       "package": "com.willmac.reps",
-      "versionCode": 8
+      "versionCode": 9
     },
     "web": { "favicon": "./assets/favicon.png" },
     "extra": { "eas": { "projectId": "d6d4b204-e9d3-466a-874c-b4401b303173" } }
