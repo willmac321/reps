@@ -24,12 +24,12 @@ const WorkoutItem = ({
       ? {
           ...theme.title,
           marginVertical: 20,
-        fontSize: 16,
+          fontSize: 16,
         }
       : {
           ...theme.title,
           marginVertical: 20,
-        fontSize: 16,
+          fontSize: 16,
         },
     text: isSelected
       ? {

@@ -1,9 +1,19 @@
-import { firebase, db } from '../firebase/config';
+import {
+  createUserWithEmailAndPassword,
+  deleteUser,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
+  sendEmailVerification,
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
+  signOut,
+  updateEmail,
+  updatePassword,
+} from 'firebase/auth';
+import { auth } from '../firebase/config';
 
 function login(email, password, callback) {
-  firebase
-    .auth()
-    .signInWithEmailAndPassword(email, password)
+  signInWithEmailAndPassword(auth, email, password)
     .then((user) => {
       callback(null, user);
     })
@@ -13,9 +23,7 @@ function login(email, password, callback) {
 }
 
 async function logout(callback) {
-  firebase
-    .auth()
-    .signOut()
+  signOut(auth)
     .then(() => {
       callback();
     })
@@ -25,9 +33,7 @@ async function logout(callback) {
 }
 
 function forgot(email, callback) {
-  firebase
-    .auth()
-    .sendPasswordResetEmail(email)
+  sendPasswordResetEmail(auth, email)
     .then(() => {
       callback(null);
     })
@@ -37,9 +43,7 @@ function forgot(email, callback) {
 }
 
 function register(email, password, callback) {
-  firebase
-    .auth()
-    .createUserWithEmailAndPassword(email, password)
+  createUserWithEmailAndPassword(auth, email, password)
     .then((res) => {
       callback(null, res.user.uid);
     })
@@ -49,31 +53,28 @@ function register(email, password, callback) {
 }
 
 function changeEmail(password, newEmail, callback) {
-  const user = firebase.auth().currentUser;
-  const cred = firebase.auth.EmailAuthProvider.credential(user.email, password);
-  user
-    .reauthenticateWithCredential(cred)
+  const { user } = auth;
+  const cred = EmailAuthProvider.credential(user.email, password);
+  reauthenticateWithCredential(user, cred)
     .then((e) => {
       if (!e) {
-        user
-          .updateEmail(newEmail)
-          .sendEmailVerification()
-          .then(() => callback())
-          .catch((er) => callback(er));
+        updateEmail(user, newEmail).then(() =>
+          sendEmailVerification(user)
+            .then(() => callback())
+            .catch((er) => callback(er))
+        );
       }
     })
     .catch((e) => callback(e));
 }
 
 function resetPassword(oldPassword, newPassword, callback) {
-  const user = firebase.auth().currentUser;
-  const cred = firebase.auth.EmailAuthProvider.credential(user.email, oldPassword);
-  user
-    .reauthenticateWithCredential(cred)
+  const user = auth.currentUser;
+  const cred = EmailAuthProvider.credential(user.email, oldPassword);
+  reauthenticateWithCredential(user, cred)
     .then((e) => {
       if (!e) {
-        user
-          .updatePassword(newPassword)
+        updatePassword(user, newPassword)
           .then(() => callback())
           .catch((er) => callback(er));
       }
@@ -82,13 +83,11 @@ function resetPassword(oldPassword, newPassword, callback) {
 }
 
 function deleteAccount(password, callback) {
-  const user = firebase.auth().currentUser;
-  const cred = firebase.auth.EmailAuthProvider.credential(user.email, password);
-  user
-    .reauthenticateWithCredential(cred)
+  const user = auth.currentUser;
+  const cred = EmailAuthProvider.credential(user.email, password);
+  reauthenticateWithCredential(user, cred)
     .then(() => {
-      user
-        .delete()
+      deleteUser(user)
         .then(() => callback())
         .catch((er) => callback(er));
     })

@@ -61,9 +61,9 @@ const Workouts = ({
   };
 
   const setWorkoutToEdit = React.useCallback(
-    (id) => {
+    async (id) => {
       if (id) {
-        setEditWorkout(workouts.find((a) => a.title === id));
+        await setEditWorkout(workouts.find((a) => a.title === id));
       } else {
         setEditWorkout({});
       }
@@ -72,9 +72,9 @@ const Workouts = ({
   );
 
   const deleteWorkout = React.useCallback(
-    (id) => {
+    async (id) => {
       if (id && user && user.uid && isMounted.current) {
-        WorkoutAPI.deleteWorkout(user.uid, id);
+        await WorkoutAPI.deleteWorkout(user.uid, id);
       }
       springOut(() => {
         setWorkoutToEdit();
@@ -92,8 +92,9 @@ const Workouts = ({
   );
 
   const editWorkout = React.useCallback(
-    (id) => {
-      setWorkoutToEdit(id);
+    async (id) => {
+    console.log('ehere');
+      await setWorkoutToEdit(id);
       setUpdatedWorkout({});
       navigation.navigate('Create', { screen: 'NewWorkout' });
       setModalOnOkSelected(null);
@@ -102,9 +103,9 @@ const Workouts = ({
   );
 
   const handleOnSubmit = React.useCallback(
-    (id) => {
+    async (id) => {
       setUpdatedWorkout(id);
-      setWorkoutToEdit();
+      await setWorkoutToEdit();
       navigation.navigate('Exercises');
     },
     [workouts, isDisable]
@@ -116,27 +117,26 @@ const Workouts = ({
       setIsDisable(false);
       if (selected === id) {
         setSelected(null);
-        setEditWorkout({});
         setIsDisable(true);
       } else {
         setSelected(id);
-        const workout = workouts.filter((d) => d.id === id)[0];
-        setEditWorkout(workout || {});
       }
     },
     [selected]
   );
 
   const handleEdit = (_, id) => {
+    const workout = workouts.filter((d) => d.id === id)[0];
+    setEditWorkout(workout || {});
     setIsFromEditButton(true);
     setIsDelete(false);
     setSelected(id);
     setIsDisable(true);
     setNotifyTitle('You wanna change this?');
-    setMessage(`You're about to edit ${workouts.filter((d) => d.id === id)[0].id}, ok?`);
+    setMessage(`You're about to edit ${workout.title}, ok?`);
     setIsOk(false);
     setIsEdit(true);
-    setModalOnOkSelected(id);
+    setModalOnOkSelected(workout.id);
     setShowNotify(true);
   };
 
@@ -173,13 +173,15 @@ const Workouts = ({
   // }, [selected]);
   // ^^
 
-  React.useLayoutEffect(() => {
+  React.useEffect(() => {
     if (isMounted.current) {
+    console.log('use layou8t effect', modalOnOkSelectedId);
       if (isOk && modalOnOkSelectedId) {
         if (isDelete) {
           deleteWorkout(modalOnOkSelectedId);
           setIsDelete(false);
         } else if (isEdit) {
+    console.log('isEdit ehere');
           editWorkout(modalOnOkSelectedId);
           setIsEdit(false);
         }

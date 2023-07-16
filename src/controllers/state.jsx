@@ -1,5 +1,5 @@
 import React from 'react';
-import { firebase } from '../firebase/config';
+import { auth } from '../firebase/config';
 import AuthAPI from './AuthApi';
 import UserSettingsAPI from './UserSettingsApi';
 import WorkoutAPI from './WorkoutApi';
@@ -58,7 +58,23 @@ export const StateContextProvider = ({ children }) => {
     id: null,
     exercises: null,
   });
-  const [editWorkout, setEditWorkout] = React.useState({});
+
+  const [editWorkout, localSetEditWorkout] = React.useState({});
+
+  const setEditWorkout = async (workout) => {
+    if (workout && Object.keys(workout).length > 0) {
+      const wRef = await WorkoutAPI.getWorkout(user.uid, workout.id);
+      const w = wRef.data();
+      localSetEditWorkout(w || {});
+      const tempW = workouts.map((myworkouts) => {
+        if (myworkouts.id === w.id) return w;
+        return myworkouts;
+      });
+      setWorkouts(tempW);
+    } else {
+      localSetEditWorkout({});
+    }
+  };
 
   // update local workouts at the same time
   const setSelectedWorkout = (w, ws = workouts) => {
@@ -204,7 +220,7 @@ export const StateContextProvider = ({ children }) => {
   }, [user]);
 
   React.useEffect(() => {
-    firebase.auth().onAuthStateChanged((res) => {
+    auth.onAuthStateChanged((res) => {
       setIsLoading(false);
       setAuthRes(res);
     });
@@ -266,7 +282,7 @@ export const StateContextProvider = ({ children }) => {
     <StateContext.Provider
       value={{
         debug,
-        isLoading,
+        isLoading: true,
         setIsLoading: (v) => setIsLoading(v !== null ? v : !isLoading),
         user,
         defaultUserDetails,

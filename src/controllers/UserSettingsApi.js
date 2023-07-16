@@ -1,12 +1,10 @@
-import { firebase, db } from '../firebase/config';
+import { doc, setDoc } from 'firebase/firestore';
+import { db } from '../firebase/config';
+
+const getUserSettingRef = async (uid) => doc(db, 'users', uid, 'settings', uid);
 
 async function getSettings(uid) {
-  return db
-    .collection('users')
-    .doc(uid)
-    .collection('settings')
-    .doc(uid)
-    .get()
+  return getUserSettingRef(uid)
     .then((res) => {
       if (res.exists) {
         return res.data();
@@ -17,21 +15,13 @@ async function getSettings(uid) {
 }
 
 function updateSettings(uid, userDetails) {
-  db.collection('users')
-    .doc(uid)
-    .collection('settings')
-    .doc(uid)
-    .set(userDetails)
-    .catch((e) => console.error(e));
+  setDoc(getUserSettingRef(uid), userDetails).catch((e) => console.error(e));
 }
 
 function setAckPrivacy(uid) {
-  db.collection('users')
-    .doc(uid)
-    .collection('privacyAck')
-    .doc(uid)
-    .set({ accepted: true })
-    .catch((e) => console.error(e));
+  setDoc(doc(db, 'users', uid, 'privacyAck', uid), { accepted: true }).catch((e) =>
+    console.error(e)
+  );
 }
 
 export default {

@@ -45,7 +45,6 @@ const NewWorkout = ({ navigation, user, theme, data }) => {
 
   const handleOnPress = React.useCallback(async () => {
     setIsLoading(true);
-    // workout will either be the new created one or the existing workout with the same name
     let workout = {
       title: workoutName,
       id: workoutName,
@@ -70,7 +69,6 @@ const NewWorkout = ({ navigation, user, theme, data }) => {
     }
 
     // if it is an existing workout delete it in the db and readd it
-    // TODO change to update func instead of delete and replace
     API.deleteWorkout(user.uid, editWorkout.id || workoutName)
       .then(() => {
         API.newWorkout(user.uid, workout);

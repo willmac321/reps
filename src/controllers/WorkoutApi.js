@@ -1,42 +1,34 @@
+import { doc, updateDoc, setDoc, getDocs, deleteDoc, collection, getDoc } from 'firebase/firestore';
 import { db } from '../firebase/config';
 
 // auth is handled by firebase
 async function updateWorkout(uid, workout) {
-  return db
-    .collection('users')
-    .doc(uid)
-    .collection('workouts')
-    .doc(workout.id)
-    .update(workout)
-    .then(() => workout.id)
-    .catch((e) => console.error(e));
+  await updateDoc(doc(db, 'users', uid, 'workouts', workout.id), workout);
+  return workout.id;
 }
 
 async function newWorkout(uid, workout) {
   // get ref to any existing doc
-  const workoutRef = db.collection('users').doc(uid).collection('workouts').doc(workout.title);
   // using title instead of an auto uuid because the workout titles should be unique so that multiple workouts aren't named the same
-  return workoutRef
-    .set(workout)
-    .then((w) => w)
-    .catch((e) => e);
+  const workoutRef = doc(db, 'users', uid, 'workouts', workout.title);
+  const w = await setDoc(workoutRef, workout);
+  return w;
 }
 
 async function getWorkouts(uid) {
-  return db
-    .collection('users')
-    .doc(uid)
-    .collection('workouts')
-    .get()
-    .then((res) => res.docs.map((doc) => ({ id: doc.id, ...doc.data() })))
-    .catch((e) => e);
+  const snapshot = await getDocs(collection(db, 'users', uid, 'workouts'));
+  return snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
 }
 
-function deleteWorkout(uid, workoutId) {
-  if (!workoutId) {
-    return null;
+async function getWorkout(uid, workoutId) {
+  const snapshot = await getDoc(doc(db, 'users', uid, 'workouts', workoutId));
+  return snapshot;
+}
+
+async function deleteWorkout(uid, workoutId) {
+  if (workoutId) {
+    await deleteDoc(doc(db, 'users', uid, 'workouts', workoutId));
   }
-  return db.collection('users').doc(uid).collection('workouts').doc(workoutId).delete();
 }
 
 export default {
@@ -44,4 +36,5 @@ export default {
   newWorkout,
   deleteWorkout,
   getWorkouts,
+  getWorkout,
 };
