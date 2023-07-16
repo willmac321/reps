@@ -282,7 +282,7 @@ export const StateContextProvider = ({ children }) => {
     <StateContext.Provider
       value={{
         debug,
-        isLoading: true,
+        isLoading,
         setIsLoading: (v) => setIsLoading(v !== null ? v : !isLoading),
         user,
         defaultUserDetails,
