@@ -42,8 +42,8 @@ function forgot(email, callback) {
     });
 }
 
-function register(email, password, callback) {
-  createUserWithEmailAndPassword(auth, email, password)
+async function register(email, password, callback) {
+  await createUserWithEmailAndPassword(auth, email, password)
     .then((res) => {
       callback(null, res.user.uid);
     })
