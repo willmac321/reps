@@ -23,7 +23,10 @@
       "package": "com.willmac.reps",
       "versionCode": 11
     },
-    "web": { "favicon": "./assets/favicon.png" },
+    "web": {
+      "bundler": "metro",
+      "favicon": "./assets/favicon.png"
+    },
     "extra": { "eas": { "projectId": "d6d4b204-e9d3-466a-874c-b4401b303173" } }
   }
 }
