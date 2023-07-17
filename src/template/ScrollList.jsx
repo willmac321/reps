@@ -15,6 +15,7 @@ const ScrollList = ({
   showScrollView = true,
 }) => {
   const ref = React.useRef();
+
   React.useEffect(() => {
     if (scrollToIndex) {
       if (showScrollView) {
@@ -22,6 +23,7 @@ const ScrollList = ({
       }
     }
   }, [scrollToIndex]);
+
   return (
     <>
       {showScrollView ? (

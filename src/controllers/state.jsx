@@ -221,8 +221,8 @@ export const StateContextProvider = ({ children }) => {
 
   React.useEffect(() => {
     auth.onAuthStateChanged((res) => {
-      setIsLoading(false);
       setAuthRes(res);
+      setIsLoading(false);
     });
   }, []);
 

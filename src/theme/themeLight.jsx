@@ -33,7 +33,7 @@ const theme = {
     textSelected: '#4e4f73',
     surface,
     placeholder: primary,
-    link: '#56CCF2',
+    link: '#43A0BF',
     alert: '#eb5757',
     secondary: '#c8d8de',
     secondarySelected: `${accent}CA`,

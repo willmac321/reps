@@ -1,17 +1,14 @@
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase/config';
 
-const getUserSettingRef = async (uid) => doc(db, 'users', uid, 'settings', uid);
+const getUserSettingRef = (uid) => doc(db, 'users', uid, 'settings', uid);
 
 async function getSettings(uid) {
-  return getUserSettingRef(uid)
-    .then((res) => {
-      if (res.exists) {
-        return res.data();
-      }
-      return null;
-    })
-    .catch((e) => e);
+  const res = await getDoc(getUserSettingRef(uid));
+  if (res.exists) {
+    return res.data();
+  }
+  return null;
 }
 
 function updateSettings(uid, userDetails) {

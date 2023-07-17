@@ -43,10 +43,12 @@ const NotifyModal = ({
           )}
         </Dialog.Content>
         <Dialog.ScrollArea
-          style={!children && {
-            borderTopWidth: 0,
-            borderBottomWidth: 0,
-          }}
+          style={
+            !children && {
+              borderTopWidth: 0,
+              borderBottomWidth: 0,
+            }
+          }
         >
           <ScrollView>{children}</ScrollView>
         </Dialog.ScrollArea>

@@ -90,7 +90,7 @@ function AuthNavigator({ theme }) {
         <Tab.Screen
           name="Create"
           component={NewComponents}
-          listeners={({ route, navigation }) => ({
+          listeners={({ navigation }) => ({
             tabPress: () => {
               if (isMounted.current && navigation.isFocused()) {
                 setEditWorkout({});

@@ -93,7 +93,6 @@ const Workouts = ({
 
   const editWorkout = React.useCallback(
     async (id) => {
-    console.log('ehere');
       await setWorkoutToEdit(id);
       setUpdatedWorkout({});
       navigation.navigate('Create', { screen: 'NewWorkout' });
@@ -173,15 +172,13 @@ const Workouts = ({
   // }, [selected]);
   // ^^
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     if (isMounted.current) {
-    console.log('use layou8t effect', modalOnOkSelectedId);
       if (isOk && modalOnOkSelectedId) {
         if (isDelete) {
           deleteWorkout(modalOnOkSelectedId);
           setIsDelete(false);
         } else if (isEdit) {
-    console.log('isEdit ehere');
           editWorkout(modalOnOkSelectedId);
           setIsEdit(false);
         }

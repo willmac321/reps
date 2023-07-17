@@ -75,11 +75,23 @@ const SettingsScreen = ({ navigation, theme }) => {
       <View style={styles.radioContainer}>
         <View style={styles.radio}>
           <Text>Adonis</Text>
-          <RadioButton value="adonis" />
+          <RadioButton
+            theme={theme}
+            value="adonis"
+            {...(userDetails.theme === 'light' && { //eslint-disable-line
+              color: theme.colors.primary,
+            })}
+          />
         </View>
         <View style={styles.radio}>
           <Text>Aphrodite</Text>
-          <RadioButton value="aphrodite" />
+          <RadioButton
+            theme={theme}
+            value="aphrodite"
+            {...(userDetails.theme === 'light' && { //eslint-disable-line
+              color: theme.colors.primary,
+            })}
+          />
         </View>
       </View>
     </RadioButton.Group>
@@ -130,7 +142,14 @@ const SettingsScreen = ({ navigation, theme }) => {
               <List.Item
                 title="Dark Mode"
                 right={() => (
-                  <Switch value={themeToggle} onValueChange={onToggleTheme} theme={theme} />
+                  <Switch
+                    value={themeToggle}
+                    onValueChange={onToggleTheme}
+                    theme={theme}
+                    {...(userDetails.theme === 'light' && { //eslint-disable-line
+                      color: theme.colors.primary,
+                    })}
+                  />
                 )}
               />
               <List.Item title="Splash Display" right={splashSelect} />
