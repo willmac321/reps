@@ -4,6 +4,7 @@
   "scripts": {
     "build": "node ./src/script/auto-increment.js && node ./src/script/generate-easignore.js && eas build",
     "build:android": "npm run build -- --platform android",
+    "build:web": "npx expo export -p web",
     "deploy:android": "eas submit --platform android",
     "test": "jest --coverage",
     "start": "expo start",
