@@ -17,7 +17,6 @@ const isWeb = Platform.select({
 });
 
 function NoAuthNavigator() {
-
   return (
     <Stack.Navigator>
       <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: isWeb }} />

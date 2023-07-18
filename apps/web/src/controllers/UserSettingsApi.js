@@ -11,12 +11,12 @@ async function getSettings(uid) {
   return null;
 }
 
-function updateSettings(uid, userDetails) {
-  setDoc(getUserSettingRef(uid), userDetails).catch((e) => console.error(e));
+async function updateSettings(uid, userDetails) {
+  await setDoc(getUserSettingRef(uid), userDetails).catch((e) => console.error(e));
 }
 
-function setAckPrivacy(uid) {
-  setDoc(doc(db, 'users', uid, 'privacyAck', uid), { accepted: true }).catch((e) =>
+async function setAckPrivacy(uid) {
+  await setDoc(doc(db, 'users', uid, 'privacyAck', uid), { accepted: true }).catch((e) =>
     console.error(e)
   );
 }

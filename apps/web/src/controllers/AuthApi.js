@@ -32,6 +32,10 @@ async function logout(callback) {
     });
 }
 
+function emailVerify(user) {
+  sendEmailVerification(user);
+}
+
 function forgot(email, callback) {
   sendPasswordResetEmail(auth, email)
     .then(() => {
@@ -102,4 +106,5 @@ export default {
   resetPassword,
   register,
   deleteAccount,
+  emailVerify,
 };

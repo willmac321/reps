@@ -262,8 +262,8 @@ export const StateContextProvider = ({ children }) => {
     }
 
     if (authRes && !authRes.emailVerified && justRegistered) {
-      authRes.sendEmailVerification();
       setJustRegistered(false);
+      AuthAPI.emailVerify(authRes);
     }
 
     setDetails(authRes);

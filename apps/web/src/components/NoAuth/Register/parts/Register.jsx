@@ -62,7 +62,7 @@ const Register = ({
 
   const emailError = () => email && !email.includes('@');
 
-  const callbackHandlePress = (err, uid) => {
+  const callbackHandlePress = async (err, uid) => {
     setIsLoading(false);
     if (err) {
       setNotifyTitle('Uhoh!');
@@ -70,8 +70,9 @@ const Register = ({
       setShowNotify(true);
       return;
     }
-    UserSettingsAPI.updateSettings(uid, defaultUserDetails);
-    UserSettingsAPI.setAckPrivacy(uid);
+    await UserSettingsAPI.updateSettings(uid, defaultUserDetails);
+    await UserSettingsAPI.setAckPrivacy(uid);
+    navigation.navigate('Login');
   };
 
   const handleOnPress = (setJustRegistered) => {
