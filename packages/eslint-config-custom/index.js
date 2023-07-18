@@ -1,7 +1,7 @@
-{
-  "parserOptions": { "ecmaVersion": 2020 },
-  "extends": ["airbnb", "prettier", "prettier/react"],
-  "rules": {
+module.exports = {
+  parserOptions: { "ecmaVersion": 2020 },
+  extends: ["airbnb", "prettier", "prettier/react"],
+  rules: {
     "import/extensions": 0,
     "import/no-unresolved": 0,
     "react/prop-types": 0,
@@ -20,7 +20,7 @@
       }
     ]
   },
-  "settings": {
+  settings: {
     "import/resolver": {
       "node": {
         "extensions": [".js", ".jsx"]
@@ -28,5 +28,5 @@
     },
     "import/core-modules": ["@expo/vector-icons"]
   },
-  "plugins": ["prettier"]
-}
+  plugins: ["prettier"]
+};

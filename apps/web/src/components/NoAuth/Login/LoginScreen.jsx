@@ -5,17 +5,11 @@ import NotifyModal from '../../../template/NotifyModal';
 import Login from './parts/Login';
 import Register from './parts/Register';
 import SafeArea from '../../../template/SafeAreaWrapper';
-import { StateContext } from '../../../controllers/state';
-import LoadingScreenOverlay from '../../../template/LoadingScreenOverlay';
 
 const LoginScreen = ({ theme, navigation }) => {
   const [showNotify, setShowNotify] = React.useState(false);
   const [notifyMessage, setNotifyMessage] = React.useState('');
   const [notifyTitle, setNotifyTitle] = React.useState('');
-
-  const { isLoading } = React.useContext(StateContext);
-
-  if (isLoading) return <LoadingScreenOverlay isVisible={isLoading} theme={theme} />;
 
   return (
     <SafeArea theme={theme}>

@@ -2,17 +2,17 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { createStackNavigator } from '@react-navigation/stack';
-import { Provider as PaperProvider, useTheme } from 'react-native-paper';
+import { Portal, Provider as PaperProvider, useTheme } from 'react-native-paper';
 import { LogBox, StatusBar, useColorScheme } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { StateContextProvider, StateContext } from './src/controllers/state';
 import NoAuthNavigator from './src/components/NoAuth/NoAuthNavigator';
 import AuthNavigator from './src/components/Auth/AuthNavigator.jsx';
-import SplashScreen from './src/components/Splash/SplashScreen';
 import { useIsSmallScreen, isMobile } from './src/utils/checkPlatform';
 import themeDark from './src/theme/themeDark';
 import themeLight from './src/theme/themeLight';
+import LoadingScreenOverlay from './src/template/LoadingScreenOverlay';
 
 const Stack = createStackNavigator();
 
@@ -33,6 +33,7 @@ function App() {
   });
 
   LogBox.ignoreLogs(['Setting a timer']);
+
   return (
     <StateContextProvider>
       <SafeAreaProvider>
@@ -58,39 +59,30 @@ function App() {
               <NavigationContainer theme={theme}>
                 <StateContext.Consumer>
                   {({ user, isLoading }) => (
-                    <Stack.Navigator
-                      options={{
-                        statusuBarStyle: theme.userTheme,
-                      }}
-                    >
+                    <Portal.Host>
                       <>
-                        {!user && isLoading ? (
-                          <Stack.Screen
-                            name="Reps"
-                            component={SplashScreen}
-                            options={{
-                              headerShown: false,
-                            }}
-                          />
-                        ) : (
-                          <>
-                            {user ? (
-                              <Stack.Screen
-                                name="AuthNav"
-                                component={AuthNavigator}
-                                options={{ headerShown: false }}
-                              />
-                            ) : (
-                              <Stack.Screen
-                                name="NoAuthNav"
-                                component={NoAuthNavigator}
-                                options={{ headerShown: false }}
-                              />
-                            )}
-                          </>
-                        )}
+                        <LoadingScreenOverlay isVisible={isLoading} theme={theme} />
+                        <Stack.Navigator
+                          options={{
+                            statusuBarStyle: theme.userTheme,
+                          }}
+                        >
+                          {user ? (
+                            <Stack.Screen
+                              name="AuthNav"
+                              component={AuthNavigator}
+                              options={{ headerShown: false }}
+                            />
+                          ) : (
+                            <Stack.Screen
+                              name="NoAuthNav"
+                              component={NoAuthNavigator}
+                              options={{ headerShown: false }}
+                            />
+                          )}
+                        </Stack.Navigator>
                       </>
-                    </Stack.Navigator>
+                    </Portal.Host>
                   )}
                 </StateContext.Consumer>
               </NavigationContainer>

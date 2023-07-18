@@ -40,12 +40,15 @@ export const StateContextProvider = ({ children }) => {
   const [userDetails, updateUserDetails] = React.useState({});
 
   const setUserDetails = (details) => {
-    storeLocalData(details && details !== {} ? details : defaultUserDetails, USER_STORE_KEY);
+    storeLocalData(
+      details && details !== {} ? details : defaultUserDetails,
+      userDetails?.uid || USER_STORE_KEY
+    );
     updateUserDetails(details);
   };
 
   React.useEffect(() => {
-    if (userDetails) {
+    if (Object.keys(userDetails).length) {
       setTheme(userDetails.theme === 'light' ? themeLight : themeDark);
     }
   }, [userDetails.theme]);
@@ -214,7 +217,7 @@ export const StateContextProvider = ({ children }) => {
   );
 
   React.useMemo(() => {
-    if (isMounted.current && user && user.uid) {
+    if (isMounted.current && user?.uid) {
       getWorkouts(user.uid, true);
     }
   }, [user]);
@@ -240,8 +243,8 @@ export const StateContextProvider = ({ children }) => {
             setUserDetails(defaultUserDetails);
           }
         } else {
-          // this is hit on program load and when logged out, set logged out user local when logout endpoint i scalled
-          const localData = await getLocalData(USER_STORE_KEY);
+          // this is hit on program load and when logged out, set logged out user local when logout endpoint is called
+          const localData = await getLocalData(user?.uid || USER_STORE_KEY);
           setUserDetails(localData || defaultUserDetails);
         }
       }

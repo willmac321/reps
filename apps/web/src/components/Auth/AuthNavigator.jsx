@@ -1,7 +1,7 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
-import { withTheme, Portal } from 'react-native-paper';
+import { withTheme } from 'react-native-paper';
 import { FontAwesome5 } from '@expo/vector-icons';
 
 import { dropShadow } from '../../theme/themeLight';
@@ -67,44 +67,43 @@ function AuthNavigator({ theme }) {
     isLoading,
   } = React.useContext(StateContext);
 
+  if (isLoading) return <LoadingScreenOverlay isVisible={isLoading} theme={theme} />;
+
   // should only route to new exercises when the page is on a selected workout screen
   return (
-    <Portal.Host>
-      <Tab.Navigator
-        screenOptions={(ev) => screenOptions(ev)}
-        initialRouteName="Workouts"
-        tabBarOptions={{
-          activeTintColor: theme.colors.textSelected,
-          inactiveTintColor: theme.colors.text,
-          inactiveBackgroundColor: theme.colors.background,
-          activeBackgroundColor: theme.colors.secondary,
-          keyboardHidesTabBar: true,
-          showLabel: false,
-          tabStyle: {},
-          style: {
-            borderTopWidth: 0,
-            ...dropShadow(),
+    <Tab.Navigator
+      screenOptions={(ev) => screenOptions(ev)}
+      initialRouteName="Workouts"
+      tabBarOptions={{
+        activeTintColor: theme.colors.textSelected,
+        inactiveTintColor: theme.colors.text,
+        inactiveBackgroundColor: theme.colors.background,
+        activeBackgroundColor: theme.colors.secondary,
+        keyboardHidesTabBar: true,
+        showLabel: false,
+        tabStyle: {},
+        style: {
+          borderTopWidth: 0,
+          ...dropShadow(),
+        },
+      }}
+    >
+      <Tab.Screen
+        name="Create"
+        component={NewComponents}
+        listeners={({ navigation }) => ({
+          tabPress: () => {
+            if (isMounted.current && navigation.isFocused()) {
+              setEditWorkout({});
+              setSelectedWorkout({});
+              navigation.navigate('Create', { screen: 'NewWorkout' });
+            }
           },
-        }}
-      >
-        <Tab.Screen
-          name="Create"
-          component={NewComponents}
-          listeners={({ navigation }) => ({
-            tabPress: () => {
-              if (isMounted.current && navigation.isFocused()) {
-                setEditWorkout({});
-                setSelectedWorkout({});
-                navigation.navigate('Create', { screen: 'NewWorkout' });
-              }
-            },
-          })}
-        />
-        <Tab.Screen name="Workouts" component={WorkoutComponents} />
-        <Tab.Screen name="Settings" component={SettingsScreen} />
-      </Tab.Navigator>
-      <LoadingScreenOverlay theme={theme} isVisible={isLoading} />
-    </Portal.Host>
+        })}
+      />
+      <Tab.Screen name="Workouts" component={WorkoutComponents} />
+      <Tab.Screen name="Settings" component={SettingsScreen} />
+    </Tab.Navigator>
   );
 }
 
