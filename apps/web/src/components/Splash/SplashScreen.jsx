@@ -1,7 +1,6 @@
 import React from 'react';
 import { withTheme } from 'react-native-paper';
 import { View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import SplashLight from './parts/SplashLight';
 import SplashDark from './parts/SplashDark';
 import { StateContext } from '../../controllers/state';
@@ -10,15 +9,12 @@ const SplashScreen = ({ theme }) => {
   const {
     userDetails: { theme: userTheme },
   } = React.useContext(StateContext);
-  const insets = useSafeAreaInsets();
   return (
     <View
       style={{
         height: '100%',
-        paddingTop: insets.top,
-        paddingBottom: insets.bottom,
-        paddingLeft: insets.left,
-        paddingRight: insets.right,
+        flex: 1,
+        flexGrow: 1,
       }}
     >
       {userTheme === 'dark' ? <SplashDark theme={theme} /> : <SplashLight theme={theme} />}

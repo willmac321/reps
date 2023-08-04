@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { withTheme, TextInput, HelperText } from 'react-native-paper';
+import { Button, withTheme, TextInput, HelperText, Text } from 'react-native-paper';
 import { Link } from '@react-navigation/native';
 import CardWithButton from '../../../../template/CardWithButton';
-import API from '../../../../controllers/AuthApi';
 import { useIsMounted } from '../../../../utils/useIsMounted';
+import AuthApi from '../../../../controllers/AuthApi';
 
 const Login = ({ theme, style, setShowNotify, setNotifyMessage, setNotifyTitle }) => {
   const isMounted = useIsMounted();
@@ -21,6 +21,15 @@ const Login = ({ theme, style, setShowNotify, setNotifyMessage, setNotifyTitle }
       fontSize: 16,
       color: theme.colors.link,
       marginLeft: 5,
+    },
+    linkButton: {
+      fontSize: 16,
+      marginHorizontal: 0,
+    },
+    linkText: {
+      color: theme.colors.link,
+      textTransform: 'capitalize',
+      marginHorizontal: 1,
     },
   });
 
@@ -41,13 +50,28 @@ const Login = ({ theme, style, setShowNotify, setNotifyMessage, setNotifyTitle }
       setIsLoading(false);
       if (err) {
         setNotifyTitle('Uhoh Brobro!');
-        setNotifyMessage(err.message.toString());
+        setNotifyMessage(
+          "Password or email was incorrect, please reset your password or register if you're a new user!"
+        );
         setShowNotify(true);
         return;
       }
-      if (!user.emailVerified) {
+      if (user && !user.emailVerified) {
         setNotifyTitle('But really...');
-        setNotifyMessage('Please verify your email to continue using REPS.');
+        setNotifyMessage(
+          <View>
+            <Text>
+              Please verify your email to continue using REPS.{' '}
+              <Button
+                style={[styles.linkButton]}
+                labelStyle={[styles.linkText]}
+                onPress={() => AuthApi.emailVerify(user.user)}
+              >
+                Resend Verification
+              </Button>
+            </Text>
+          </View>
+        );
         setShowNotify(true);
       }
     }
@@ -55,7 +79,7 @@ const Login = ({ theme, style, setShowNotify, setNotifyMessage, setNotifyTitle }
 
   const handleOnPress = () => {
     setIsLoading(true);
-    API.login(email, password, callbackHandlePress);
+    AuthApi.login(email, password, callbackHandlePress);
   };
 
   return (
