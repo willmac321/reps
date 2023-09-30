@@ -11,7 +11,7 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "run-build:android": "npm run build:android && npm run deploy:android",
+    "build-deploy:android": "npm run build:android && npm run deploy:android",
     "eject": "expo eject",
     "pretty": "npx prettier"
   },
