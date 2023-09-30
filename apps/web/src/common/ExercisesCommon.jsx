@@ -12,7 +12,6 @@ import ExerciseItem from './ExerciseItem';
 import ExerciseItemDraggable from './ExerciseItemDraggable';
 
 const Exercises = ({
-  setIsLoading,
   exercises,
   selected,
   setSelected,
@@ -182,43 +181,41 @@ const Exercises = ({
   );
 
   return (
-    <Portal.Host>
-      <CardWithButton
-        theme={theme}
-        showButton={false}
-        flex={1}
-        style={{
-          flexGrow: localExercises.length > 0 ? 1 : null,
-          marginBottom: 50,
-          scrollbarColor: `${theme.colors.primary} ${theme.colors.surface}`,
-        }}
-      >
-        {isDraggable ? (
-          <DraggableScrollList
-            data={localExercises}
-            renderItem={DraggableItem}
-            onDragEnd={handleNewDragOrder}
-            keyExtractor={(item) => item.id}
-            extraData={selected}
-            theme={theme}
-            ItemSeparatorComponent={ItemSeparator}
-            ListEmptyComponent={EmptyComponent}
-          />
-        ) : (
-          <ScrollList
-            data={localExercises}
-            renderItem={Item}
-            onDragEnd={() => {}}
-            keyExtractor={(item) => item.id}
-            extraData={selected}
-            theme={theme}
-            ItemSeparatorComponent={ItemSeparator}
-            ListEmptyComponent={EmptyComponent}
-            scrollToIndex={scrollToIndex}
-          />
-        )}
-      </CardWithButton>
-    </Portal.Host>
+    <CardWithButton
+      theme={theme}
+      showButton={false}
+      flex={1}
+      style={{
+        flexGrow: localExercises.length > 0 ? 1 : null,
+        marginBottom: 50,
+        scrollbarColor: `${theme.colors.primary} ${theme.colors.surface}`,
+      }}
+    >
+      {isDraggable ? (
+        <DraggableScrollList
+          data={localExercises}
+          renderItem={DraggableItem}
+          onDragEnd={handleNewDragOrder}
+          keyExtractor={(item) => item.id}
+          extraData={selected}
+          theme={theme}
+          ItemSeparatorComponent={ItemSeparator}
+          ListEmptyComponent={EmptyComponent}
+        />
+      ) : (
+        <ScrollList
+          data={localExercises}
+          renderItem={Item}
+          onDragEnd={() => {}}
+          keyExtractor={(item) => item.id}
+          extraData={selected}
+          theme={theme}
+          ItemSeparatorComponent={ItemSeparator}
+          ListEmptyComponent={EmptyComponent}
+          scrollToIndex={scrollToIndex}
+        />
+      )}
+    </CardWithButton>
   );
 };
 

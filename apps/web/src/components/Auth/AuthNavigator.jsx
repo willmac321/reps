@@ -1,4 +1,5 @@
 import React from 'react';
+import { View } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { withTheme } from 'react-native-paper';
@@ -11,7 +12,6 @@ import ExercisesScreen from './Exercises/ExercisesScreen';
 import WorkoutsScreen from './Workouts/WorkoutsScreen';
 import SettingsScreen from './Settings/SettingsScreen';
 import { StateContext } from '../../controllers/state';
-import LoadingScreenOverlay from '../../template/LoadingScreenOverlay';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -64,46 +64,45 @@ function AuthNavigator({ theme }) {
   const {
     editWorkout: { setEditWorkout },
     selectedWorkout: { setSelectedWorkout },
-    isLoading,
   } = React.useContext(StateContext);
-
-  if (isLoading) return <LoadingScreenOverlay isVisible={isLoading} theme={theme} />;
 
   // should only route to new exercises when the page is on a selected workout screen
   return (
-    <Tab.Navigator
-      screenOptions={(ev) => screenOptions(ev)}
-      initialRouteName="Workouts"
-      tabBarOptions={{
-        activeTintColor: theme.colors.textSelected,
-        inactiveTintColor: theme.colors.text,
-        inactiveBackgroundColor: theme.colors.background,
-        activeBackgroundColor: theme.colors.secondary,
-        keyboardHidesTabBar: true,
-        showLabel: false,
-        tabStyle: {},
-        style: {
-          borderTopWidth: 0,
-          ...dropShadow(),
-        },
-      }}
-    >
-      <Tab.Screen
-        name="Create"
-        component={NewComponents}
-        listeners={({ navigation }) => ({
-          tabPress: () => {
-            if (isMounted.current && navigation.isFocused()) {
-              setEditWorkout({});
-              setSelectedWorkout({});
-              navigation.navigate('Create', { screen: 'NewWorkout' });
-            }
+    <View style={{ height: '100%', width: '100%' }}>
+      <Tab.Navigator
+        screenOptions={(ev) => screenOptions(ev)}
+        initialRouteName="Workouts"
+        tabBarOptions={{
+          activeTintColor: theme.colors.textSelected,
+          inactiveTintColor: theme.colors.text,
+          inactiveBackgroundColor: theme.colors.background,
+          activeBackgroundColor: theme.colors.secondary,
+          keyboardHidesTabBar: true,
+          showLabel: false,
+          tabStyle: {},
+          style: {
+            borderTopWidth: 0,
+            ...dropShadow(),
           },
-        })}
-      />
-      <Tab.Screen name="Workouts" component={WorkoutComponents} />
-      <Tab.Screen name="Settings" component={SettingsScreen} />
-    </Tab.Navigator>
+        }}
+      >
+        <Tab.Screen
+          name="Create"
+          component={NewComponents}
+          listeners={({ navigation }) => ({
+            tabPress: () => {
+              if (isMounted.current && navigation.isFocused()) {
+                setEditWorkout({});
+                setSelectedWorkout({});
+                navigation.navigate('Create', { screen: 'NewWorkout' });
+              }
+            },
+          })}
+        />
+        <Tab.Screen name="Workouts" component={WorkoutComponents} />
+        <Tab.Screen name="Settings" component={SettingsScreen} />
+      </Tab.Navigator>
+    </View>
   );
 }
 

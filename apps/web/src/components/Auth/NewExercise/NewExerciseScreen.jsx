@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { Keyboard, LayoutAnimation, UIManager, ScrollView } from 'react-native';
 import { withTheme } from 'react-native-paper';

@@ -1,5 +1,5 @@
 import debounce from 'lodash/debounce';
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { View } from 'react-native';
 import { withTheme, Portal } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -7,11 +7,17 @@ import SplashScreen from '../components/Splash/SplashScreen';
 
 const LoadingOverlay = ({ isVisible, theme }) => {
   const [isLoading, setIsLoading] = React.useState(true);
-
-  useEffect(
-    debounce(() => setIsLoading(isVisible), 100),
-    [isVisible]
+  const debounceLoad = useCallback(
+    debounce((isVis) => setIsLoading(isVis), 400, {
+      leading: true,
+      trailing: true,
+    }),
+    []
   );
+
+  useEffect(() => {
+    debounceLoad(isVisible);
+  }, [isVisible]);
 
   const insets = useSafeAreaInsets();
 

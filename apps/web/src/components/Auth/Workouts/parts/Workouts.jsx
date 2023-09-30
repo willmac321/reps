@@ -7,7 +7,6 @@ import ScrollList from '../../../../template/ScrollList';
 import WorkoutItem from './WorkoutItem';
 import WorkoutAPI from '../../../../controllers/WorkoutApi';
 import { useIsMounted } from '../../../../utils/useIsMounted';
-// remove
 
 const Workouts = ({
   theme,
@@ -18,6 +17,7 @@ const Workouts = ({
   isOk,
   setIsOk,
   showEditAndSelect = true,
+  isEditName = false,
 }) => {
   const {
     user,
@@ -82,6 +82,7 @@ const Workouts = ({
           setIsOk(false);
           setModalOnOkSelected(null);
           setSelected(null);
+          setEditWorkout({});
         }
         springAnim.setValue(1);
         setWorkouts(() => [...workouts].filter((d) => d.id !== id));
@@ -115,6 +116,7 @@ const Workouts = ({
       setIsFromEditButton(false);
       setIsDisable(false);
       if (selected === id) {
+        setEditWorkout({});
         setSelected(null);
         setIsDisable(true);
       } else {
@@ -156,21 +158,6 @@ const Workouts = ({
     setIsFromEditButton(false);
     navigation.navigate('Create');
   };
-
-  // TODO for quick nav to workout screen remove
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     if (isMounted.current && !isLoading && workouts && showEditAndSelect && workouts.length > 0) {
-  //       onPress('r');
-  //     }
-  //   }, [workouts, isLoading, showEditAndSelect])
-  // );
-  // React.useEffect(() => {
-  //   if (selected) {
-  //     handleOnSubmit();
-  //   }
-  // }, [selected]);
-  // ^^
 
   React.useLayoutEffect(() => {
     if (isMounted.current) {
@@ -258,7 +245,7 @@ const Workouts = ({
   return (
     <CardWithButton
       buttonText="Select"
-      showButton={showEditAndSelect && workouts && workouts.length > 0}
+      showButton={!isEditName && showEditAndSelect && workouts && workouts.length > 0}
       theme={theme}
       buttonDisabled={isDisable}
       onPress={() => handleOnSubmit(selected)}

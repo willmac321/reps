@@ -79,6 +79,7 @@ const NewWorkoutsScreen = ({ navigation, theme }) => {
             showEditAndSelect
             isOk={isOk}
             setIsOk={setIsOk}
+            isEditName={isEditWorkout}
           />
         )}
         <WarnModal
