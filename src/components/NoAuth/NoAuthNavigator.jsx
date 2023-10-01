@@ -1,7 +1,6 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { withTheme } from "react-native-paper";
-import { Platform } from "react-native";
 
 import LoginScreen from "./Login/LoginScreen";
 import RegisterScreen from "./Register/RegisterScreen";

@@ -5,12 +5,12 @@ import WorkoutAPI from "./WorkoutApi";
 import ExerciseApi from "./ExerciseApi";
 import themeDark from "../theme/themeDark";
 import themeLight from "../theme/themeLight";
-import {auth} from 'src/firebase/config';
+import {auth} from '../firebase/config';
 import {
   getLocalData,
   storeLocalData,
   USER_STORE_KEY,
-} from "src/firebase/localStorage";
+} from "../firebase/localStorage";
 
 export const StateContext = React.createContext();
 

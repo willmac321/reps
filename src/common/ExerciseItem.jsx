@@ -1,5 +1,4 @@
 import React from 'react';
-import { useFocusEffect } from '@react-navigation/native';
 import { View, StyleSheet, TouchableOpacity, Animated, Easing } from 'react-native';
 import { IconButton, withTheme, TouchableRipple, Text, Card } from 'react-native-paper';
 import { useIsMounted } from '../utils/useIsMounted';
