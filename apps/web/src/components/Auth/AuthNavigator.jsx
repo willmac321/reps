@@ -1,17 +1,17 @@
-import React from 'react';
-import { View } from 'react-native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createStackNavigator } from '@react-navigation/stack';
-import { withTheme } from 'react-native-paper';
-import { FontAwesome5 } from '@expo/vector-icons';
+import React from "react";
+import { View } from "react-native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createStackNavigator } from "@react-navigation/stack";
+import { withTheme } from "react-native-paper";
+import { FontAwesome5 } from "@expo/vector-icons";
 
-import { dropShadow } from '../../theme/themeLight';
-import NewWorkoutsScreen from './NewWorkouts/NewWorkoutsScreen';
-import NewExercisesScreen from './NewExercise/NewExerciseScreen';
-import ExercisesScreen from './Exercises/ExercisesScreen';
-import WorkoutsScreen from './Workouts/WorkoutsScreen';
-import SettingsScreen from './Settings/SettingsScreen';
-import { StateContext } from '../../controllers/state';
+import { dropShadow } from "../../theme/themeLight";
+import NewWorkoutsScreen from "./NewWorkouts/NewWorkoutsScreen";
+import NewExercisesScreen from "./NewExercise/NewExerciseScreen";
+import ExercisesScreen from "./Exercises/ExercisesScreen";
+import WorkoutsScreen from "./Workouts/WorkoutsScreen";
+import SettingsScreen from "./Settings/SettingsScreen";
+import { StateContext } from "../../controllers/state";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -20,17 +20,17 @@ const screenOptions = ({ route }) => ({
   tabBarIcon: ({ color, size }) => {
     let iconName;
     switch (route.name) {
-      case 'Workouts':
-        iconName = 'dumbbell';
+      case "Workouts":
+        iconName = "dumbbell";
         break;
-      case 'Create':
-        iconName = 'plus-square';
+      case "Create":
+        iconName = "plus-square";
         break;
-      case 'Settings':
-        iconName = 'cog';
+      case "Settings":
+        iconName = "cog";
         break;
-      case 'Account':
-        iconName = 'user';
+      case "Account":
+        iconName = "user";
         break;
       default:
         break;
@@ -47,7 +47,7 @@ const NewComponents = () => (
 
 const WorkoutComponents = () => (
   <Stack.Navigator screenOptions={{ headerShown: false }}>
-    <Stack.Screen name="Workouts" component={WorkoutsScreen} />
+    <Stack.Screen name="WorkoutsList" component={WorkoutsScreen} />
     <Stack.Screen name="Exercises" component={ExercisesScreen} />
   </Stack.Navigator>
 );
@@ -68,23 +68,25 @@ function AuthNavigator({ theme }) {
 
   // should only route to new exercises when the page is on a selected workout screen
   return (
-    <View style={{ height: '100%', width: '100%' }}>
+    <View style={{ height: "100%", width: "100%" }}>
       <Tab.Navigator
-        screenOptions={(ev) => screenOptions(ev)}
-        initialRouteName="Workouts"
-        tabBarOptions={{
-          activeTintColor: theme.colors.textSelected,
-          inactiveTintColor: theme.colors.text,
-          inactiveBackgroundColor: theme.colors.background,
-          activeBackgroundColor: theme.colors.secondary,
-          keyboardHidesTabBar: true,
-          showLabel: false,
-          tabStyle: {},
-          style: {
-            borderTopWidth: 0,
+        backBehavior="history"
+        screenOptions={(ev) => ({
+          ...screenOptions(ev),
+          tabBarActiveTintColor: theme.colors.textSelected,
+          tabBarInactiveTintColor: theme.colors.text,
+          tabBarInactiveBackgroundColor: theme.colors.background,
+          tabBarActiveBackgroundColor: theme.colors.secondary,
+          tabBarHideOnKeyboard: true,
+          tabBarShowLabel: false,
+          tabBarStyle: {
+            borderTopWidth: 4,
+            borderTopColor: theme.colors.primary,
             ...dropShadow(),
           },
-        }}
+          headerShown: false,
+        })}
+        initialRouteName="Workouts"
       >
         <Tab.Screen
           name="Create"
@@ -94,7 +96,7 @@ function AuthNavigator({ theme }) {
               if (isMounted.current && navigation.isFocused()) {
                 setEditWorkout({});
                 setSelectedWorkout({});
-                navigation.navigate('Create', { screen: 'NewWorkout' });
+                navigation.navigate("Create", { screen: "NewWorkout" });
               }
             },
           })}

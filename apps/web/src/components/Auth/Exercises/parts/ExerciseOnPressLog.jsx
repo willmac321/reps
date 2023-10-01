@@ -1,33 +1,43 @@
-import React, { useState } from 'react';
-import { View, Animated, Easing, Text, StyleSheet, Dimensions } from 'react-native';
-import { IconButton, Card, withTheme, TouchableRipple } from 'react-native-paper';
-import { useIsMounted } from '../../../../utils/useIsMounted';
-import { isMobile, useIsSmallScreen } from '../../../../utils/checkPlatform';
-import Button from '../../../../template/ButtonTemplate';
+import React, { useState } from "react";
+import {
+  View,
+  Animated,
+  Easing,
+  Text,
+  StyleSheet,
+} from "react-native";
+import {
+  IconButton,
+  Card,
+  withTheme,
+  TouchableRipple,
+} from "react-native-paper";
+import { useIsMounted } from "../../../../utils/useIsMounted";
+import { isMobile, useIsSmallScreen } from "../../../../utils/checkPlatform";
 
 const nextButtonIconArr = [
-  'check',
-  'heart',
-  'cheese',
-  'trophy',
-  'hat-cowboy',
-  'fire',
-  'skull',
-  'arrow-down',
-  'cookie-bite',
-  'crown',
-  'candy-cane',
-  'meteor',
-  'dog',
-  'star',
-  'horse',
-  'hippo',
-  'sun',
-  'rocket',
-  'snowman',
-  'gem',
-  'cat',
-  'carrot',
+  "check",
+  "heart",
+  "cheese",
+  "trophy",
+  "hat-cowboy",
+  "fire",
+  "skull",
+  "arrow-down",
+  "cookie-bite",
+  "crown",
+  "candy-cane",
+  "meteor",
+  "dog",
+  "star",
+  "horse",
+  "hippo",
+  "sun",
+  "rocket",
+  "snowman",
+  "gem",
+  "cat",
+  "carrot",
 ];
 
 const ExerciseOnPressLog = ({ theme, content, onProgress }) => {
@@ -35,7 +45,7 @@ const ExerciseOnPressLog = ({ theme, content, onProgress }) => {
   const isMounted = useIsMounted();
   const animColor = React.useRef(new Animated.Value(0)).current;
   const [selected, setSelected] = useState(0);
-  const [icon, setIcon] = useState('check');
+  const [icon, setIcon] = useState("check");
   const isScreenSmall = useIsSmallScreen();
 
   const styles = StyleSheet.create({
@@ -49,15 +59,15 @@ const ExerciseOnPressLog = ({ theme, content, onProgress }) => {
     selectedText: {
       ...theme.buttonTextSecondary,
       color: theme.buttonTextSecondary.color,
-      marginVertical: 'auto',
+      marginVertical: "auto",
     },
     subItemView: {
       flex: 0,
       flexGrow: 1,
-      textAlignVertical: 'center',
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      justifyContent: 'space-around',
+      textAlignVertical: "center",
+      flexDirection: "row",
+      flexWrap: "wrap",
+      justifyContent: "space-around",
     },
     selectedSubItemText: {
       margin: 4,
@@ -68,14 +78,14 @@ const ExerciseOnPressLog = ({ theme, content, onProgress }) => {
       flexGrow: 1,
     },
     subItemText: {
-      marginVertical: 'auto',
+      marginVertical: "auto",
       flex: 1,
       flexGrow: 1,
       padding: 4,
     },
     subItem: {
       ...theme.item,
-      flexDirection: 'row',
+      flexDirection: "row",
       flex: 0,
       flexGrow: 1,
       borderWidth: 1,
@@ -101,19 +111,19 @@ const ExerciseOnPressLog = ({ theme, content, onProgress }) => {
       ...theme.title,
     },
     text: {
-      marginVertical: 'auto',
+      marginVertical: "auto",
       color: theme.buttonText.color,
     },
     rowTextHeader: {
       fontSize: 24,
-      fontWeight: 'bold',
+      fontWeight: "bold",
       color: `${theme.colors.accent}`,
     },
     rowTextContainer: {
       marginHorizontal: 4,
       paddingHorizontal: 4,
-      textAlignVertical: 'middle',
-      borderStyle: 'solid',
+      textAlignVertical: "middle",
+      borderStyle: "solid",
       borderBottomWidth: 1,
       borderBottomColor: `${theme.colors.accent}`,
     },
@@ -141,7 +151,9 @@ const ExerciseOnPressLog = ({ theme, content, onProgress }) => {
 
   const goNext = React.useCallback(() => {
     if (isMounted.current) {
-      setIcon(nextButtonIconArr[Math.floor(Math.random() * nextButtonIconArr.length)]);
+      setIcon(
+        nextButtonIconArr[Math.floor(Math.random() * nextButtonIconArr.length)]
+      );
       if (parseInt(content.sets, 10) - 1 > selected) {
         onLocalPress(selected + 1);
       } else {
@@ -149,23 +161,32 @@ const ExerciseOnPressLog = ({ theme, content, onProgress }) => {
         setSelected(null);
       }
     }
-  }, [isMounted, selected, onProgress, onLocalPress, setSelected, content.sets]);
+  }, [
+    isMounted,
+    selected,
+    onProgress,
+    onLocalPress,
+    setSelected,
+    content.sets,
+  ]);
 
   React.useEffect(() => {
     const listener = (event) => {
       if (
         isMounted.current &&
-        (event.code === 'Space' || event.code === 'Enter' || event.code === 'NumpadEnter')
+        (event.code === "Space" ||
+          event.code === "Enter" ||
+          event.code === "NumpadEnter")
       ) {
         goNext();
       }
     };
     if (isMounted.current && !isMobile()) {
-      document.addEventListener('keydown', listener);
+      document.addEventListener("keydown", listener);
     }
     return () => {
       if (isMounted.current && !isMobile()) {
-        document.removeEventListener('keydown', listener);
+        document.removeEventListener("keydown", listener);
       }
     };
   }, [goNext, isMounted]);
@@ -206,47 +227,80 @@ const ExerciseOnPressLog = ({ theme, content, onProgress }) => {
                 rippleColor={theme.colors.secondarySelected}
                 underlayColor={theme.colors.secondarySelected}
                 theme={theme}
-                style={[{ marginTop: 4 }, selected === i ? styles.selectedSubItem : styles.subItem]}
+                style={[
+                  { marginTop: 4 },
+                  selected === i ? styles.selectedSubItem : styles.subItem,
+                ]}
                 onPress={(e) => onLocalPress(i, e)}
               >
                 <View
                   theme={theme}
                   style={[
                     {
-                      flexDirection: 'column',
+                      flexDirection: "column",
                     },
                     styles.subItemView,
                     selected
                       ? {
-                          flexDirection: 'row',
+                          flexDirection: "row",
                           flexGrow: 1,
                         }
                       : {},
                   ]}
                 >
-                  <View style={selected === i ? styles.selectedSubItemText : styles.subItemText}>
-                    <Text theme={theme} style={selected === i ? styles.selectedText : styles.text}>
+                  <View
+                    style={
+                      selected === i
+                        ? styles.selectedSubItemText
+                        : styles.subItemText
+                    }
+                  >
+                    <Text
+                      theme={theme}
+                      style={selected === i ? styles.selectedText : styles.text}
+                    >
                       Set {i + 1}
                     </Text>
                   </View>
-                  <View style={selected === i ? styles.selectedSubItemText : styles.subItemText}>
-                    <Text theme={theme} style={selected === i ? styles.selectedText : styles.text}>
+                  <View
+                    style={
+                      selected === i
+                        ? styles.selectedSubItemText
+                        : styles.subItemText
+                    }
+                  >
+                    <Text
+                      theme={theme}
+                      style={selected === i ? styles.selectedText : styles.text}
+                    >
                       Rep Range: {content.repRange[0]} to {content.repRange[1]}
                     </Text>
                   </View>
-                  <View style={[selected === i ? styles.selectedSubItemText : styles.subItemText]}>
-                    <Text theme={theme} style={selected === i ? styles.selectedText : styles.text}>
-                      Rest Target: {new Date(content.rest * 1000).toISOString().substring(14, 19)}
+                  <View
+                    style={[
+                      selected === i
+                        ? styles.selectedSubItemText
+                        : styles.subItemText,
+                    ]}
+                  >
+                    <Text
+                      theme={theme}
+                      style={selected === i ? styles.selectedText : styles.text}
+                    >
+                      Rest Target:{" "}
+                      {new Date(content.rest * 1000)
+                        .toISOString()
+                        .substring(14, 19)}
                     </Text>
                   </View>
                   {selected === i && (
-                    <View theme={theme} style={{ alignItems: 'flex-end' }}>
+                    <View theme={theme} style={{ alignItems: "flex-end" }}>
                       <IconButton
                         icon={icon}
                         color={theme.buttonTextSecondary.color}
                         style={[
                           {
-                            marginVertical: 'auto',
+                            marginVertical: "auto",
                             backgroundColor: theme.colors.backgroundShadow,
                           },
                         ]}

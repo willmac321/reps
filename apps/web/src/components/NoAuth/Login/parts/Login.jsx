@@ -1,15 +1,28 @@
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { Button, withTheme, TextInput, HelperText, Text } from 'react-native-paper';
-import { Link } from '@react-navigation/native';
-import CardWithButton from '../../../../template/CardWithButton';
-import { useIsMounted } from '../../../../utils/useIsMounted';
-import AuthApi from '../../../../controllers/AuthApi';
+import React from "react";
+import { View, StyleSheet } from "react-native";
+import {
+  Button,
+  withTheme,
+  TextInput,
+  HelperText,
+  Text,
+} from "react-native-paper";
+import { Link } from "@react-navigation/native";
+import CardWithButton from "../../../../template/CardWithButton";
+import { useIsMounted } from "../../../../utils/useIsMounted";
+import AuthApi from "../../../../controllers/AuthApi";
 
-const Login = ({ theme, style, setShowNotify, setNotifyMessage, setNotifyTitle }) => {
+const Login = ({
+  theme,
+  style,
+  setShowNotify,
+  setNotifyMessage,
+  setNotifyTitle,
+  navigation
+}) => {
   const isMounted = useIsMounted();
-  const [email, setEmail] = React.useState('');
-  const [password, setPassword] = React.useState('');
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
   const [isPasswordVisible, setPasswordVisible] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
   const [isDisable, setIsDisable] = React.useState(false);
@@ -28,12 +41,12 @@ const Login = ({ theme, style, setShowNotify, setNotifyMessage, setNotifyTitle }
     },
     linkText: {
       color: theme.colors.link,
-      textTransform: 'capitalize',
+      textTransform: "capitalize",
       marginHorizontal: 1,
     },
   });
 
-  const emailError = () => isMounted.current && email && !email.includes('@');
+  const emailError = () => isMounted.current && email && !email.includes("@");
 
   React.useEffect(() => {
     if (isMounted.current) {
@@ -45,11 +58,11 @@ const Login = ({ theme, style, setShowNotify, setNotifyMessage, setNotifyTitle }
     }
   }, [password, email]);
 
-  const callbackHandlePress = (err, user) => {
+  const callbackHandlePress = (err, { user }) => {
     if (isMounted.current) {
       setIsLoading(false);
       if (err) {
-        setNotifyTitle('Uhoh Brobro!');
+        setNotifyTitle("Uhoh!");
         setNotifyMessage(
           "Password or email was incorrect, please reset your password or register if you're a new user!"
         );
@@ -57,15 +70,15 @@ const Login = ({ theme, style, setShowNotify, setNotifyMessage, setNotifyTitle }
         return;
       }
       if (user && !user.emailVerified) {
-        setNotifyTitle('But really...');
+        setNotifyTitle("But really...");
         setNotifyMessage(
           <View>
             <Text>
-              Please verify your email to continue using REPS.{' '}
+              Please verify your email to continue using REPS.{" "}
               <Button
                 style={[styles.linkButton]}
                 labelStyle={[styles.linkText]}
-                onPress={() => AuthApi.emailVerify(user.user)}
+                onPress={() => AuthApi.emailVerify(user)}
               >
                 Resend Verification
               </Button>
@@ -73,13 +86,15 @@ const Login = ({ theme, style, setShowNotify, setNotifyMessage, setNotifyTitle }
           </View>
         );
         setShowNotify(true);
+      } else if (user && user.emailVerified) {
+        navigation.navigate('AuthNav');
       }
     }
   };
 
-  const handleOnPress = () => {
+  const handleOnPress = async () => {
     setIsLoading(true);
-    AuthApi.login(email, password, callbackHandlePress);
+    await AuthApi.login(email, password, callbackHandlePress);
   };
 
   return (
@@ -122,7 +137,10 @@ const Login = ({ theme, style, setShowNotify, setNotifyMessage, setNotifyTitle }
           onChangeText={(val) => setPassword(val)}
           style={styles.input}
           right={
-            <TextInput.Icon icon="eye" onPress={() => setPasswordVisible(!isPasswordVisible)} />
+            <TextInput.Icon
+              icon="eye"
+              onPress={() => setPasswordVisible(!isPasswordVisible)}
+            />
           }
         />
         <Link style={styles.link} to="/Forgot">

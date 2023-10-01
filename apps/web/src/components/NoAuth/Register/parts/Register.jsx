@@ -66,7 +66,7 @@ const Register = ({
     setIsLoading(false);
     if (err) {
       setNotifyTitle('Uhoh!');
-      setNotifyMessage(err.message.toString());
+      setNotifyMessage(err.message.toString().split('Firebase: ')[1]);
       setShowNotify(true);
       return;
     }

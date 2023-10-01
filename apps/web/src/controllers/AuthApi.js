@@ -9,11 +9,11 @@ import {
   signOut,
   updateEmail,
   updatePassword,
-} from 'firebase/auth';
-import { auth } from '../firebase/config';
+} from "firebase/auth";
+import { auth } from "../firebase/config";
 
-function login(email, password, callback) {
-  signInWithEmailAndPassword(auth, email, password)
+async function login(email, password, callback) {
+  return signInWithEmailAndPassword(auth, email, password)
     .then((user) => {
       callback(null, user);
     })

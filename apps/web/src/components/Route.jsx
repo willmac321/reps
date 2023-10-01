@@ -1,13 +1,13 @@
-import React from 'react';
-import { Provider as PaperProvider, withTheme } from 'react-native-paper';
-import { View } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { FontAwesome5 } from '@expo/vector-icons';
-import { createStackNavigator } from '@react-navigation/stack';
-import { StateContext } from '../controllers/state';
-import NoAuthNavigator from './NoAuth/NoAuthNavigator';
-import AuthNavigator from './Auth/AuthNavigator.jsx';
-import LoadingScreenOverlay from '../template/LoadingScreenOverlay';
+import React from "react";
+import { Provider as PaperProvider, withTheme } from "react-native-paper";
+import { View } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import { FontAwesome5 } from "@expo/vector-icons";
+import { createStackNavigator } from "@react-navigation/stack";
+import { StateContext } from "../controllers/state";
+import NoAuthNavigator from "./NoAuth/NoAuthNavigator";
+import AuthNavigator from "./Auth/AuthNavigator.jsx";
+import LoadingScreenOverlay from "../template/LoadingScreenOverlay";
 
 const Stack = createStackNavigator();
 
@@ -32,20 +32,20 @@ const Route = ({ theme }) => (
         {({ user, isLoading }) => (
           <View
             style={{
-              height: '100%',
-              width: '100%',
+              height: "100%",
+              width: "100%",
             }}
           >
             <LoadingScreenOverlay isVisible={isLoading} theme={theme} />
             <Stack.Navigator
               style={{
-                visibility: !isLoading ? 'visible' : 'hidden',
+                visibility: !isLoading ? "visible" : "hidden",
               }}
               options={{
-                statusuBarStyle: theme.userTheme,
+                statusBarStyle: theme.userTheme,
               }}
             >
-              {user ? (
+              {user && user?.emailVerified ? (
                 <Stack.Screen
                   name="AuthNav"
                   component={AuthNavigator}

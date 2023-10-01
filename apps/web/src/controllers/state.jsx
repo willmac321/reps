@@ -1,12 +1,16 @@
-import React from 'react';
-import { auth } from '../firebase/config';
-import AuthAPI from './AuthApi';
-import UserSettingsAPI from './UserSettingsApi';
-import WorkoutAPI from './WorkoutApi';
-import ExerciseApi from './ExerciseApi';
-import themeDark from '../theme/themeDark';
-import themeLight from '../theme/themeLight';
-import { getLocalData, storeLocalData, USER_STORE_KEY } from '../firebase/localStorage';
+import React from "react";
+import { auth } from "../firebase/config";
+import AuthAPI from "./AuthApi";
+import UserSettingsAPI from "./UserSettingsApi";
+import WorkoutAPI from "./WorkoutApi";
+import ExerciseApi from "./ExerciseApi";
+import themeDark from "../theme/themeDark";
+import themeLight from "../theme/themeLight";
+import {
+  getLocalData,
+  storeLocalData,
+  USER_STORE_KEY,
+} from "../firebase/localStorage";
 
 export const StateContext = React.createContext();
 
@@ -21,7 +25,9 @@ export const StateContextProvider = ({ children }) => {
   }, []);
   // used to spoof endpoints and user auth for dev,
   // XXX leave compare to dev string in case I forget!
-  const [debug] = React.useState(process.env.NODE_ENV === 'development' && false);
+  const [debug] = React.useState(
+    process.env.NODE_ENV === "development" && false
+  );
   const [isLoading, setIsLoading] = React.useState(true);
   const [justRegistered, setJustRegistered] = React.useState(false);
   const [authRes, setAuthRes] = React.useState(null);
@@ -31,10 +37,10 @@ export const StateContextProvider = ({ children }) => {
 
   // default user state, use this on account create and overwrite after login
   const [defaultUserDetails] = React.useState({
-    theme: 'light',
-    splashScreenIcon: 'aphrodite',
+    theme: "light",
+    splashScreenIcon: "aphrodite",
     timeout: false,
-    contactEmail: 'help@loblollysoftware.com',
+    contactEmail: "help@loblollysoftware.com",
   });
 
   const [userDetails, updateUserDetails] = React.useState({});
@@ -49,7 +55,7 @@ export const StateContextProvider = ({ children }) => {
 
   React.useEffect(() => {
     if (Object.keys(userDetails).length) {
-      setTheme(userDetails.theme === 'light' ? themeLight : themeDark);
+      setTheme(userDetails.theme === "light" ? themeLight : themeDark);
     }
   }, [userDetails.theme]);
 
@@ -97,7 +103,8 @@ export const StateContextProvider = ({ children }) => {
 
     if (!isAlreadyThere) {
       unsortedWorkouts.push(w);
-      const sorted = () => unsortedWorkouts.sort((a, b) => a.id.localeCompare(b.id));
+      const sorted = () =>
+        unsortedWorkouts.sort((a, b) => a.id.localeCompare(b.id));
       setWorkouts(sorted);
     }
     updateSelectedWorkout(w);
@@ -106,7 +113,7 @@ export const StateContextProvider = ({ children }) => {
   const getExercises = async (setLoading = null, selectedW = null) => {
     let localSelectedWorkout = selectedW || selectedWorkout;
 
-    if (typeof localSelectedWorkout === 'string' && workouts) {
+    if (typeof localSelectedWorkout === "string" && workouts) {
       localSelectedWorkout =
         workouts.find((workout) => workout.id === localSelectedWorkout) || null;
     }
@@ -118,7 +125,10 @@ export const StateContextProvider = ({ children }) => {
     ) {
       if (setLoading) setIsLoading(true);
       try {
-        const exs = await ExerciseApi.getExercises(user.uid, localSelectedWorkout.id);
+        const exs = await ExerciseApi.getExercises(
+          user.uid,
+          localSelectedWorkout.id
+        );
         // set locally
         if (exs && exs.length > 0) {
           updateExercises(exs);
@@ -130,7 +140,12 @@ export const StateContextProvider = ({ children }) => {
     }
   };
 
-  const addExercise = async (newExercise, id = null, workoutId, setLoading = null) => {
+  const addExercise = async (
+    newExercise,
+    id = null,
+    workoutId,
+    setLoading = null
+  ) => {
     if (setLoading) setIsLoading(true);
     let localExercise = {};
     if (id) {
@@ -140,7 +155,11 @@ export const StateContextProvider = ({ children }) => {
         id,
       };
     } else {
-      localExercise = await ExerciseApi.newExercise(user.uid, newExercise, workoutId);
+      localExercise = await ExerciseApi.newExercise(
+        user.uid,
+        newExercise,
+        workoutId
+      );
     }
     const localSelectedWorkout = {
       ...selectedWorkout,
@@ -190,8 +209,15 @@ export const StateContextProvider = ({ children }) => {
   const deleteExercise = React.useCallback(
     async (exUid) => {
       if (exUid && isMounted.current) {
-        const localExercises = exercises.map((e) => e.id).filter((e) => e !== exUid);
-        await ExerciseApi.deleteExercise(user.uid, exUid, selectedWorkout.id, localExercises)
+        const localExercises = exercises
+          .map((e) => e.id)
+          .filter((e) => e !== exUid);
+        await ExerciseApi.deleteExercise(
+          user.uid,
+          exUid,
+          selectedWorkout.id,
+          localExercises
+        )
           .then(async () => {
             const localSelectedWorkout = {
               ...selectedWorkout,
@@ -258,15 +284,12 @@ export const StateContextProvider = ({ children }) => {
         // if authRes is null -- ie logout then set to default
         setUser(null);
       }
-      return;
-    }
-
-    if (authRes && !authRes.emailVerified && justRegistered) {
+    } else if (authRes && !authRes.emailVerified && justRegistered) {
       setJustRegistered(false);
       AuthAPI.emailVerify(authRes);
+    } else {
+      setDetails(authRes);
     }
-
-    setDetails(authRes);
   }, [authRes]);
 
   const logout = async (callback = () => {}) => {

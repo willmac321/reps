@@ -1,27 +1,29 @@
-import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
-import { withTheme } from 'react-native-paper';
-import { Platform } from 'react-native';
+import React from "react";
+import { createStackNavigator } from "@react-navigation/stack";
+import { withTheme } from "react-native-paper";
+import { Platform } from "react-native";
 
-import LoginScreen from './Login/LoginScreen';
-import RegisterScreen from './Register/RegisterScreen';
-import ForgotScreen from './ForgotPassword/ForgotScreen';
+import LoginScreen from "./Login/LoginScreen";
+import RegisterScreen from "./Register/RegisterScreen";
+import ForgotScreen from "./ForgotPassword/ForgotScreen";
 
 const Stack = createStackNavigator();
 
-const isWeb = Platform.select({
-  ios: false,
-  android: false,
-  native: false,
-  default: true,
-});
-
-function NoAuthNavigator() {
+function NoAuthNavigator({ theme }) {
   return (
-    <Stack.Navigator>
-      <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: isWeb }} />
-      <Stack.Screen name="Register" component={RegisterScreen} options={{ headerShown: isWeb }} />
-      <Stack.Screen name="Forgot" component={ForgotScreen} options={{ headerShown: isWeb }} />
+    <Stack.Navigator
+      screenOptions={(ev) => ({
+        headerBackVisible: false,
+        headerTitleStyle: { ...theme.title },
+        headerStyle: {
+          borderBottomWidth: 4,
+          borderBottomColor: theme.colors.primary,
+        },
+      })}
+    >
+      <Stack.Screen name="Login" component={LoginScreen} />
+      <Stack.Screen name="Register" component={RegisterScreen} />
+      <Stack.Screen name="Forgot" component={ForgotScreen} />
     </Stack.Navigator>
   );
 }
