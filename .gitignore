@@ -15,7 +15,8 @@ web-build/
 /dist
 /ignore
 
-/android
+**/android/*
+android/*
 
 # local env files
 .env
