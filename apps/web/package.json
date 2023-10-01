@@ -7,9 +7,9 @@
     "build:web": "npx expo export -p web",
     "deploy:android": "eas submit --platform android",
     "test": "jest --coverage",
-    "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "start": "expo start --dev-client",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "web": "expo start --web",
     "build-deploy:android": "npm run build:android && npm run deploy:android",
     "eject": "expo eject",
@@ -22,7 +22,7 @@
     "@react-navigation/bottom-tabs": "^5.11.15",
     "@react-navigation/native": "^5.9.8",
     "@react-navigation/stack": "^5.14.9",
-    "expo": "^48.0.0",
+    "expo": "~49.0.7",
     "expo-dev-client": "~2.2.1",
     "expo-status-bar": "~1.4.4",
     "firebase": "^10.0.0",
@@ -41,12 +41,14 @@
     "react-native-svg": "13.4.0",
     "react-native-web": "~0.18.10",
     "react-redux": "^7.2.6",
-    "whatwg-fetch": "^3.6.17"
+    "whatwg-fetch": "^3.6.17",
+    "expo-splash-screen": "~0.18.2"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
     "@babel/plugin-transform-export-namespace-from": "^7.22.5",
     "eslint-config-custom": "*"
   },
-  "private": true
+  "private": true,
+  "version": "1.0.19"
 }
