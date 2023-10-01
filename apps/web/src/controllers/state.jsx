@@ -1,16 +1,16 @@
 import React from "react";
-import { auth } from "../firebase/config";
 import AuthAPI from "./AuthApi";
 import UserSettingsAPI from "./UserSettingsApi";
 import WorkoutAPI from "./WorkoutApi";
 import ExerciseApi from "./ExerciseApi";
 import themeDark from "../theme/themeDark";
 import themeLight from "../theme/themeLight";
+import {auth} from 'src/firebase/config';
 import {
   getLocalData,
   storeLocalData,
   USER_STORE_KEY,
-} from "../firebase/localStorage";
+} from "src/firebase/localStorage";
 
 export const StateContext = React.createContext();
 

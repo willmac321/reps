@@ -46,7 +46,6 @@
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
-    "@babel/plugin-transform-export-namespace-from": "^7.22.5",
     "eslint-config-custom": "*"
   },
   "private": true,
