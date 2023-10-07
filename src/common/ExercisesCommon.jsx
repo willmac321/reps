@@ -37,6 +37,7 @@ const Exercises = ({
 
   React.useEffect(() => {
     if (isMounted.current) {
+      console.log(exercises);
       setLocalExercises(
         exercises.map((v) => {
           const rv = { ...v };
@@ -185,12 +186,12 @@ const Exercises = ({
     <CardWithButton
       theme={theme}
       showButton={false}
-      flex={1}
       style={{
-        flexGrow: localExercises.length > 0 ? 1 : null,
-        marginBottom: 50,
+        flexShrink: 1,
+        flexBasis: 'auto',
+        flexGrow: 0,
+        marginBottom: 20,
         scrollbarColor: `${theme.colors.primary} ${theme.colors.surface}`,
-        overflowY: 'hidden'
       }}
     >
       {isDraggable ? (

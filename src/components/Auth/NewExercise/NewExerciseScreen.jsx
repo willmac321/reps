@@ -1,16 +1,16 @@
-import React from 'react';
-import { useFocusEffect } from '@react-navigation/native';
-import { Keyboard, LayoutAnimation, UIManager, ScrollView } from 'react-native';
-import { withTheme } from 'react-native-paper';
-import { NestableScrollContainer } from 'react-native-draggable-flatlist';
-import SafeArea from '../../../template/SafeAreaWrapper';
-import { StateContext } from '../../../controllers/state';
-import WarnModal from '../../../template/WarnModal';
-import Header from '../../../template/Header';
-import NewExerciseCreator from './parts/NewExerciseCreator';
-import NewExercises from './parts/NewExercises';
-import NewExerciseNext from './parts/NewExerciseNext';
-import { isMobile, isAndroid } from '../../../utils/checkPlatform';
+import React from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import { Keyboard, LayoutAnimation, UIManager, ScrollView } from "react-native";
+import { withTheme } from "react-native-paper";
+import { NestableScrollContainer } from "react-native-draggable-flatlist";
+import SafeArea from "../../../template/SafeAreaWrapper";
+import { StateContext } from "../../../controllers/state";
+import WarnModal from "../../../template/WarnModal";
+import Header from "../../../template/Header";
+import NewExerciseCreator from "./parts/NewExerciseCreator";
+import NewExercises from "./parts/NewExercises";
+import NewExerciseNext from "./parts/NewExerciseNext";
+import { isMobile, isAndroid } from "../../../utils/checkPlatform";
 
 if (isAndroid() && UIManager.setLayoutAnimationEnabledExperimental) {
   UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -19,6 +19,7 @@ if (isAndroid() && UIManager.setLayoutAnimationEnabledExperimental) {
 const NewExerciseScreen = ({ navigation, theme }) => {
   const {
     isLoading,
+    setIsLoading,
     user = null,
     selectedWorkout: { selectedWorkout },
     exercises: { exercises, addExercise, getExercises },
@@ -28,16 +29,25 @@ const NewExerciseScreen = ({ navigation, theme }) => {
   const keyboardHide = React.useRef(null);
   const [keyboardActive, setKeyboardActive] = React.useState(false);
   const [showNotify, setShowNotify] = React.useState(false);
-  const [customTopMargin, setCustomTopMargin] = React.useState(theme.card.marginTop);
+  const [customTopMargin, setCustomTopMargin] = React.useState(
+    theme.card.marginTop
+  );
   const [isOk, setIsOk] = React.useState(false);
-  const [notifyMessage, setNotifyMessage] = React.useState('');
-  const [notifyTitle, setNotifyTitle] = React.useState('');
+  const [notifyMessage, setNotifyMessage] = React.useState("");
+  const [notifyTitle, setNotifyTitle] = React.useState("");
   const [selectedExercise, setSelectedExercise] = React.useState(null);
   const [isReloadWorkout, setIsReloadWorkout] = React.useState(true);
 
   useFocusEffect(
     React.useCallback(() => {
-      if (selectedWorkout) getExercises(isReloadWorkout, selectedWorkout);
+      const func = async () => {
+        if (selectedWorkout) {
+          setIsLoading(true);
+          await getExercises(isReloadWorkout, selectedWorkout);
+          setIsLoading(false);
+        }
+      };
+      func();
     }, [selectedWorkout])
   );
 
@@ -62,8 +72,14 @@ const NewExerciseScreen = ({ navigation, theme }) => {
   const [markSelected, setMarkSelected] = React.useState(null);
 
   React.useEffect(() => {
-    keyboardShow.current = Keyboard.addListener('keyboardDidShow', keyboardEventShow);
-    keyboardHide.current = Keyboard.addListener('keyboardDidHide', keyboardEventHide);
+    keyboardShow.current = Keyboard.addListener(
+      "keyboardDidShow",
+      keyboardEventShow
+    );
+    keyboardHide.current = Keyboard.addListener(
+      "keyboardDidHide",
+      keyboardEventHide
+    );
 
     // cleanup function
     return () => {
@@ -142,7 +158,7 @@ const NewExerciseScreen = ({ navigation, theme }) => {
             {
               scrollbarColor: `${theme.colors.primary} ${theme.colors.surface}`,
             },
-            isMobile() ? {} : { overflow: 'auto' },
+            isMobile() ? {} : { overflow: "auto" },
           ]}
         >
           {innerContent}
@@ -158,7 +174,7 @@ const NewExerciseScreen = ({ navigation, theme }) => {
           {
             scrollbarColor: `${theme.colors.primary} ${theme.colors.surface}`,
           },
-          isMobile() ? {} : { overflow: 'auto' },
+          isMobile() ? {} : { overflow: "auto" },
         ]}
       >
         {innerContent}

@@ -11,7 +11,7 @@ const WorkoutsScreen = ({ navigation, theme }) => {
   const [notifyTitle, setNotifyTitle] = React.useState('');
 
   return (
-    <SafeArea>
+    <SafeArea theme={theme}>
       <Workouts
         navigation={navigation}
         setMessage={setNotifyMessage}

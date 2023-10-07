@@ -1,12 +1,12 @@
-import React from 'react';
-import { withTheme, List, IconButton } from 'react-native-paper';
-import { View, Animated, Easing } from 'react-native';
-import { StateContext } from '../../../../controllers/state';
-import CardWithButton from '../../../../template/CardWithButton';
-import ScrollList from '../../../../template/ScrollList';
-import WorkoutItem from './WorkoutItem';
-import WorkoutAPI from '../../../../controllers/WorkoutApi';
-import { useIsMounted } from '../../../../utils/useIsMounted';
+import React from "react";
+import { withTheme, List, IconButton } from "react-native-paper";
+import { View, Animated, Easing } from "react-native";
+import { StateContext } from "../../../../controllers/state";
+import CardWithButton from "../../../../template/CardWithButton";
+import ScrollList from "../../../../template/ScrollList";
+import WorkoutItem from "./WorkoutItem";
+import WorkoutAPI from "../../../../controllers/WorkoutApi";
+import { useIsMounted } from "../../../../utils/useIsMounted";
 
 const Workouts = ({
   theme,
@@ -36,7 +36,7 @@ const Workouts = ({
 
   const [isDelete, setIsDelete] = React.useState(false);
   const [isEdit, setIsEdit] = React.useState(false);
-  const [modalOnOkSelectedId, setModalOnOkSelected] = React.useState('');
+  const [modalOnOkSelectedId, setModalOnOkSelected] = React.useState("");
   const springAnim = React.useRef(new Animated.Value(1)).current;
   const springOut = (callback) => {
     Animated.timing(springAnim, {
@@ -96,7 +96,7 @@ const Workouts = ({
     async (id) => {
       await setWorkoutToEdit(id);
       setUpdatedWorkout({});
-      navigation.navigate('Create', { screen: 'NewWorkout' });
+      navigation.navigate("Create", { screen: "NewWorkout" });
       setModalOnOkSelected(null);
     },
     [user, workouts]
@@ -106,7 +106,7 @@ const Workouts = ({
     async (id) => {
       setUpdatedWorkout(id);
       await setWorkoutToEdit();
-      navigation.navigate('Exercises');
+      navigation.navigate("Exercises");
     },
     [workouts, isDisable]
   );
@@ -133,7 +133,7 @@ const Workouts = ({
     setIsDelete(false);
     setSelected(id);
     setIsDisable(true);
-    setNotifyTitle('You wanna change this?');
+    setNotifyTitle("You wanna change this?");
     setMessage(`You're about to edit ${workout.title}, ok?`);
     setIsOk(false);
     setIsEdit(true);
@@ -146,8 +146,12 @@ const Workouts = ({
     setIsEdit(false);
     setIsDisable(true);
     setSelected(id);
-    setNotifyTitle('Woah, you sure...');
-    setMessage(`Do you really want to delete ${workouts.filter((d) => d.id === id)[0].id}?`);
+    setNotifyTitle("Woah, you sure...");
+    setMessage(
+      `Do you really want to delete ${
+        workouts.filter((d) => d.id === id)[0].id
+      }?`
+    );
     setIsOk(false);
     setIsDelete(true);
     setModalOnOkSelected(id);
@@ -156,7 +160,7 @@ const Workouts = ({
 
   const handleNew = () => {
     setIsFromEditButton(false);
-    navigation.navigate('Create');
+    navigation.navigate("Create");
   };
 
   React.useLayoutEffect(() => {
@@ -179,7 +183,11 @@ const Workouts = ({
 
   const Item = ({ item }) => (
     <Animated.View
-      style={item && item.id === selected ? { transform: [{ translateX: panX }] } : null}
+      style={
+        item && item.id === selected
+          ? { transform: [{ translateX: panX }] }
+          : null
+      }
     >
       <WorkoutItem
         onPress={() => onPress(item.id)}
@@ -232,40 +240,54 @@ const Workouts = ({
       style={{
         marginTop: 16,
         marginBottom: 16,
-        marginRight: 'auto',
-        marginLeft: 'auto',
+        marginRight: "auto",
+        marginLeft: "auto",
         borderColor: theme.colors.primary,
         borderRadius: theme.roundness,
         borderWidth: 1,
-        width: '90%',
+        width: "90%",
       }}
     />
   );
 
   return (
-    <CardWithButton
-      buttonText="Select"
-      showButton={!isEditName && showEditAndSelect && workouts && workouts.length > 0}
-      theme={theme}
-      buttonDisabled={isDisable}
-      onPress={() => handleOnSubmit(selected)}
-      isLoading={isLoading}
-      flex={1}
+    <View
       style={{
-        flex: workouts && workouts.length > 0 ? 2 : null,
-        marginBottom: 50,
+        flexGrow: 1,
+        flexShrink: 1,
+        flexBasis: 0,
+        maxHeight: "100%",
       }}
     >
-      <ScrollList
-        data={workouts}
-        renderItem={Item}
-        keyExtractor={(item) => item && item.id}
-        extraData={selected}
+      <CardWithButton
+        buttonText="Select"
+        showButton={
+          !isEditName && showEditAndSelect && workouts && workouts.length > 0
+        }
         theme={theme}
-        ItemSeparatorComponent={ItemSeparator}
-        ListEmptyComponent={EmptyComponent}
-      />
-    </CardWithButton>
+        buttonDisabled={isDisable}
+        onPress={() => handleOnSubmit(selected)}
+        isLoading={isLoading}
+        flex={1}
+        style={{
+          flexShrink: 1,
+          flexBasis: "auto",
+          flexGrow: 0,
+          marginBottom: 20,
+          maxHeight: "100%",
+        }}
+      >
+        <ScrollList
+          data={workouts}
+          renderItem={Item}
+          keyExtractor={(item) => item && item.id}
+          extraData={selected}
+          theme={theme}
+          ItemSeparatorComponent={ItemSeparator}
+          ListEmptyComponent={EmptyComponent}
+        />
+      </CardWithButton>
+    </View>
   );
 };
 

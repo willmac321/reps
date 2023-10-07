@@ -26,7 +26,7 @@ const ExercisesList = ({
   };
 
   return (
-    <View flex={0} flexGrow={1}>
+    <View style={{ flexGrow: 1, flexShrink:1, flexBasis: 0, maxHeight: '100%', height: '100%'}}>
       <ExercisesCommon
         setIsLoading={setIsLoading}
         navigation={navigation}

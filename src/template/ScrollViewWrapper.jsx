@@ -1,14 +1,16 @@
 import React from 'react';
 import { ScrollView } from 'react-native';
 import { withTheme } from 'react-native-paper';
-import { isMobile } from '../utils/checkPlatform';
+import {isMobile} from '../utils/checkPlatform';
 
-const ScrollViewWrapper = ({ isForceScroll = false, children, theme }) =>
-  !isForceScroll ? (
+const ScrollViewWrapper = ({ children, theme }) =>
+  isMobile() ? (
     <>{children}</>
   ) : (
     <ScrollView
       style={{
+        height: '100%',
+        flex: '1 1 0',
         scrollbarColor: `${theme.colors.primary} ${theme.colors.surface}`,
       }}
       theme={theme}

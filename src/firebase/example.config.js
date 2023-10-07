@@ -1,35 +1,23 @@
-import firebase from 'firebase/app';
-import 'firebase/auth';
-import 'firebase/firestore';
-
-const fieldValue = firebase.firestore.FieldValue;
-const fieldPath = firebase.firestore.FieldPath;
+import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
+import { getAuth, initializeAuth } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: '',
-  authDomain: '',
-  databaseURL: '',
-  projectId: '',
-  storageBucket: '',
-  messagingSenderId: '',
-  appId: '',
-  measurementId: '',
 };
 
-firebase.initializeApp(firebaseConfig);
+const firebase = initializeApp(firebaseConfig);
 
-const db = firebase.firestore();
+// if using mobile do this
+import AsyncStorage from "@react-native-async-storage/async-storage";
+const auth = initializeAuth(firebase, {
+  persistence: getReactNativePersistence(AsyncStorage),
+});
 
-// this only needs to be done for web
-firebase
-  .firestore()
-  .enablePersistence()
-  .catch((err) => {
-    if (err.code === 'failed-precondition') {
-      // multiple tabs open, can only do this once per instance
-    } else if (err.code === 'unimplemented') {
-      // feautre not supported for offline storage
-    }
-  });
 
-export { firebase, db, fieldValue, fieldPath };
+const auth = getAuth(firebase);
+
+const db = getFirestore(firebase);
+
+const fieldValue = db.FieldValue;
+
+export { firebase, db, auth, fieldValue };

@@ -35,7 +35,6 @@ const ExercisesScreen = ({ navigation, theme }) => {
           theme={theme}
         />
       )}
-      <ScrollViewWrapper theme={theme}>
         <Exercises
           navigation={navigation}
           setIsLoading={setIsLoading}
@@ -45,7 +44,6 @@ const ExercisesScreen = ({ navigation, theme }) => {
           OnPressExerciseComponent={ExerciseOnPressLog}
           isDraggable={false}
         />
-      </ScrollViewWrapper>
     </SafeArea>
   );
 };
