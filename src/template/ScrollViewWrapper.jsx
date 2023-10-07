@@ -4,7 +4,7 @@ import { withTheme } from 'react-native-paper';
 import { isMobile } from '../utils/checkPlatform';
 
 const ScrollViewWrapper = ({ isForceScroll = false, children, theme }) =>
-  isMobile() && !isForceScroll ? (
+  !isForceScroll ? (
     <>{children}</>
   ) : (
     <ScrollView

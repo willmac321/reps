@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useCallback} from "react";
 import { View, StyleSheet } from "react-native";
 import {
   Button,
@@ -58,7 +58,7 @@ const Login = ({
     }
   }, [password, email]);
 
-  const callbackHandlePress = (err, { user }) => {
+  const callbackHandlePress = useCallback((err, { user }) => {
     if (isMounted.current) {
       setIsLoading(false);
       if (err) {
@@ -90,7 +90,7 @@ const Login = ({
         navigation.navigate('AuthNav');
       }
     }
-  };
+  }, [isMounted]);
 
   const handleOnPress = async () => {
     setIsLoading(true);

@@ -10,6 +10,7 @@ import DraggableScrollList from '../template/DraggableScrollList';
 import { useIsMounted } from '../utils/useIsMounted';
 import ExerciseItem from './ExerciseItem';
 import ExerciseItemDraggable from './ExerciseItemDraggable';
+import {isMobile} from '../utils/checkPlatform';
 
 const Exercises = ({
   exercises,
@@ -189,6 +190,7 @@ const Exercises = ({
         flexGrow: localExercises.length > 0 ? 1 : null,
         marginBottom: 50,
         scrollbarColor: `${theme.colors.primary} ${theme.colors.surface}`,
+        overflowY: 'hidden'
       }}
     >
       {isDraggable ? (

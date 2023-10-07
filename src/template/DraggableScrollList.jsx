@@ -20,7 +20,6 @@ const DraggableScrollList = ({
     return <ListEmptyComponent />;
   }
 
-
   if (!isMobile()) {
     return (
       <DraggableFlatList

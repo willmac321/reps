@@ -5,7 +5,7 @@ import WorkoutAPI from "./WorkoutApi";
 import ExerciseApi from "./ExerciseApi";
 import themeDark from "../theme/themeDark";
 import themeLight from "../theme/themeLight";
-import {auth} from '../firebase/config';
+import { auth } from "../firebase/config";
 import {
   getLocalData,
   storeLocalData,
