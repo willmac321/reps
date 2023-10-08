@@ -8,7 +8,6 @@ import WorkoutItem from "./WorkoutItem";
 import WorkoutAPI from "../../../../controllers/WorkoutApi";
 import { useIsMounted } from "../../../../utils/useIsMounted";
 import { useFocusEffect } from "@react-navigation/native";
-import SplashScreen from "../../../Splash/SplashScreen";
 
 const Workouts = ({
   theme,
@@ -29,8 +28,6 @@ const Workouts = ({
     editWorkout: { setEditWorkout },
     workouts: { workouts, setWorkouts },
     isLoading,
-    isFetchingExercises,
-    isFetchingWorkouts,
   } = React.useContext(StateContext);
 
   const [isDisable, setIsDisable] = React.useState(true);
@@ -60,7 +57,8 @@ const Workouts = ({
   const setUpdatedWorkout = (id) => {
     if (id) {
       setSelectedWorkout(workouts.find((a) => a.id === id.toString()));
-    } else {
+    }
+    else {
       setSelectedWorkout();
     }
   };
@@ -260,7 +258,6 @@ const Workouts = ({
     />
   );
 
-
   return (
     <View
       style={{
@@ -286,15 +283,17 @@ const Workouts = ({
           maxHeight: "100%",
         }}
       >
-        <ScrollList
-          data={workouts}
-          renderItem={Item}
-          keyExtractor={(item) => item && item.id}
-          extraData={selected}
-          theme={theme}
-          ItemSeparatorComponent={ItemSeparator}
-          ListEmptyComponent={EmptyComponent}
-        />
+        {!isLoading && (
+          <ScrollList
+            data={workouts}
+            renderItem={Item}
+            keyExtractor={(item) => item && item.id}
+            extraData={selected}
+            theme={theme}
+            ItemSeparatorComponent={ItemSeparator}
+            ListEmptyComponent={EmptyComponent}
+          />
+        )}
       </CardWithButton>
     </View>
   );

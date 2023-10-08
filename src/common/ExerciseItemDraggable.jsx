@@ -313,15 +313,22 @@ const ExerciseItem = ({
                   </View>
                   {showTrash && (
                     <View
-                      style={{
-                        height: "100%",
-                        margin: "auto",
-                      }}
+                      style={{ flexGrow: 1, flexShrink: 1, flexBasis: "auto" }}
                     >
                       <TouchableOpacity
                         style={[
                           styles.rowButtonContainer,
-                          { flexGrow: 4, flexBasis: 0, flexShrink: 0 },
+                          {
+                            height: "100%",
+                            margin: "auto",
+                            alignContent: "center",
+                            verticalAlign: "middle",
+                            alignItems: 'center',
+                            justifyContent: "center",
+                            flexGrow: 4,
+                            flexBasis: 0,
+                            flexShrink: 0,
+                          },
                         ]}
                         theme={theme}
                         onPress={(e) => {

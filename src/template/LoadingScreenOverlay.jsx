@@ -1,5 +1,6 @@
+import {useFocusEffect} from "@react-navigation/native";
 import debounce from "lodash/debounce";
-import React, { useCallback, useEffect, useLayoutEffect } from "react";
+import React, { useCallback } from "react";
 import { View } from "react-native";
 import { withTheme, Portal } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -8,15 +9,16 @@ import { isMobile } from "../utils/checkPlatform";
 
 const LoadingOverlay = ({ isVisible, theme }) => {
   const [isLoading, setIsLoading] = React.useState(true);
+
   const debounceLoad = useCallback(
-    debounce((isVis) => setIsLoading(isVis), 500, {
+    debounce((isVis) => setIsLoading(isVis), 200, {
       leading: true,
       trailing: true,
     }),
     []
   );
 
-  useLayoutEffect(React.useCallback(() => {
+  useFocusEffect(useCallback(() => {
     debounceLoad(isVisible);
   }, [isVisible]));
 
