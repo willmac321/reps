@@ -1,9 +1,10 @@
-import React from 'react';
-import { withTheme } from 'react-native-paper';
-import { Animated, Easing } from 'react-native';
-import { StateContext } from '../../../../controllers/state';
-import ExercisesCommon from '../../../../common/ExercisesCommon';
-import { useIsMounted } from '../../../../utils/useIsMounted';
+import React from "react";
+import { withTheme } from "react-native-paper";
+import { Animated, Easing } from "react-native";
+import { StateContext } from "../../../../controllers/state";
+import ExercisesCommon from "../../../../common/ExercisesCommon";
+import { useIsMounted } from "../../../../utils/useIsMounted";
+import { useFocusEffect } from "@react-navigation/native";
 
 const NewExercisesList = ({
   isLoading,
@@ -29,7 +30,7 @@ const NewExercisesList = ({
 
   const [selected, setSelected] = React.useState(null);
   const [isDelete, setIsDelete] = React.useState(false);
-  const [modalOnOkSelectedId, setModalOnOkSelected] = React.useState('');
+  const [modalOnOkSelectedId, setModalOnOkSelected] = React.useState("");
   const springAnim = React.useRef(new Animated.Value(1)).current;
   const springOut = (callback) => {
     Animated.timing(springAnim, {
@@ -59,9 +60,11 @@ const NewExercisesList = ({
   });
 
   const handleTrash = (exerciseId) => {
-    setNotifyTitle('Woah, you sure...');
+    setNotifyTitle("Woah, you sure...");
     setNotifyMessage(
-      `Do you really want to delete ${exercises.filter((d) => d.id === exerciseId)[0].name}?`
+      `Do you really want to delete ${
+        exercises.filter((d) => d.id === exerciseId)[0].name
+      }?`
     );
     setIsOk(false);
     setIsDelete(true);
@@ -70,32 +73,37 @@ const NewExercisesList = ({
     setMarkSelected(exerciseId);
   };
 
-  React.useEffect(() => {
-    if (markSelected !== selected && typeof setMarkSelected === 'function')
-      setSelected(markSelected);
-  }, [markSelected, setMarkSelected, selected, setSelected]);
+  useFocusEffect(
+    React.useCallback(() => {
+      if (markSelected !== selected && typeof setMarkSelected === "function")
+        setSelected(markSelected);
+    }, [markSelected, setMarkSelected, selected, setSelected])
+  );
 
-  React.useEffect(() => {
-    if (!modalOnOkSelectedId) {
-      setIsDelete(false);
-      setMarkSelected(null);
-    }
-  }, [modalOnOkSelectedId]);
-
-  React.useLayoutEffect(() => {
-    if (isMounted.current) {
-      if (isOk && isDelete && modalOnOkSelectedId) {
-        springAnim.setValue(1);
-        animateDeleteExercise(modalOnOkSelectedId);
+  useFocusEffect(
+    React.useCallback(() => {
+      if (!modalOnOkSelectedId) {
+        setIsDelete(false);
+        setMarkSelected(null);
       }
-    }
-  }, [isOk]);
+    }, [modalOnOkSelectedId])
+  );
+
+  useFocusEffect(
+    React.useCallback(() => {
+      if (isMounted.current) {
+        if (isOk && isDelete && modalOnOkSelectedId) {
+          springAnim.setValue(1);
+          animateDeleteExercise(modalOnOkSelectedId);
+        }
+      }
+    }, [isOk])
+  );
 
   return (
     <ExercisesCommon
       isLoading={isLoading}
       navigation={navigation}
-      exercises={exercises}
       selected={selected}
       setSelected={setMarkSelected}
       theme={theme}

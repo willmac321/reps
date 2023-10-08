@@ -1,19 +1,18 @@
-import React, { useContext } from 'react';
-import { withTheme, List, Portal } from 'react-native-paper';
-import { ScaleDecorator } from 'react-native-draggable-flatlist';
-import { Text, View, Animated } from 'react-native';
-import { FontAwesome5 } from '@expo/vector-icons';
-import State from '../controllers/state';
-import CardWithButton from '../template/CardWithButton';
-import ScrollList from '../template/ScrollList';
-import DraggableScrollList from '../template/DraggableScrollList';
-import { useIsMounted } from '../utils/useIsMounted';
-import ExerciseItem from './ExerciseItem';
-import ExerciseItemDraggable from './ExerciseItemDraggable';
-import {isMobile} from '../utils/checkPlatform';
+import React, { useContext } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import { withTheme, List, Portal } from "react-native-paper";
+import { ScaleDecorator } from "react-native-draggable-flatlist";
+import { Text, View, Animated } from "react-native";
+import { FontAwesome5 } from "@expo/vector-icons";
+import State from "../controllers/state";
+import CardWithButton from "../template/CardWithButton";
+import ScrollList from "../template/ScrollList";
+import DraggableScrollList from "../template/DraggableScrollList";
+import { useIsMounted } from "../utils/useIsMounted";
+import ExerciseItem from "./ExerciseItem";
+import ExerciseItemDraggable from "./ExerciseItemDraggable";
 
 const Exercises = ({
-  exercises,
   selected,
   setSelected,
   theme,
@@ -29,26 +28,26 @@ const Exercises = ({
   setIsReload = () => {},
 }) => {
   const {
-    exercises: { updateExerciseOrder },
+    isFetchingExercises,
+    exercises: { exercises, updateExerciseOrder },
   } = useContext(State);
   const [localExercises, setLocalExercises] = React.useState([]);
   const isMounted = useIsMounted();
   const [scrollToIndex, setScrollToIndex] = React.useState(null);
 
-  React.useEffect(() => {
-    if (isMounted.current) {
-      console.log(exercises);
+  useFocusEffect(React.useCallback(() => {
+    if (isMounted.current && !isFetchingExercises) {
       setLocalExercises(
         exercises.map((v) => {
           const rv = { ...v };
-          if (v.sets !== '' && v.sets !== null) {
+          if (v.sets !== "" && v.sets !== null) {
             rv.sets = parseInt(v.sets, 10);
           }
           return rv;
         })
       );
     }
-  }, [exercises, isMounted]);
+  }, [exercises, isMounted, isFetchingExercises]));
 
   const handleSetSelected = React.useCallback(
     (id) => {
@@ -93,7 +92,11 @@ const Exercises = ({
 
   const Item = ({ item, isActive }) => (
     <Animated.View
-      style={item && panX && item.id === selected ? { transform: [{ translateX: panX }] } : null}
+      style={
+        item && panX && item.id === selected
+          ? { transform: [{ translateX: panX }] }
+          : null
+      }
     >
       <ExerciseItem
         onPress={() => handleSetSelected(item.id)}
@@ -147,7 +150,7 @@ const Exercises = ({
           color: theme.colors.primary,
         },
       ]}
-      onPress={typeof handleNew === 'function' ? handleNew : () => {}}
+      onPress={typeof handleNew === "function" ? handleNew : () => {}}
       right={() => (
         <>
           {handleNew && (
@@ -172,12 +175,12 @@ const Exercises = ({
       style={{
         marginTop: 16,
         marginBottom: 16,
-        marginRight: 'auto',
-        marginLeft: 'auto',
+        marginRight: "auto",
+        marginLeft: "auto",
         borderColor: theme.colors.primary,
         borderRadius: theme.roundness,
         borderWidth: 1,
-        width: '90%',
+        width: "90%",
       }}
     />
   );
@@ -188,7 +191,7 @@ const Exercises = ({
       showButton={false}
       style={{
         flexShrink: 1,
-        flexBasis: 'auto',
+        flexBasis: "auto",
         flexGrow: 0,
         marginBottom: 20,
         scrollbarColor: `${theme.colors.primary} ${theme.colors.surface}`,

@@ -1,17 +1,17 @@
-import React from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
-import { IconButton, Text, withTheme, TextInput, HelperText } from 'react-native-paper';
-import API from '../../../../controllers/WorkoutApi';
-import CardWithButton from '../../../../template/CardWithButton';
-import { StateContext } from '../../../../controllers/state';
-import { useIsMounted } from '../../../../utils/useIsMounted';
+import React from "react";
+import { StyleSheet, ScrollView } from "react-native";
+import { Text, withTheme, TextInput, HelperText } from "react-native-paper";
+import API from "../../../../controllers/WorkoutApi";
+import CardWithButton from "../../../../template/CardWithButton";
+import { StateContext } from "../../../../controllers/state";
+import { useIsMounted } from "../../../../utils/useIsMounted";
 
 const NewWorkout = ({ navigation, user, theme, data }) => {
   const isMounted = useIsMounted();
   const [isDisable, setIsDisable] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
   const [isError, setIsError] = React.useState(false);
-  const [workoutName, setWorkoutName] = React.useState('');
+  const [workoutName, setWorkoutName] = React.useState("");
 
   const styles = StyleSheet.create({
     input: theme.input,
@@ -20,6 +20,7 @@ const NewWorkout = ({ navigation, user, theme, data }) => {
   const {
     workouts: { workouts },
     editWorkout: { editWorkout },
+    setIsFromEditButton,
     selectedWorkout: { setSelectedWorkout },
   } = React.useContext(StateContext);
 
@@ -29,7 +30,11 @@ const NewWorkout = ({ navigation, user, theme, data }) => {
     data.map((a) => a.title).includes(workoutName);
 
   React.useEffect(() => {
-    if (isMounted.current && editWorkout && Object.keys(editWorkout).length > 0) {
+    if (
+      isMounted.current &&
+      editWorkout &&
+      Object.keys(editWorkout).length > 0
+    ) {
       setWorkoutName(editWorkout.title);
     }
   }, [editWorkout, isMounted]);
@@ -75,9 +80,10 @@ const NewWorkout = ({ navigation, user, theme, data }) => {
       })
       .finally(() => {
         setSelectedWorkout(workout, newWorkouts);
-        setWorkoutName('');
+        setWorkoutName("");
         setIsLoading(false);
-        navigation.navigate('NewExercises');
+        setIsFromEditButton(false);
+        navigation.navigate("NewExercises");
       });
   }, [workoutName, workouts, editWorkout, user]);
 
@@ -88,7 +94,7 @@ const NewWorkout = ({ navigation, user, theme, data }) => {
           <Text theme={theme} style={theme.title}>
             {editWorkout && editWorkout.title
               ? `Editing workout name for "${editWorkout.title}"`
-              : 'Name your workout'}
+              : "Name your workout"}
           </Text>
         }
         buttonText="Ok"
@@ -116,15 +122,18 @@ const NewWorkout = ({ navigation, user, theme, data }) => {
               workoutName && (
                 <TextInput.Icon
                   fontSize={16}
-                  style={{ marginVertical: 'auto' }}
+                  style={{ marginVertical: "auto" }}
                   name="backspace"
-                  onPress={() => setWorkoutName('')}
+                  onPress={() => setWorkoutName("")}
                 />
               )
             }
           />
           {!!isNameTaken() && (
-            <HelperText type="error" visible={isError || (editWorkout && isNameTaken())}>
+            <HelperText
+              type="error"
+              visible={isError || (editWorkout && isNameTaken())}
+            >
               Try a different name!
             </HelperText>
           )}

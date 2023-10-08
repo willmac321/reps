@@ -1,22 +1,23 @@
-import React from 'react';
-import { LayoutAnimation, Keyboard, KeyboardAvoidingView } from 'react-native';
-import { withTheme } from 'react-native-paper';
-import SafeArea from '../../../template/SafeAreaWrapper';
-import { StateContext } from '../../../controllers/state';
-import WarnModal from '../../../template/WarnModal';
-import Workouts from '../Workouts/parts/Workouts';
-import NewWorkout from './parts/NewWorkout';
-import { useIsMounted } from '../../../utils/useIsMounted';
+import React from "react";
+import { LayoutAnimation, Keyboard, KeyboardAvoidingView } from "react-native";
+import { withTheme } from "react-native-paper";
+import SafeArea from "../../../template/SafeAreaWrapper";
+import { StateContext } from "../../../controllers/state";
+import WarnModal from "../../../template/WarnModal";
+import Workouts from "../Workouts/parts/Workouts";
+import NewWorkout from "./parts/NewWorkout";
+import { useIsMounted } from "../../../utils/useIsMounted";
+import { useFocusEffect } from "@react-navigation/native";
 
 const NewWorkoutsScreen = ({ navigation, theme }) => {
   const [showNotify, setShowNotify] = React.useState(false);
   const [isOk, setIsOk] = React.useState(false);
-  const [notifyMessage, setNotifyMessage] = React.useState('');
-  const [notifyTitle, setNotifyTitle] = React.useState('');
+  const [notifyMessage, setNotifyMessage] = React.useState("");
+  const [notifyTitle, setNotifyTitle] = React.useState("");
   const [keyboardActive, setKeyboardActive] = React.useState(false);
   const isMounted = useIsMounted();
   const {
-    workouts: { workouts },
+    workouts: { workouts, getWorkouts },
     user,
     editWorkout: { editWorkout },
     isFromEditButton,
@@ -35,22 +36,32 @@ const NewWorkoutsScreen = ({ navigation, theme }) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
   };
 
-  React.useLayoutEffect(() => {
-    if (isMounted.current && editWorkout) {
-      setIsEditWorkout(Object.keys(editWorkout).length > 0);
-    }
-  }, [isMounted.current, editWorkout]);
+  useFocusEffect(
+    React.useCallback(() => {
+      if (isMounted.current && editWorkout) {
+        setIsEditWorkout(Object.keys(editWorkout).length > 0);
+      }
+    }, [isMounted.current])
+  );
 
-  React.useEffect(() => {
-    const keyboardShow = Keyboard.addListener('keyboardDidShow', keyboardEventShow);
-    const keyboardHide = Keyboard.addListener('keyboardDidHide', keyboardEventHide);
+  useFocusEffect(
+    React.useCallback(() => {
+      const keyboardShow = Keyboard.addListener(
+        "keyboardDidShow",
+        keyboardEventShow
+      );
+      const keyboardHide = Keyboard.addListener(
+        "keyboardDidHide",
+        keyboardEventHide
+      );
 
-    // cleanup function
-    return () => {
-      keyboardShow.remove();
-      keyboardHide.remove();
-    };
-  }, []);
+      // cleanup function
+      return () => {
+        keyboardShow.remove();
+        keyboardHide.remove();
+      };
+    }, [])
+  );
 
   return (
     <SafeArea>
@@ -76,10 +87,10 @@ const NewWorkoutsScreen = ({ navigation, theme }) => {
               setIsFromEditButton(false);
               setShowNotify(v);
             }}
-            showEditAndSelect
             isOk={isOk}
             setIsOk={setIsOk}
-            isEditName={isEditWorkout}
+            isEditScreen
+            showEdit={false}
           />
         )}
         <WarnModal

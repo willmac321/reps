@@ -19,10 +19,10 @@ if (isAndroid() && UIManager.setLayoutAnimationEnabledExperimental) {
 const NewExerciseScreen = ({ navigation, theme }) => {
   const {
     isLoading,
-    setIsLoading,
     user = null,
     selectedWorkout: { selectedWorkout },
-    exercises: { exercises, addExercise, getExercises },
+    exercises: { exercises, addExercise, getExercises, isFetchingExercises },
+    setIsFromEditButton,
   } = React.useContext(StateContext);
   const scroll = React.useRef(null);
   const keyboardShow = React.useRef(null);
@@ -40,14 +40,15 @@ const NewExerciseScreen = ({ navigation, theme }) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      const func = async () => {
-        if (selectedWorkout) {
-          setIsLoading(true);
-          await getExercises(isReloadWorkout, selectedWorkout);
-          setIsLoading(false);
-        }
-      };
-      func();
+      setIsFromEditButton(false);
+    }, [])
+  );
+
+  useFocusEffect(
+    React.useCallback(() => {
+      if (selectedWorkout) {
+        getExercises(isReloadWorkout, selectedWorkout);
+      }
     }, [selectedWorkout])
   );
 
@@ -71,22 +72,24 @@ const NewExerciseScreen = ({ navigation, theme }) => {
 
   const [markSelected, setMarkSelected] = React.useState(null);
 
-  React.useEffect(() => {
-    keyboardShow.current = Keyboard.addListener(
-      "keyboardDidShow",
-      keyboardEventShow
-    );
-    keyboardHide.current = Keyboard.addListener(
-      "keyboardDidHide",
-      keyboardEventHide
-    );
+  useFocusEffect(
+    React.useCallback(() => {
+      keyboardShow.current = Keyboard.addListener(
+        "keyboardDidShow",
+        keyboardEventShow
+      );
+      keyboardHide.current = Keyboard.addListener(
+        "keyboardDidHide",
+        keyboardEventHide
+      );
 
-    // cleanup function
-    return () => {
-      keyboardShow.current.remove();
-      keyboardHide.current.remove();
-    };
-  }, []);
+      // cleanup function
+      return () => {
+        keyboardShow.current.remove();
+        keyboardHide.current.remove();
+      };
+    }, [])
+  );
 
   const innerContent = (
     <>
@@ -101,7 +104,7 @@ const NewExerciseScreen = ({ navigation, theme }) => {
         exercises={exercises}
         addExerciseToList={async (val, id = null, workoutId = null) => {
           if (val) {
-            const newE = await addExercise(val, id, workoutId, true);
+            const newE = await addExercise(val, id, workoutId, false);
             setMarkSelected(val.id || null);
             return newE;
           }
@@ -119,22 +122,24 @@ const NewExerciseScreen = ({ navigation, theme }) => {
       {!keyboardActive && (
         <>
           <NewExerciseNext theme={theme} navigation={navigation} />
-          <NewExercises
-            isLoading={isLoading}
-            navigation={navigation}
-            theme={theme}
-            setShowNotify={setShowNotify}
-            showEditAndSelect={false}
-            markSelected={markSelected}
-            setMarkSelected={setMarkSelected}
-            setSelectedExercise={setSelectedExercise}
-            setIsOk={setIsOk}
-            isOk={isOk}
-            setNotifyTitle={setNotifyTitle}
-            setNotifyMessage={setNotifyMessage}
-            showScrollView={false}
-            setIsReload={setIsReloadWorkout}
-          />
+          {!isFetchingExercises && (
+            <NewExercises
+              isLoading={isLoading}
+              navigation={navigation}
+              theme={theme}
+              setShowNotify={setShowNotify}
+              showEditAndSelect={false}
+              markSelected={markSelected}
+              setMarkSelected={setMarkSelected}
+              setSelectedExercise={setSelectedExercise}
+              setIsOk={setIsOk}
+              isOk={isOk}
+              setNotifyTitle={setNotifyTitle}
+              setNotifyMessage={setNotifyMessage}
+              showScrollView={false}
+              setIsReload={setIsReloadWorkout}
+            />
+          )}
         </>
       )}
       <WarnModal

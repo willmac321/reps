@@ -1,6 +1,7 @@
-import React from 'react';
-import { withTheme } from 'react-native-paper';
-import { FlatList, View } from 'react-native';
+import React from "react";
+import { withTheme } from "react-native-paper";
+import { FlatList, View } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
 
 const ScrollList = ({
   data,
@@ -16,13 +17,15 @@ const ScrollList = ({
 }) => {
   const ref = React.useRef();
 
-  React.useEffect(() => {
-    if (scrollToIndex) {
-      if (showScrollView) {
-        ref.current.scrollToIndex({ index: scrollToIndex, animated: true });
+  useFocusEffect(
+    React.useCallback(() => {
+      if (scrollToIndex) {
+        if (showScrollView) {
+          ref.current.scrollToIndex({ index: scrollToIndex, animated: true });
+        }
       }
-    }
-  }, [scrollToIndex]);
+    }, [scrollToIndex])
+  );
 
   return (
     <>

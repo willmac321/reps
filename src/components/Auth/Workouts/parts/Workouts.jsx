@@ -7,6 +7,8 @@ import ScrollList from "../../../../template/ScrollList";
 import WorkoutItem from "./WorkoutItem";
 import WorkoutAPI from "../../../../controllers/WorkoutApi";
 import { useIsMounted } from "../../../../utils/useIsMounted";
+import { useFocusEffect } from "@react-navigation/native";
+import SplashScreen from "../../../Splash/SplashScreen";
 
 const Workouts = ({
   theme,
@@ -16,8 +18,9 @@ const Workouts = ({
   setShowNotify,
   isOk,
   setIsOk,
-  showEditAndSelect = true,
-  isEditName = false,
+  showEdit = true,
+  showTrash = true,
+  isEditScreen = false,
 }) => {
   const {
     user,
@@ -26,6 +29,8 @@ const Workouts = ({
     editWorkout: { setEditWorkout },
     workouts: { workouts, setWorkouts },
     isLoading,
+    isFetchingExercises,
+    isFetchingWorkouts,
   } = React.useContext(StateContext);
 
   const [isDisable, setIsDisable] = React.useState(true);
@@ -92,7 +97,7 @@ const Workouts = ({
     [user, workouts]
   );
 
-  const editWorkout = React.useCallback(
+  const handleEditWorkout = React.useCallback(
     async (id) => {
       await setWorkoutToEdit(id);
       setUpdatedWorkout({});
@@ -121,6 +126,8 @@ const Workouts = ({
         setIsDisable(true);
       } else {
         setSelected(id);
+        const workout = workouts.filter((d) => d.id === id)[0];
+        setEditWorkout(workout);
       }
     },
     [selected]
@@ -128,7 +135,7 @@ const Workouts = ({
 
   const handleEdit = (_, id) => {
     const workout = workouts.filter((d) => d.id === id)[0];
-    setEditWorkout(workout || {});
+    setEditWorkout(workout);
     setIsFromEditButton(true);
     setIsDelete(false);
     setSelected(id);
@@ -163,23 +170,25 @@ const Workouts = ({
     navigation.navigate("Create");
   };
 
-  React.useLayoutEffect(() => {
-    if (isMounted.current) {
-      if (isOk && modalOnOkSelectedId) {
-        if (isDelete) {
-          deleteWorkout(modalOnOkSelectedId);
-          setIsDelete(false);
-        } else if (isEdit) {
-          editWorkout(modalOnOkSelectedId);
-          setIsEdit(false);
+  useFocusEffect(
+    React.useCallback(() => {
+      if (isMounted.current) {
+        if (isOk && modalOnOkSelectedId) {
+          if (isDelete) {
+            deleteWorkout(modalOnOkSelectedId);
+            setIsDelete(false);
+          } else if (isEdit) {
+            handleEditWorkout(modalOnOkSelectedId);
+            setIsEdit(false);
+          }
+          setIsOk(false);
         }
-        setIsOk(false);
+        if (!isOk && modalOnOkSelectedId) {
+          setIsDisable(false);
+        }
       }
-      if (!isOk && modalOnOkSelectedId) {
-        setIsDisable(false);
-      }
-    }
-  }, [isOk, modalOnOkSelectedId]);
+    }, [isOk, modalOnOkSelectedId])
+  );
 
   const Item = ({ item }) => (
     <Animated.View
@@ -195,7 +204,8 @@ const Workouts = ({
         text={item}
         handleTrash={handleTrash}
         handleEdit={handleEdit}
-        showEditAndTrash={showEditAndSelect}
+        showEdit={showEdit}
+        showTrash={showTrash}
       />
     </Animated.View>
   );
@@ -250,6 +260,7 @@ const Workouts = ({
     />
   );
 
+
   return (
     <View
       style={{
@@ -260,10 +271,8 @@ const Workouts = ({
       }}
     >
       <CardWithButton
-        buttonText="Select"
-        showButton={
-          !isEditName && showEditAndSelect && workouts && workouts.length > 0
-        }
+        buttonText={"Select"}
+        showButton={!isEditScreen && workouts && workouts.length > 0}
         theme={theme}
         buttonDisabled={isDisable}
         onPress={() => handleOnSubmit(selected)}

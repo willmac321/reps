@@ -48,6 +48,8 @@ async function newExercise(uid, exercise, workoutId) {
 
 async function getExercises(uid, workoutId) {
   if (!workoutId) return [];
+  // FIXME race condition here on android only, calling twice fixes it somehow
+  await getDoc(doc(db, 'users', uid, 'workouts', workoutId));
   const workout = await getDoc(doc(db, 'users', uid, 'workouts', workoutId));
   if (workout.exists) {
     const workoutData = workout.data();

@@ -3,7 +3,6 @@ import { Text, withTheme } from 'react-native-paper';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { View } from 'react-native';
 import NotifyModal from '../../../../template/NotifyModal';
-import { StateContext } from '../../../../controllers/state';
 import ExercisesCommon from '../../../../common/ExercisesCommon';
 
 const ExercisesList = ({
@@ -14,9 +13,6 @@ const ExercisesList = ({
   setSelectedExercise = () => {},
   isDraggable = false,
 }) => {
-  const {
-    exercises: { exercises },
-  } = React.useContext(StateContext);
 
   const [selected, setSelected] = React.useState(null);
   const [showCompletion, setShowCompletion] = React.useState(false);
@@ -30,7 +26,6 @@ const ExercisesList = ({
       <ExercisesCommon
         setIsLoading={setIsLoading}
         navigation={navigation}
-        exercises={exercises}
         selected={selected}
         setSelected={setSelected}
         setShowCompletion={setShowCompletion}

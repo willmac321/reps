@@ -1,6 +1,6 @@
-import React from 'react';
-import { StyleSheet } from 'react-native';
-import { withTheme, List, IconButton } from 'react-native-paper';
+import React from "react";
+import { StyleSheet } from "react-native";
+import { withTheme, List, IconButton } from "react-native-paper";
 
 const WorkoutItem = ({
   theme,
@@ -9,7 +9,8 @@ const WorkoutItem = ({
   onPress,
   handleEdit,
   handleTrash,
-  showEditAndTrash = true,
+  showEdit = true,
+  showTrash = true,
 }) => {
   const styles = StyleSheet.create({
     item: isSelected
@@ -53,24 +54,24 @@ const WorkoutItem = ({
       style={styles.item}
       onPress={onPress}
       titleStyle={styles.text}
-      descriptionStyle={[styles.text, { fontWeight: 'normal' }]}
+      descriptionStyle={[styles.text, { fontWeight: "normal" }]}
       right={() => (
         <>
-          {showEditAndTrash && (
-            <>
-              <IconButton
-                icon="pen"
-                color={isSelected ? theme.buttonText.color : theme.colors.primary}
-                style={styles.icon}
-                onPress={(e) => handleEdit(e, text.id)}
-              />
-              <IconButton
-                color={isSelected ? theme.buttonText.color : theme.colors.primary}
-                icon="trash-alt"
-                style={styles.icon}
-                onPress={(e) => handleTrash(e, text.id)}
-              />
-            </>
+          {showEdit && (
+            <IconButton
+              icon="pen"
+              color={isSelected ? theme.buttonText.color : theme.colors.primary}
+              style={styles.icon}
+              onPress={(e) => handleEdit(e, text.id)}
+            />
+          )}
+          {showTrash && (
+            <IconButton
+              color={isSelected ? theme.buttonText.color : theme.colors.primary}
+              icon="trash-alt"
+              style={styles.icon}
+              onPress={(e) => handleTrash(e, text.id)}
+            />
           )}
         </>
       )}

@@ -1,5 +1,5 @@
 import debounce from "lodash/debounce";
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useLayoutEffect } from "react";
 import { View } from "react-native";
 import { withTheme, Portal } from "react-native-paper";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -16,9 +16,9 @@ const LoadingOverlay = ({ isVisible, theme }) => {
     []
   );
 
-  useEffect(() => {
+  useLayoutEffect(React.useCallback(() => {
     debounceLoad(isVisible);
-  }, [isVisible]);
+  }, [isVisible]));
 
   const insets = useSafeAreaInsets();
 

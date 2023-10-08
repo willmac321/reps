@@ -62,6 +62,8 @@ export const StateContextProvider = ({ children }) => {
   const [workouts, setWorkouts] = React.useState([]);
 
   const [exercises, updateExercises] = React.useState([]);
+  const [isFetchingExercises, setIsFetchingExercises] = React.useState(false);
+  const [isFetchingWorkouts, setIsFetchingWorkouts] = React.useState(false);
 
   const [selectedWorkout, updateSelectedWorkout] = React.useState({
     id: null,
@@ -125,6 +127,7 @@ export const StateContextProvider = ({ children }) => {
     ) {
       if (setLoading) setIsLoading(true);
       try {
+        setIsFetchingExercises(true);
         const exs = await ExerciseApi.getExercises(
           user.uid,
           localSelectedWorkout.id
@@ -135,8 +138,10 @@ export const StateContextProvider = ({ children }) => {
         } else updateExercises([]);
       } catch (e) {
         console.error(e);
+      } finally {
+        setIsFetchingExercises(false);
+        if (setLoading && !isFetchingWorkouts) setIsLoading(false);
       }
-      if (setLoading) setIsLoading(false);
     }
   };
 
@@ -148,6 +153,7 @@ export const StateContextProvider = ({ children }) => {
   ) => {
     if (setLoading) setIsLoading(true);
     let localExercise = {};
+    setIsFetchingExercises(true);
     if (id) {
       await ExerciseApi.updateExercise(user.uid, newExercise);
       localExercise = {
@@ -168,6 +174,7 @@ export const StateContextProvider = ({ children }) => {
     updateSelectedWorkout(localSelectedWorkout);
 
     await getExercises(false, workoutId);
+    setIsFetchingExercises(false);
     if (setLoading) setIsLoading(false);
 
     return localExercise;
@@ -175,6 +182,7 @@ export const StateContextProvider = ({ children }) => {
 
   const getWorkouts = React.useCallback((uid, setLoading = null) => {
     if (setLoading) setIsLoading(true);
+    setIsFetchingWorkouts(true);
     if (uid && isMounted.current) {
       WorkoutAPI.getWorkouts(uid)
         .then((res) => {
@@ -182,9 +190,12 @@ export const StateContextProvider = ({ children }) => {
             const t = res.sort((a, b) => a.id.localeCompare(b.id));
             setWorkouts(t);
           }
-          if (setLoading) setIsLoading(false);
         })
-        .catch(() => setLoading && setIsLoading(false));
+        .catch(() => {})
+        .finally(() => {
+          setIsFetchingWorkouts(false);
+          setLoading && !isFetchingExercises && setIsLoading(false);
+        });
     }
   }, []);
 
@@ -200,9 +211,11 @@ export const StateContextProvider = ({ children }) => {
       ...selectedWorkout,
       exercises: sortedExercises.map((e) => e.id),
     };
+    setIsFetchingExercises(true);
     await ExerciseApi.batchUpdateExercises(user.uid, sortedExercises);
     await WorkoutAPI.updateWorkout(user.uid, sortedWorkout);
     updateSelectedWorkout(sortedWorkout);
+    setIsFetchingExercises(false);
     if (setLoading) setIsLoading(false);
   };
 
@@ -322,6 +335,7 @@ export const StateContextProvider = ({ children }) => {
           deleteExercise,
           addExercise,
           updateExerciseOrder,
+          isFetchingExercises,
         },
         selectedWorkout: { selectedWorkout, setSelectedWorkout },
         editWorkout: { editWorkout, setEditWorkout },

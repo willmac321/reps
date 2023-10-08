@@ -1,17 +1,17 @@
-import React, { useCallback, useContext, useState } from 'react';
-import { withTheme } from 'react-native-paper';
-import { useFocusEffect } from '@react-navigation/native';
-import ScrollViewWrapper from '../../../template/ScrollViewWrapper';
-import { StateContext } from '../../../controllers/state';
-import Exercises from './parts/Exercises';
-import Header from '../../../template/Header';
-import ExerciseOnPressLog from './parts/ExerciseOnPressLog';
-import SafeArea from '../../../template/SafeAreaWrapper';
+import React, { useCallback, useContext, useState } from "react";
+import { withTheme } from "react-native-paper";
+import { useFocusEffect } from "@react-navigation/native";
+import { StateContext } from "../../../controllers/state";
+import Exercises from "./parts/Exercises";
+import Header from "../../../template/Header";
+import ExerciseOnPressLog from "./parts/ExerciseOnPressLog";
+import SafeArea from "../../../template/SafeAreaWrapper";
 
 const ExercisesScreen = ({ navigation, theme }) => {
   const [isOk, setIsOk] = useState(false);
   const {
     exercises: { getExercises },
+    setIsFromEditButton,
     selectedWorkout: { selectedWorkout },
     setIsLoading,
   } = useContext(StateContext);
@@ -19,6 +19,8 @@ const ExercisesScreen = ({ navigation, theme }) => {
   // react navigation version of use effect, called when tab is activated -> ie onMount and when props change
   useFocusEffect(
     useCallback(() => {
+      setIsFromEditButton(false);
+
       const gettem = async () => {
         await getExercises(true);
       };
@@ -35,15 +37,15 @@ const ExercisesScreen = ({ navigation, theme }) => {
           theme={theme}
         />
       )}
-        <Exercises
-          navigation={navigation}
-          setIsLoading={setIsLoading}
-          isOk={isOk}
-          setIsOk={setIsOk}
-          theme={theme}
-          OnPressExerciseComponent={ExerciseOnPressLog}
-          isDraggable={false}
-        />
+      <Exercises
+        navigation={navigation}
+        setIsLoading={setIsLoading}
+        isOk={isOk}
+        setIsOk={setIsOk}
+        theme={theme}
+        OnPressExerciseComponent={ExerciseOnPressLog}
+        isDraggable={false}
+      />
     </SafeArea>
   );
 };
