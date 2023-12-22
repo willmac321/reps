@@ -1,4 +1,4 @@
-import React, {useCallback} from "react";
+import React, { useCallback } from "react";
 import { View, StyleSheet } from "react-native";
 import {
   Button,
@@ -18,7 +18,7 @@ const Login = ({
   setShowNotify,
   setNotifyMessage,
   setNotifyTitle,
-  navigation
+  navigation,
 }) => {
   const isMounted = useIsMounted();
   const [email, setEmail] = React.useState("");
@@ -58,39 +58,44 @@ const Login = ({
     }
   }, [password, email]);
 
-  const callbackHandlePress = useCallback((err, { user }) => {
-    if (isMounted.current) {
-      setIsLoading(false);
-      if (err) {
-        setNotifyTitle("Uhoh!");
-        setNotifyMessage(
-          "Password or email was incorrect, please reset your password or register if you're a new user!"
-        );
-        setShowNotify(true);
-        return;
+  const callbackHandlePress = useCallback(
+    (err, userDetail) => {
+      if (isMounted.current) {
+        setIsLoading(false);
+        if (err || !userDetail) {
+          setNotifyTitle("Uhoh!");
+          setNotifyMessage(
+            "Password or email was incorrect, please reset your password or register if you're a new user!"
+          );
+          setShowNotify(true);
+          return;
+        }
+        const user = userDetail.user;
+        console.log(userDetail);
+        if (user && !user.emailVerified) {
+          setNotifyTitle("But really...");
+          setNotifyMessage(
+            <View>
+              <Text>
+                Please verify your email to continue using REPS.{" "}
+                <Button
+                  style={[styles.linkButton]}
+                  labelStyle={[styles.linkText]}
+                  onPress={() => AuthApi.emailVerify(user)}
+                >
+                  Resend Verification
+                </Button>
+              </Text>
+            </View>
+          );
+          setShowNotify(true);
+        } else if (user && user.emailVerified) {
+          navigation.navigate("AuthNav");
+        }
       }
-      if (user && !user.emailVerified) {
-        setNotifyTitle("But really...");
-        setNotifyMessage(
-          <View>
-            <Text>
-              Please verify your email to continue using REPS.{" "}
-              <Button
-                style={[styles.linkButton]}
-                labelStyle={[styles.linkText]}
-                onPress={() => AuthApi.emailVerify(user)}
-              >
-                Resend Verification
-              </Button>
-            </Text>
-          </View>
-        );
-        setShowNotify(true);
-      } else if (user && user.emailVerified) {
-        navigation.navigate('AuthNav');
-      }
-    }
-  }, [isMounted]);
+    },
+    [isMounted]
+  );
 
   const handleOnPress = async () => {
     setIsLoading(true);
