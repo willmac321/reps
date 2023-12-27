@@ -11,4 +11,4 @@ This is a simple workout routine app that is made to store different workouts an
  * Confetti
 
 
-[![demo video](./repsDemo.mp4)]
+![](./repsDemo.mp4){width=600}
