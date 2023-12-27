@@ -21,8 +21,8 @@ const Login = ({
   navigation,
 }) => {
   const isMounted = useIsMounted();
-  const [email, setEmail] = React.useState("willmac321@gmail.com");
-  const [password, setPassword] = React.useState("asdfasdf");
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
   const [isPasswordVisible, setPasswordVisible] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
   const [isDisable, setIsDisable] = React.useState(false);

@@ -48,7 +48,7 @@ const NewExercise = ({
     rowInput: {
       flex: 0,
       flexGrow: 3,
-      minWidth: 50,
+      minWidth: 60,
     },
     rowTextHeader: {
       alignSelf: 'flex-start',
