@@ -25,7 +25,9 @@ async function login(email, password, callback) {
 async function logout(callback) {
   signOut(auth)
     .then(() => {
-      callback();
+      if (callback) {
+        callback();
+      }
     })
     .catch((error) => {
       callback(error);

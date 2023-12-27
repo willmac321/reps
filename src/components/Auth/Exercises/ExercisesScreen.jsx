@@ -9,6 +9,7 @@ import SafeArea from "../../../template/SafeAreaWrapper";
 
 const ExercisesScreen = ({ navigation, theme }) => {
   const [isOk, setIsOk] = useState(false);
+
   const {
     exercises: { getExercises },
     setIsFromEditButton,

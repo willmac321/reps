@@ -11,6 +11,7 @@ import {
   storeLocalData,
   USER_STORE_KEY,
 } from "../firebase/localStorage";
+import { isEmpty } from "lodash";
 
 export const StateContext = React.createContext();
 
@@ -47,7 +48,7 @@ export const StateContextProvider = ({ children }) => {
 
   const setUserDetails = (details) => {
     storeLocalData(
-      details && details !== {} ? details : defaultUserDetails,
+      !isEmpty(details) ? details : defaultUserDetails,
       userDetails?.uid || USER_STORE_KEY
     );
     updateUserDetails(details);
@@ -121,8 +122,7 @@ export const StateContextProvider = ({ children }) => {
     }
 
     if (
-      localSelectedWorkout &&
-      localSelectedWorkout !== {} &&
+      !isEmpty(localSelectedWorkout) &&
       localSelectedWorkout.exercises !== null
     ) {
       if (setLoading) setIsLoading(true);
@@ -211,7 +211,7 @@ export const StateContextProvider = ({ children }) => {
       ...selectedWorkout,
       exercises: sortedExercises.map((e) => e.id),
     };
-    setIsFetchingExercises(true);
+    if (setLoading) setIsFetchingExercises(true);
     await ExerciseApi.batchUpdateExercises(user.uid, sortedExercises);
     await WorkoutAPI.updateWorkout(user.uid, sortedWorkout);
     updateSelectedWorkout(sortedWorkout);
@@ -242,8 +242,7 @@ export const StateContextProvider = ({ children }) => {
             };
 
             if (
-              localSelectedWorkout &&
-              localSelectedWorkout !== {} &&
+              !isEmpty(localSelectedWorkout) &&
               localSelectedWorkout.exercises !== null
             ) {
               await getStuff();

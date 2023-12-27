@@ -1,14 +1,14 @@
-import React from 'react';
-import { withTheme } from 'react-native-paper';
-import SafeArea from '../../../template/SafeAreaWrapper';
-import WarnModal from '../../../template/WarnModal';
-import Workouts from './parts/Workouts';
+import React, { useState } from "react";
+import { withTheme } from "react-native-paper";
+import SafeArea from "../../../template/SafeAreaWrapper";
+import WarnModal from "../../../template/WarnModal";
+import Workouts from "./parts/Workouts";
 
 const WorkoutsScreen = ({ navigation, theme }) => {
-  const [showNotify, setShowNotify] = React.useState(false);
-  const [isOk, setIsOk] = React.useState(false);
-  const [notifyMessage, setNotifyMessage] = React.useState('');
-  const [notifyTitle, setNotifyTitle] = React.useState('');
+  const [showNotify, setShowNotify] = useState(false);
+  const [isOk, setIsOk] = useState(false);
+  const [notifyMessage, setNotifyMessage] = useState("");
+  const [notifyTitle, setNotifyTitle] = useState("");
 
   return (
     <SafeArea theme={theme}>

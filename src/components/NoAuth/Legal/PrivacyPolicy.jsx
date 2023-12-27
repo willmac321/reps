@@ -1,9 +1,9 @@
-import React from 'react';
-import { View } from 'react-native';
-import Markdown from 'react-native-markdown-display-updated';
+import React from "react";
+import { View } from "react-native";
+import Markdown from "react-native-markdown-display-updated";
 
 const PrivacyPolicy = () => (
-  <View style={{ backgroundColor: 'white', color: 'black' }}>
+  <View style={{ backgroundColor: "white", color: "black" }}>
     <Markdown>
       {`
 **PRIVACY NOTICE**
@@ -326,15 +326,13 @@ We may update this privacy notice from time to time. The updated version will be
 
   
 
-If you have questions or comments about this notice, you may email us at help@loblollysoftware.com or by post to:
+If you have questions or comments about this notice, you may email us at will@loblollysoftware.com or by post to:
 
   
 
 Loblolly Software, LLC
 
-1570 3rd Ave
-
-New York, NY 10128
+New York, NY 10028
 
 United States
   

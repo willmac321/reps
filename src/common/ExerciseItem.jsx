@@ -147,12 +147,6 @@ const ExerciseItem = ({
       }).start(onPress);
     }
   };
-  // TODO for quick nav to workout screen remove
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     if (text && text.id === 'A7u3rt8tneINe1uyhzVQ') onPress();
-  //   }, [text])
-  // );
 
   return (
     <View>

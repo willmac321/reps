@@ -65,8 +65,12 @@ const LegalPrivacyPolicy = ({ navigation, theme, isVisible = true, setIsVisible 
             <Menu.Item onPress={() => showOpenSource()} title={ThirdParty} />
           </View>
         ) : (
-          <View style={{ maxHeight: 500 }}>
-            <ScrollView isForceScroll>
+          <View style={{ 
+            flexGrow: 1,
+            display: 'flex',
+            overflow: 'scroll',
+            }}>
+            <ScrollView style={{flex: '1 0 auto'}}>
               <LegalJargon switchTerm={title} />
             </ScrollView>
           </View>

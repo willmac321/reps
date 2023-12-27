@@ -3,5 +3,5 @@ input {
 }
 
 #root {
-  overflow-y: hidden;
+  overflow: hidden;
 }

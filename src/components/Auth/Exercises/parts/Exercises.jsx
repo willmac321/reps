@@ -1,9 +1,10 @@
-import React from 'react';
-import { Text, withTheme } from 'react-native-paper';
-import { FontAwesome5 } from '@expo/vector-icons';
-import { View } from 'react-native';
-import NotifyModal from '../../../../template/NotifyModal';
-import ExercisesCommon from '../../../../common/ExercisesCommon';
+import React, { useEffect } from "react";
+import { Text, withTheme } from "react-native-paper";
+import { FontAwesome5 } from "@expo/vector-icons";
+import { View } from "react-native";
+import NotifyModal from "../../../../template/NotifyModal";
+import ExercisesCommon from "../../../../common/ExercisesCommon";
+import Celebration from "../../../../common/Celebration";
 
 const ExercisesList = ({
   setIsLoading,
@@ -13,16 +14,37 @@ const ExercisesList = ({
   setSelectedExercise = () => {},
   isDraggable = false,
 }) => {
-
   const [selected, setSelected] = React.useState(null);
   const [showCompletion, setShowCompletion] = React.useState(false);
+  const [isVisible, setIsVisible] = React.useState(false);
 
   const handleNew = () => {
-    navigation.navigate('Create', { screen: 'NewExercises' });
+    navigation.navigate("Create", { screen: "NewExercises" });
   };
 
+  useEffect(() => {
+    if (showCompletion && !isVisible) {
+      setIsVisible(true);
+    }
+  }, [showCompletion]);
+
   return (
-    <View style={{ flexGrow: 1, flexShrink:1, flexBasis: 0, maxHeight: '100%', height: '100%'}}>
+    <View
+      style={{
+        flexGrow: 1,
+        flexShrink: 1,
+        flexBasis: 0,
+        maxHeight: "100%",
+        height: "100%",
+      }}
+    >
+      {isVisible && (
+        <Celebration
+          setIsVisible={setIsVisible}
+          isVisible={isVisible}
+          theme={theme}
+        />
+      )}
       <ExercisesCommon
         setIsLoading={setIsLoading}
         navigation={navigation}
@@ -37,18 +59,26 @@ const ExercisesList = ({
       />
       <NotifyModal
         title={
-          <Text style={{ marginHorizontal: 16 }}>
-            <Text style={{ padding: 4 }}>
+          <Text style={{ marginHorizontal: "auto" }}>
+            <Text style={{ padding: 2 }}>
               {[...Array(3).keys()].map((v) => (
-                <FontAwesome5 key={v} name="horse" style={{ fontSize: 24, marginHorizontal: 4 }} />
+                <FontAwesome5
+                  key={v}
+                  name="horse"
+                  style={{ fontSize: 24, marginHorizontal: 4 }}
+                />
               ))}
-              {'  '}
+              {"  "}
             </Text>
             Yesssss
-            <Text style={{ padding: 4 }}>
-              {'  '}
+            <Text style={{ padding: 2 }}>
+              {"  "}
               {[...Array(3).keys()].map((v) => (
-                <FontAwesome5 key={v} name="horse" style={{ fontSize: 24, marginHorizontal: 4 }} />
+                <FontAwesome5
+                  key={v}
+                  name="horse"
+                  style={{ fontSize: 24, marginHorizontal: 4 }}
+                />
               ))}
             </Text>
           </Text>
@@ -64,15 +94,16 @@ const ExercisesList = ({
         isVisible={showCompletion}
         setIsVisible={setShowCompletion}
         content={
-          <Text style={{ marginTop: 24, marginBottom: 4 }}>Nice workout! Cool it down now.</Text>
+          <Text style={{ marginTop: 24, marginBottom: 4 }}>
+            Nice workout! Cool it down now.
+          </Text>
         }
         style={{
-          minWidth: 320,
           flexGrow: 0,
           flexShrink: 1,
-          flexBasis: 210,
-          alignItems: 'center',
-          alignSelf: 'center',
+          flexBasis: 260,
+          alignItems: "center",
+          alignSelf: "center",
         }}
       />
     </View>

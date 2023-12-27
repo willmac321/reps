@@ -5,6 +5,7 @@ import { withTheme } from "react-native-paper";
 import LoginScreen from "./Login/LoginScreen";
 import RegisterScreen from "./Register/RegisterScreen";
 import ForgotScreen from "./ForgotPassword/ForgotScreen";
+import { isMobile } from "../../utils/checkPlatform";
 
 const Stack = createStackNavigator();
 
@@ -17,6 +18,11 @@ function NoAuthNavigator({ theme }) {
         headerStyle: {
           borderBottomWidth: 4,
           borderBottomColor: theme.colors.primary,
+          elevation: 0,
+          ...(isMobile && {
+            borderTopColor: theme.colors.primary,
+            borderTopWidth: 1,
+          }),
         },
       })}
     >

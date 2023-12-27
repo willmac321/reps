@@ -1,8 +1,8 @@
 import { DefaultTheme } from 'react-native-paper';
 import { isAndroid, isApple } from '../utils/checkPlatform';
 
-const primary = '#8a8cc2';
-const accent = '#DBE0F2';
+const primary = '#5864a7';
+const accent = '#A3B4DC';
 const surface = 'white';
 
 export const dropShadow = () => {
@@ -58,7 +58,6 @@ const theme = {
     marginTop: 10,
     marginBottom: 20,
     width: 170,
-    height: 40,
     borderRadius: 10,
     ...dropShadow(),
   },

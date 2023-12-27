@@ -58,7 +58,6 @@ const theme = {
     marginTop: 10,
     marginBottom: 20,
     width: 170,
-    height: 40,
     borderRadius: 10,
     ...dropShadow(),
   },

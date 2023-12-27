@@ -21,11 +21,13 @@ const Login = ({
   navigation,
 }) => {
   const isMounted = useIsMounted();
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
+  const [email, setEmail] = React.useState("willmac321@gmail.com");
+  const [password, setPassword] = React.useState("asdfasdf");
   const [isPasswordVisible, setPasswordVisible] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
   const [isDisable, setIsDisable] = React.useState(false);
+  const [isResetSent, setIsResetSent] = React.useState(false);
+
   const styles = StyleSheet.create({
     input: theme.input,
     link: {
@@ -43,6 +45,12 @@ const Login = ({
       color: theme.colors.link,
       textTransform: "capitalize",
       marginHorizontal: 1,
+    },
+    popUpText: {
+      width: "100%",
+      alignContent: "center",
+      justifyContent: "center",
+      marginHorizontal: "auto",
     },
   });
 
@@ -71,33 +79,36 @@ const Login = ({
           return;
         }
         const user = userDetail.user;
-        console.log(userDetail);
         if (user && !user.emailVerified) {
           setNotifyTitle("But really...");
           setNotifyMessage(
-            <View>
-              <Text>
-                Please verify your email to continue using REPS.{" "}
-                <Button
-                  style={[styles.linkButton]}
-                  labelStyle={[styles.linkText]}
-                  onPress={() => AuthApi.emailVerify(user)}
-                >
-                  Resend Verification
-                </Button>
-              </Text>
+            <View style={[styles.popUpText]}>
+              <Text>Please verify your email to continue using REPS. </Text>
+              <Button
+                style={[styles.linkButton]}
+                labelStyle={[styles.linkText]}
+                onPress={() => {
+                  if (!isResetSent) {
+                    setIsResetSent(true);
+                    AuthApi.emailVerify(user);
+                  }
+                }}
+              >
+                Resend Verification
+              </Button>
             </View>
           );
           setShowNotify(true);
         } else if (user && user.emailVerified) {
-          navigation.navigate("AuthNav");
+          navigation.navigate("AuthNav", { screen: "Workouts" });
         }
       }
     },
-    [isMounted]
+    [navigation, isMounted, isResetSent]
   );
 
   const handleOnPress = async () => {
+    setIsResetSent(false);
     setIsLoading(true);
     await AuthApi.login(email, password, callbackHandlePress);
   };

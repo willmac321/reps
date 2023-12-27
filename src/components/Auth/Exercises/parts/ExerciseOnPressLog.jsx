@@ -46,7 +46,6 @@ const ExerciseOnPressLog = ({ theme, content, onProgress }) => {
   const animColor = React.useRef(new Animated.Value(0)).current;
   const [selected, setSelected] = useState(0);
   const [icon, setIcon] = useState("check");
-  const isScreenSmall = useIsSmallScreen();
 
   const styles = StyleSheet.create({
     item: {
@@ -73,7 +72,7 @@ const ExerciseOnPressLog = ({ theme, content, onProgress }) => {
       margin: 4,
       padding: 4,
       borderRadius: 8,
-      backgroundColor: `${theme.colors.backgroundShadow}`,
+      backgroundColor: `${theme.colors.primary}19`,
       flex: 0,
       flexGrow: 1,
     },
@@ -117,7 +116,7 @@ const ExerciseOnPressLog = ({ theme, content, onProgress }) => {
     rowTextHeader: {
       fontSize: 24,
       fontWeight: "bold",
-      color: `${theme.colors.accent}`,
+      color: `${theme.colors.secondary}`,
     },
     rowTextContainer: {
       marginHorizontal: 4,

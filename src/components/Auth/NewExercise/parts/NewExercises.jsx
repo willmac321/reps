@@ -63,7 +63,7 @@ const NewExercisesList = ({
     setNotifyTitle("Woah, you sure...");
     setNotifyMessage(
       `Do you really want to delete ${
-        exercises.filter((d) => d.id === exerciseId)[0].name
+        exercises.filter((d) => d.id === exerciseId)[0].title
       }?`
     );
     setIsOk(false);

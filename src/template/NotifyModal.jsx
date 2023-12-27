@@ -1,7 +1,8 @@
-import React from 'react';
-import { ScrollView } from 'react-native';
-import { withTheme, Portal, Dialog, Paragraph } from 'react-native-paper';
-import Button from './ButtonTemplate';
+import React from "react";
+import { ScrollView } from "react-native";
+import { withTheme, Portal, Dialog, Paragraph } from "react-native-paper";
+import Button from "./ButtonTemplate";
+import { isMobile } from "../utils/checkPlatform";
 
 const NotifyModal = ({
   title,
@@ -32,7 +33,10 @@ const NotifyModal = ({
           ...style,
         }}
       >
-        <Dialog.Title theme={theme} style={theme.title}>
+        <Dialog.Title
+          theme={theme}
+          style={{ ...(isMobile && { minHeight: 64 }), ...theme.title }}
+        >
           {title}
         </Dialog.Title>
         <Dialog.Content>
@@ -43,14 +47,15 @@ const NotifyModal = ({
           )}
         </Dialog.Content>
         <Dialog.ScrollArea
-          style={
-            !children && {
+          style={{
+            maxHeight: 400,
+            ...(!children && {
               borderTopWidth: 0,
               borderBottomWidth: 0,
-            }
-          }
+            }),
+          }}
         >
-          <ScrollView>{children}</ScrollView>
+          <ScrollView style={{}}>{children}</ScrollView>
         </Dialog.ScrollArea>
         <Dialog.Actions>
           {showButton && (

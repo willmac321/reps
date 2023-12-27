@@ -1,22 +1,30 @@
-import React from 'react';
-import { View, StyleSheet, Linking, ScrollView } from 'react-native';
-import { withTheme, Switch, List, RadioButton, Button, Text } from 'react-native-paper';
-import { debounce } from 'lodash';
-import SafeArea from '../../../template/SafeAreaWrapper';
-import { StateContext } from '../../../controllers/state';
-import CardWithButton from '../../../template/CardWithButton';
-import LegalPrivacyPolicy from '../../NoAuth/Legal/LegalPrivacy';
-import DeleteAccount from './parts/DeleteAccount';
-import ResetPassword from './parts/ResetPassword';
-import Logout from './parts/Logout';
-import ChangeEmail from './parts/ChangeEmail';
-import API from '../../../controllers/UserSettingsApi.js';
-import { isMobile } from '../../../utils/checkPlatform';
+import React from "react";
+import { View, StyleSheet, Linking, ScrollView } from "react-native";
+import {
+  withTheme,
+  Switch,
+  List,
+  RadioButton,
+  Button,
+  Text,
+} from "react-native-paper";
+import { debounce } from "lodash";
+import SafeArea from "../../../template/SafeAreaWrapper";
+import { StateContext } from "../../../controllers/state";
+import CardWithButton from "../../../template/CardWithButton";
+import LegalPrivacyPolicy from "../../NoAuth/Legal/LegalPrivacy";
+import DeleteAccount from "./parts/DeleteAccount";
+import ResetPassword from "./parts/ResetPassword";
+import Logout from "./parts/Logout";
+import ChangeEmail from "./parts/ChangeEmail";
+import API from "../../../controllers/UserSettingsApi.js";
+import { isMobile } from "../../../utils/checkPlatform";
 
 const { updateSettings } = API;
 
 const SettingsScreen = ({ navigation, theme }) => {
-  const { user, userDetails, setUserDetails, defaultUserDetails } = React.useContext(StateContext);
+  const { user, userDetails, setUserDetails, defaultUserDetails } =
+    React.useContext(StateContext);
   const [showLegal, setShowLegal] = React.useState(false);
   const [showDelete, setShowDelete] = React.useState(false);
   const [showLogout, setShowLogout] = React.useState(false);
@@ -32,32 +40,36 @@ const SettingsScreen = ({ navigation, theme }) => {
     },
     linkText: {
       color: theme.colors.link,
-      textTransform: 'capitalize',
+      textTransform: "capitalize",
     },
     radio: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      alignSelf: 'center',
-      alignItems: 'center',
-      textAlign: 'center',
+      flexDirection: "row",
+      flexWrap: "wrap",
+      alignSelf: "center",
+      alignItems: "center",
+      textAlign: "center",
     },
     radioContainer: {
-      justifyContent: 'space-evenly',
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      alignSelf: 'center',
-      alignItems: 'center',
-      textAlign: 'center',
+      justifyContent: "space-evenly",
+      flexDirection: "row",
+      flexWrap: "wrap",
+      alignSelf: "center",
+      alignItems: "center",
+      textAlign: "center",
     },
   });
 
-  const [themeToggle, setThemeToggle] = React.useState(userDetails.theme === 'light');
-  const [splashToggle, setSplashToggle] = React.useState(userDetails.splashScreenIcon);
+  const [themeToggle, setThemeToggle] = React.useState(
+    userDetails.theme === "light"
+  );
+  const [splashToggle, setSplashToggle] = React.useState(
+    userDetails.splashScreenIcon
+  );
 
   const onToggleTheme = () => {
     setUserDetails({
       ...userDetails,
-      theme: !themeToggle ? 'light' : 'dark',
+      theme: !themeToggle ? "light" : "dark",
     });
     setThemeToggle(!themeToggle);
   };
@@ -71,14 +83,18 @@ const SettingsScreen = ({ navigation, theme }) => {
   };
 
   const splashSelect = () => (
-    <RadioButton.Group onValueChange={(newVal) => onSplashToggle(newVal)} value={splashToggle}>
+    <RadioButton.Group
+      onValueChange={(newVal) => onSplashToggle(newVal)}
+      value={splashToggle}
+    >
       <View style={styles.radioContainer}>
         <View style={styles.radio}>
           <Text>Adonis</Text>
           <RadioButton
             theme={theme}
             value="adonis"
-            {...(userDetails.theme === 'light' && { //eslint-disable-line
+            {...(userDetails.theme === "light" && {
+              //eslint-disable-line
               color: theme.colors.primary,
             })}
           />
@@ -88,7 +104,8 @@ const SettingsScreen = ({ navigation, theme }) => {
           <RadioButton
             theme={theme}
             value="aphrodite"
-            {...(userDetails.theme === 'light' && { //eslint-disable-line
+            {...(userDetails.theme === "light" && {
+              //eslint-disable-line
               color: theme.colors.primary,
             })}
           />
@@ -98,7 +115,7 @@ const SettingsScreen = ({ navigation, theme }) => {
   );
 
   const setShowContact = () =>
-    Linking.openURL('mailto:help@loblollysoftware.com?subject=RepsApp Help');
+    Linking.openURL("mailto:will@loblollysoftware.com?subject=RepsApp Help");
 
   const handleReset = () => {
     setSplashToggle(defaultUserDetails.splashScreenIcon);
@@ -127,7 +144,7 @@ const SettingsScreen = ({ navigation, theme }) => {
           {
             scrollbarColor: `${theme.colors.primary} ${theme.colors.surface}`,
           },
-          isMobile() ? {} : { overflow: 'auto' },
+          isMobile() ? {} : { overflow: "auto" },
         ]}
       >
         <CardWithButton
@@ -146,7 +163,8 @@ const SettingsScreen = ({ navigation, theme }) => {
                     value={themeToggle}
                     onValueChange={onToggleTheme}
                     theme={theme}
-                    {...(userDetails.theme === 'light' && { //eslint-disable-line
+                    {...(userDetails.theme === "light" && {
+                      //eslint-disable-line
                       color: theme.colors.primary,
                     })}
                   />
@@ -159,7 +177,7 @@ const SettingsScreen = ({ navigation, theme }) => {
                 style={{
                   borderTopWidth: 1,
                   borderColor: theme.colors.primary,
-                  borderStyle: 'solid',
+                  borderStyle: "solid",
                 }}
               />
               <List.Item
@@ -207,7 +225,7 @@ const SettingsScreen = ({ navigation, theme }) => {
                 style={{
                   borderTopWidth: 1,
                   borderColor: theme.colors.primary,
-                  borderStyle: 'solid',
+                  borderStyle: "solid",
                 }}
               />
               <List.Item
@@ -216,7 +234,10 @@ const SettingsScreen = ({ navigation, theme }) => {
                 right={() => (
                   <Button
                     style={[styles.linkButton]}
-                    labelStyle={[styles.linkText, { color: theme.colors.alert }]}
+                    labelStyle={[
+                      styles.linkText,
+                      { color: theme.colors.alert },
+                    ]}
                     onPress={() => setShowDelete(true)}
                   >
                     Remove it
@@ -257,7 +278,7 @@ const SettingsScreen = ({ navigation, theme }) => {
                 style={{
                   borderTopWidth: 1,
                   borderColor: theme.colors.primary,
-                  borderStyle: 'solid',
+                  borderStyle: "solid",
                 }}
               />
               <List.Item
@@ -266,7 +287,10 @@ const SettingsScreen = ({ navigation, theme }) => {
                 right={() => (
                   <Button
                     style={[styles.linkButton]}
-                    labelStyle={[styles.linkText, { color: theme.colors.alert }]}
+                    labelStyle={[
+                      styles.linkText,
+                      { color: theme.colors.alert },
+                    ]}
                     onPress={handleReset}
                   >
                     Reset it
@@ -282,14 +306,26 @@ const SettingsScreen = ({ navigation, theme }) => {
           isVisible={showLegal}
           setIsVisible={setShowLegal}
         />
-        <DeleteAccount isVisible={showDelete} setIsVisible={setShowDelete} theme={theme} />
+        <DeleteAccount
+          isVisible={showDelete}
+          setIsVisible={setShowDelete}
+          theme={theme}
+        />
         <ResetPassword
           isVisible={showResetPassword}
           setIsVisible={setShowResetPassword}
           theme={theme}
         />
-        <Logout isVisible={showLogout} setIsVisible={setShowLogout} theme={theme} />
-        <ChangeEmail isVisible={showEmail} setIsVisible={setShowEmail} theme={theme} />
+        <Logout
+          isVisible={showLogout}
+          setIsVisible={setShowLogout}
+          theme={theme}
+        />
+        <ChangeEmail
+          isVisible={showEmail}
+          setIsVisible={setShowEmail}
+          theme={theme}
+        />
       </ScrollView>
     </SafeArea>
   );
