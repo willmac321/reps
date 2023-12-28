@@ -41,44 +41,48 @@ const Route = ({ theme }) => {
       >
         <StateContext.Consumer>
           {({ user, isLoading }) => {
-            console.log(JSON.stringify(user), isLoading);
-            return(
-            <View
-              style={{
-                height: "100%",
-                width: "100%",
-              }}
-            >
-              <LoadingScreenOverlay isVisible={isLoading} theme={theme} />
-              <Stack.Navigator
+            return (
+              <View
                 style={{
-                  visibility: !isLoading ? "visible" : "hidden",
-                }}
-                options={{
-                  statusBarStyle: theme.userTheme,
+                  height: "100%",
+                  width: "100%",
                 }}
               >
-                {user && user?.emailVerified ? (
-                  <Stack.Screen
-                    name="AuthNav"
-                    component={AuthNavigator}
-                    options={{ headerShown: false }}
-                  />
-                ) : (
-                  <Stack.Screen
-                    name="NoAuthNav"
-                    component={NoAuthNavigator}
-                    options={{ headerShown: false }}
-                  />
-                )}
-                <Stack.Screen
-                  name="DeleteMe"
-                  component={DeleteMeScreen}
-                  options={{ headerShown: false }}
-                />
-              </Stack.Navigator>
-            </View>
-          )}}
+                <LoadingScreenOverlay isVisible={!!isLoading} theme={theme} />
+                <View
+                  style={{
+                    visibility: !isLoading ? "visible" : "hidden",
+                    height: "100%",
+                    width: "100%",
+                  }}
+                >
+                  <Stack.Navigator
+                    options={{
+                      statusBarStyle: theme.userTheme,
+                    }}
+                  >
+                    {user && user?.emailVerified && (
+                      <Stack.Screen
+                        name="AuthNav"
+                        component={AuthNavigator}
+                        options={{ headerShown: false }}
+                      />
+                    )}
+                    <Stack.Screen
+                      name="NoAuthNav"
+                      component={NoAuthNavigator}
+                      options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                      name="DeleteMe"
+                      component={DeleteMeScreen}
+                      options={{ headerShown: false }}
+                    />
+                  </Stack.Navigator>
+                </View>
+              </View>
+            );
+          }}
         </StateContext.Consumer>
       </NavigationContainer>
     </PaperProvider>

@@ -31,7 +31,6 @@ export const StateContextProvider = ({ children }) => {
   );
   const [isLoading, setIsLoading] = React.useState(true);
   const [justRegistered, setJustRegistered] = React.useState(false);
-  const [authRes, setAuthRes] = React.useState(null);
   const [user, setUser] = React.useState(null);
   const [theme, setTheme] = React.useState(themeLight);
   const [isFromEditButton, setIsFromEditButton] = React.useState(false);
@@ -261,48 +260,43 @@ export const StateContextProvider = ({ children }) => {
   }, [user]);
 
   React.useEffect(() => {
-    auth.onAuthStateChanged((res) => {
-      console.log(JSON.stringify(res));
-      setAuthRes(res);
+    auth.onAuthStateChanged((authRes) => {
+      const setDetails = async (aR) => {
+        // NOTE debug related might take this out
+        if (!debug) {
+          setUser(aR);
+          // set user settings if auth user changes
+          if (aR && aR.uid) {
+            const res = await UserSettingsAPI.getSettings(aR.uid);
+            if (res && !(res instanceof Error)) {
+              setUserDetails(res);
+            } else {
+              setUserDetails(defaultUserDetails);
+            }
+          } else {
+            // this is hit on program load and when logged out, set logged out user local when logout endpoint is called
+            const localData = await getLocalData(user?.uid || USER_STORE_KEY);
+            setUserDetails(localData || defaultUserDetails);
+          }
+        }
+      };
+
+      if (authRes && !authRes.emailVerified && !justRegistered) {
+        setUserDetails(defaultUserDetails);
+        AuthAPI.logout(() => {});
+        // NOTE if statement debug related might take this out
+        if (!debug) {
+          // if authRes is null -- ie logout then set to default
+          setUser(null);
+        }
+      } else if (authRes && !authRes.emailVerified && justRegistered) {
+        setJustRegistered(false);
+      } else {
+        setDetails(authRes);
+      }
       setIsLoading(false);
     });
   }, []);
-
-  React.useEffect(() => {
-    const setDetails = async (aR) => {
-      // NOTE debug related might take this out
-      if (!debug) {
-        setUser(aR);
-        // set user settings if auth user changes
-        if (aR && aR.uid) {
-          const res = await UserSettingsAPI.getSettings(aR.uid);
-          if (res && !(res instanceof Error)) {
-            setUserDetails(res);
-          } else {
-            setUserDetails(defaultUserDetails);
-          }
-        } else {
-          // this is hit on program load and when logged out, set logged out user local when logout endpoint is called
-          const localData = await getLocalData(user?.uid || USER_STORE_KEY);
-          setUserDetails(localData || defaultUserDetails);
-        }
-      }
-    };
-
-    if (authRes && !authRes.emailVerified && !justRegistered) {
-      setUserDetails(defaultUserDetails);
-      AuthAPI.logout(() => {});
-      // NOTE if statement debug related might take this out
-      if (!debug) {
-        // if authRes is null -- ie logout then set to default
-        setUser(null);
-      }
-    } else if (authRes && !authRes.emailVerified && justRegistered) {
-      setJustRegistered(false);
-    } else {
-      setDetails(authRes);
-    }
-  }, [authRes]);
 
   const logout = async (callback = () => {}) => {
     await AuthAPI.logout(() => {});
