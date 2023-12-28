@@ -7,7 +7,7 @@ import ScrollList from "../../../../template/ScrollList";
 import WorkoutItem from "./WorkoutItem";
 import WorkoutAPI from "../../../../controllers/WorkoutApi";
 import { useIsMounted } from "../../../../utils/useIsMounted";
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect, useLinkTo } from "@react-navigation/native";
 
 const Workouts = ({
   theme,
@@ -29,6 +29,8 @@ const Workouts = ({
     workouts: { workouts, setWorkouts },
     isLoading,
   } = React.useContext(StateContext);
+
+  const linkTo = useLinkTo();
 
   const [isDisable, setIsDisable] = React.useState(true);
 
@@ -57,8 +59,7 @@ const Workouts = ({
   const setUpdatedWorkout = (id) => {
     if (id) {
       setSelectedWorkout(workouts.find((a) => a.id === id.toString()));
-    }
-    else {
+    } else {
       setSelectedWorkout();
     }
   };
@@ -99,7 +100,7 @@ const Workouts = ({
     async (id) => {
       await setWorkoutToEdit(id);
       setUpdatedWorkout({});
-      navigation.navigate("Create", { screen: "NewWorkout" });
+      linkTo("/auth/create/newworkout");
       setModalOnOkSelected(null);
     },
     [user, workouts]
@@ -109,7 +110,7 @@ const Workouts = ({
     async (id) => {
       setUpdatedWorkout(id);
       await setWorkoutToEdit();
-      navigation.navigate("Exercises");
+      linkTo("/auth/workouts/exercises");
     },
     [workouts, isDisable]
   );
@@ -165,7 +166,7 @@ const Workouts = ({
 
   const handleNew = () => {
     setIsFromEditButton(false);
-    navigation.navigate("Create");
+    linkTo("/auth/create");
   };
 
   useFocusEffect(

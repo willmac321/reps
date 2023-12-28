@@ -6,6 +6,7 @@ import CardWithButton from '../../../../template/CardWithButton';
 import AuthAPI from '../../../../controllers/AuthApi';
 import UserSettingsAPI from '../../../../controllers/UserSettingsApi';
 import LegalPrivacy from '../../Legal/LegalPrivacy';
+import {useLinkTo} from '@react-navigation/native';
 
 const Register = ({
   theme,
@@ -15,6 +16,7 @@ const Register = ({
   setNotifyMessage,
   setNotifyTitle,
 }) => {
+  const linkTo = useLinkTo();
   const [email, setEmail] = React.useState('');
   const [acceptedEULA, setAcceptedEULA] = React.useState(false);
   const [eulaVis, setEulaVis] = React.useState(false);
@@ -72,7 +74,7 @@ const Register = ({
     }
     await UserSettingsAPI.updateSettings(uid, defaultUserDetails);
     await UserSettingsAPI.setAckPrivacy(uid);
-    navigation.navigate('Login');
+    linkTo('/noauth/login');
   };
 
   const handleOnPress = (setJustRegistered) => {

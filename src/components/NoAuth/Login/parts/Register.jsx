@@ -2,10 +2,12 @@ import React from 'react';
 import { View } from 'react-native';
 import { withTheme } from 'react-native-paper';
 import CardWithButton from '../../../../template/CardWithButton';
+import {useLinkTo} from '@react-navigation/native';
 
 const Register = ({ theme, navigation }) => {
+  const linkTo = useLinkTo();
   const onRegisterClick = () => {
-    navigation.navigate('Register');
+    linkTo('/noauth/register');
   };
   return (
     <View theme={theme}>

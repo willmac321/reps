@@ -5,6 +5,7 @@ import { View } from "react-native";
 import NotifyModal from "../../../../template/NotifyModal";
 import ExercisesCommon from "../../../../common/ExercisesCommon";
 import Celebration from "../../../../common/Celebration";
+import {useLinkTo} from "@react-navigation/native";
 
 const ExercisesList = ({
   setIsLoading,
@@ -14,12 +15,13 @@ const ExercisesList = ({
   setSelectedExercise = () => {},
   isDraggable = false,
 }) => {
+  const linkTo = useLinkTo()
   const [selected, setSelected] = React.useState(null);
   const [showCompletion, setShowCompletion] = React.useState(false);
   const [isVisible, setIsVisible] = React.useState(false);
 
   const handleNew = () => {
-    navigation.navigate("Create", { screen: "NewExercises" });
+    linkTo('/auth/create/newexercises');
   };
 
   useEffect(() => {

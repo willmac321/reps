@@ -262,6 +262,7 @@ export const StateContextProvider = ({ children }) => {
 
   React.useEffect(() => {
     auth.onAuthStateChanged((res) => {
+      console.log(JSON.stringify(res));
       setAuthRes(res);
       setIsLoading(false);
     });
@@ -298,7 +299,6 @@ export const StateContextProvider = ({ children }) => {
       }
     } else if (authRes && !authRes.emailVerified && justRegistered) {
       setJustRegistered(false);
-      AuthAPI.emailVerify(authRes);
     } else {
       setDetails(authRes);
     }

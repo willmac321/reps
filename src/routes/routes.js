@@ -1,5 +1,4 @@
-const linking = {
-  config: {
+const config = {
     screens: {
       AuthNav: {
         path: "auth",
@@ -25,7 +24,6 @@ const linking = {
       },
       DeleteMe: "deleteme",
     },
-  },
-};
+  };
 
-export default linking;
+export default config;

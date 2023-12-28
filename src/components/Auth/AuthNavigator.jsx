@@ -12,6 +12,7 @@ import ExercisesScreen from "./Exercises/ExercisesScreen";
 import WorkoutsScreen from "./Workouts/WorkoutsScreen";
 import SettingsScreen from "./Settings/SettingsScreen";
 import { StateContext } from "../../controllers/state";
+import {useLinkTo} from "@react-navigation/native";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -54,6 +55,7 @@ const WorkoutComponents = () => (
 
 function AuthNavigator({ theme }) {
   const isMounted = React.useRef(true);
+  const linkTo = useLinkTo();
   React.useEffect(() => {
     isMounted.current = true;
     return () => {
@@ -96,7 +98,7 @@ function AuthNavigator({ theme }) {
               if (isMounted.current && navigation.isFocused()) {
                 setEditWorkout({});
                 setSelectedWorkout({});
-                navigation.navigate("Create", { screen: "NewWorkout" });
+                linkTo('/auth/create/newworkout');
               }
             },
           })}

@@ -7,7 +7,7 @@ import {
   HelperText,
   Text,
 } from "react-native-paper";
-import { Link } from "@react-navigation/native";
+import { Link, useLinkTo } from "@react-navigation/native";
 import CardWithButton from "../../../../template/CardWithButton";
 import { useIsMounted } from "../../../../utils/useIsMounted";
 import AuthApi from "../../../../controllers/AuthApi";
@@ -21,6 +21,7 @@ const Login = ({
   navigation,
 }) => {
   const isMounted = useIsMounted();
+  const linkTo = useLinkTo();
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [isPasswordVisible, setPasswordVisible] = React.useState(false);
@@ -100,11 +101,11 @@ const Login = ({
           );
           setShowNotify(true);
         } else if (user && user.emailVerified) {
-          navigation.navigate("AuthNav", { screen: "Workouts" });
+          linkTo('/auth/workouts');
         }
       }
     },
-    [navigation, isMounted, isResetSent]
+    [linkTo, isMounted, isResetSent]
   );
 
   const handleOnPress = async () => {

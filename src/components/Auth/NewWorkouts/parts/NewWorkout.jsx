@@ -5,8 +5,10 @@ import API from "../../../../controllers/WorkoutApi";
 import CardWithButton from "../../../../template/CardWithButton";
 import { StateContext } from "../../../../controllers/state";
 import { useIsMounted } from "../../../../utils/useIsMounted";
+import {useLinkTo} from "@react-navigation/native";
 
 const NewWorkout = ({ navigation, user, theme, data }) => {
+  const linkTo = useLinkTo();
   const isMounted = useIsMounted();
   const [isDisable, setIsDisable] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
@@ -83,7 +85,8 @@ const NewWorkout = ({ navigation, user, theme, data }) => {
         setWorkoutName("");
         setIsLoading(false);
         setIsFromEditButton(false);
-        navigation.navigate("NewExercises");
+        linkTo('/auth/create/newexercises');
+
       });
   }, [workoutName, workouts, editWorkout, user]);
 

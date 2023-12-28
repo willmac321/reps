@@ -1,13 +1,13 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { withTheme, TextInput, HelperText } from 'react-native-paper';
-import { useNavigation } from '@react-navigation/native';
+import { useLinkTo, useNavigation } from '@react-navigation/native';
 import CardWithButton from '../../../../template/CardWithButton';
 import NotifyModal from '../../../../template/NotifyModal';
 import API from '../../../../controllers/AuthApi';
 
 const Forgot = ({ theme, style }) => {
-  const navigation = useNavigation();
+  const linkTo = useLinkTo()
   const [email, setEmail] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(false);
   const [isError, setIsError] = React.useState(false);
@@ -45,7 +45,7 @@ const Forgot = ({ theme, style }) => {
       setContent('Password reset email sent, check your email.');
       setIsError(false);
     } else {
-      navigation.navigate('Login');
+      linkTo('/noauth/login');
     }
   };
 
