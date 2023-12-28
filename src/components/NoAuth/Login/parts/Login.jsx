@@ -159,7 +159,7 @@ const Login = ({
             />
           }
         />
-        <Link style={styles.link} to="/Forgot">
+        <Link style={styles.link} to={{ screen: "Forgot" }}>
           Forgot Password?
         </Link>
       </CardWithButton>

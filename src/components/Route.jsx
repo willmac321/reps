@@ -8,10 +8,13 @@ import { StateContext } from "../controllers/state";
 import NoAuthNavigator from "./NoAuth/NoAuthNavigator";
 import AuthNavigator from "./Auth/AuthNavigator.jsx";
 import LoadingScreenOverlay from "../template/LoadingScreenOverlay";
+import DeleteMeScreen from "./DeleteMe/DeleteMeScreen";
+import linking from "../routes/routes";
 
 const Stack = createStackNavigator();
 
-const Route = ({ theme }) => (
+const Route = ({ theme }) => {
+  return(
   <PaperProvider
     theme={theme}
     settings={{
@@ -27,6 +30,7 @@ const Route = ({ theme }) => (
         flexGrow: 1,
       }}
       theme={theme}
+      linking={linking}
     >
       <StateContext.Consumer>
         {({ user, isLoading }) => (
@@ -58,12 +62,15 @@ const Route = ({ theme }) => (
                   options={{ headerShown: false }}
                 />
               )}
+              <Stack.Screen name="DeleteMe" component={DeleteMeScreen} 
+                  options={{ headerShown: false }}
+              />
             </Stack.Navigator>
           </View>
         )}
       </StateContext.Consumer>
     </NavigationContainer>
   </PaperProvider>
-);
+)};
 
 export default withTheme(Route);
