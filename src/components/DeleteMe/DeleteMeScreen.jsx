@@ -2,8 +2,10 @@ import React from "react";
 import { View, StyleSheet } from "react-native";
 import { Subheading, Text, Title, withTheme } from "react-native-paper";
 import CardWithButton from "../../template/CardWithButton";
-import { Link } from "@react-navigation/native";
+import { Link, useLinkTo } from "@react-navigation/native";
+import AuthApi from "../../controllers/AuthApi";
 const DeleteMe = ({ theme }) => {
+  const linkTo = useLinkTo();
   const styles = StyleSheet.create({
     list: { marginLeft: 8, padding: 2 },
     item: { marginLeft: 8, marginVertical: 2 },
@@ -12,19 +14,26 @@ const DeleteMe = ({ theme }) => {
     },
   });
 
+  React.useEffect(() => {
+    AuthApi.logout();
+  }, []);
+
   return (
     <View>
       <CardWithButton buttonDisabled title={"Account Deletion"}>
         <Title>Reps App</Title>
         <Title>Two Options to Delete Your Data</Title>
-          <Text style={styles.item}>
-            All data will be removed associated with a valid email.  There is no additional retention period and the request is permanent.
-            </Text>
+        <Text style={styles.item}>
+          All data will be removed associated with a valid email. There is no
+          additional retention period and the request is permanent.
+        </Text>
         <View style={styles.list}>
-          <Subheading variant="titleLarge">Login to the app (Preferred) - Instant</Subheading>
+          <Subheading variant="titleLarge">
+            Login to the app (Preferred) - Instant
+          </Subheading>
           <Text style={styles.item}>
             1) Navigate to{" "}
-            <Link style={styles.link} to={"/noauth/login"}>
+            <Link style={styles.link} target="_blank" to={"/noauth/login"}>
               Login Screen
             </Link>
           </Text>
@@ -42,20 +51,32 @@ const DeleteMe = ({ theme }) => {
             follow the steps to verify your account.
           </Text>
           <Text style={styles.item}>
-            5) All data associated with the account and password used will be removed instantaneously.
+            5) All data associated with the account and password used will be
+            removed instantaneously.
           </Text>
         </View>
         <View style={styles.list}>
-          <Subheading variant="titleLarge">Email the author - Up to 2 Weeks</Subheading>
+          <Subheading variant="titleLarge">
+            Email the author - Up to 2 Weeks
+          </Subheading>
           <Text style={styles.item}>
-            1) Email {" "}
-            <Link style={styles.link} to={
-    "mailto:will@loblollysoftware.com?subject=RepsApp Delete Account" }>
+            1) Email{" "}
+            <Link
+              style={styles.link}
+              to={
+                "mailto:will@loblollysoftware.com?subject=RepsApp Delete Account"
+              }
+            >
               will@loblollysoftware.com
             </Link>
           </Text>
-          <Text style={styles.item}>2) Include the email used to create the account.  If no email is supplied, no action will be taken!</Text>
-          <Text style={styles.item}>3) If an account exists, it will be removed in up to 2 weeks.</Text>
+          <Text style={styles.item}>
+            2) Include the email used to create the account. If no email is
+            supplied, no action will be taken!
+          </Text>
+          <Text style={styles.item}>
+            3) If an account exists, it will be removed in up to 2 weeks.
+          </Text>
         </View>
       </CardWithButton>
     </View>
