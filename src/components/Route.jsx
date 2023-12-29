@@ -15,9 +15,7 @@ import NotFoundScreen from "./NotFoundScreen";
 
 const Stack = createStackNavigator();
 
-const prefixList = [
-  Linking.createURL("/"),
-];
+const prefixList = [Linking.createURL("/")];
 
 const Route = ({ theme }) => {
   return (
@@ -51,6 +49,8 @@ const Route = ({ theme }) => {
                 <View
                   style={{
                     visibility: !isLoading ? "visible" : "hidden",
+                    height: "100%",
+                    width: "100%",
                   }}
                 >
                   <Stack.Navigator
@@ -64,12 +64,13 @@ const Route = ({ theme }) => {
                         component={AuthNavigator}
                         options={{ headerShown: false }}
                       />
-                    ):
-                    <Stack.Screen
-                      name="NoAuthNav"
-                      component={NoAuthNavigator}
-                      options={{ headerShown: false }}
-                    />}
+                    ) : (
+                      <Stack.Screen
+                        name="NoAuthNav"
+                        component={NoAuthNavigator}
+                        options={{ headerShown: false }}
+                      />
+                    )}
                     <Stack.Screen
                       name="DeleteMe"
                       component={DeleteMeScreen}
