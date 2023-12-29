@@ -11,13 +11,12 @@ import AuthNavigator from "./Auth/AuthNavigator.jsx";
 import LoadingScreenOverlay from "../template/LoadingScreenOverlay";
 import DeleteMeScreen from "./DeleteMe/DeleteMeScreen";
 import config from "../routes/routes";
+import NotFoundScreen from "./NotFoundScreen";
 
 const Stack = createStackNavigator();
 
 const prefixList = [
   Linking.createURL("/"),
-  "https://reps-app-7c3fe.web.app",
-  "https://repstracker.dev",
 ];
 
 const Route = ({ theme }) => {
@@ -52,8 +51,6 @@ const Route = ({ theme }) => {
                 <View
                   style={{
                     visibility: !isLoading ? "visible" : "hidden",
-                    height: "100%",
-                    width: "100%",
                   }}
                 >
                   <Stack.Navigator
@@ -61,21 +58,26 @@ const Route = ({ theme }) => {
                       statusBarStyle: theme.userTheme,
                     }}
                   >
-                    {user && user?.emailVerified && (
+                    {user && user?.emailVerified ? (
                       <Stack.Screen
                         name="AuthNav"
                         component={AuthNavigator}
                         options={{ headerShown: false }}
                       />
-                    )}
+                    ):
                     <Stack.Screen
                       name="NoAuthNav"
                       component={NoAuthNavigator}
                       options={{ headerShown: false }}
-                    />
+                    />}
                     <Stack.Screen
                       name="DeleteMe"
                       component={DeleteMeScreen}
+                      options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                      name="NotFound"
+                      component={NotFoundScreen}
                       options={{ headerShown: false }}
                     />
                   </Stack.Navigator>

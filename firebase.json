@@ -7,6 +7,12 @@
       "[!assets]*/node_modules/**",
       "*/config/",
       "config.js"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
     ]
   }
 }
