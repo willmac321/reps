@@ -18,6 +18,8 @@ const Stack = createStackNavigator();
 const prefixList = [Linking.createURL("/")];
 
 const Route = ({ theme }) => {
+  // TODO
+  //https://medium.com/codex/react-navigation-deep-linking-with-authentication-9056eb4a0456
   return (
     <PaperProvider
       theme={theme}
