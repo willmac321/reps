@@ -95,7 +95,16 @@ const Celebration = ({ style, theme, isVisible, setIsVisible }) => {
 
   return (
     <Portal>
-      <View style={{ width: "100%", height: "100%", overflow: "hidden" }}>
+      <View
+        style={{
+          left: 0,
+          right: 0,
+          position: "absolute",
+          top: 0,
+          bottom: 0,
+          overflow: "hidden",
+        }}
+      >
         {[...Array(50).keys()].map((v) => (
           <CelebrationItem key={v} theme={theme} style={style} />
         ))}
