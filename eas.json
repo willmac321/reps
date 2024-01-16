@@ -9,8 +9,7 @@
       "distribution": "internal"
     },
     "preview": {
-      "node": "16.18.1",
-      "distribution": "internal"
+      "node": "16.18.1"
     },
     "production": {
       "node": "16.18.1"
@@ -20,14 +19,14 @@
     "production": {
       "android": {
         "track": "production",
-        "serviceAccountKeyPath": "/home/will/Documents/loblolly/googleCloudKey/pc-api-6971641615449854156-40-242a27d263db.json"
+        "serviceAccountKeyPath": "/home/will/Documents/loblolly/googleCloudKey/reps-app-7c3fe-889c75997e09.json"
       }
     },
     "preview": {
       "extends": "production",
       "android": {
         "track": "internal",
-        "serviceAccountKeyPath": "/home/will/Documents/loblolly/googleCloudKey/pc-api-6971641615449854156-40-242a27d263db.json"
+        "serviceAccountKeyPath": "/home/will/Documents/loblolly/googleCloudKey/reps-app-7c3fe-889c75997e09.json"
       }
     }
   }
