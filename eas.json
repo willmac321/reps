@@ -19,6 +19,14 @@
   "submit": {
     "production": {
       "android": {
+        "track": "production",
+        "serviceAccountKeyPath": "/home/will/Documents/loblolly/googleCloudKey/pc-api-6971641615449854156-40-242a27d263db.json"
+      }
+    },
+    "testing": {
+      "extends": "production",
+      "android": {
+        "track": "internal",
         "serviceAccountKeyPath": "/home/will/Documents/loblolly/googleCloudKey/pc-api-6971641615449854156-40-242a27d263db.json"
       }
     }
