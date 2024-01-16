@@ -7,13 +7,13 @@
     "build-test:android": "npm run build -- --platform android --profile preview",
     "build:web": "npx expo export -p web",
     "deploy:android": "eas submit --platform android",
-    "deploy-test:android": "eas submit --platform android --production",
+    "deploy-test:android": "eas submit --platform android --preview",
     "test": "jest --coverage",
     "start": "expo start --dev-client",
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
-    "build-deploy-test:android": "npm run build-test:android && npm run deploy:android",
+    "build-deploy-test:android": "npm run build-test:android && npm run deploy-test:android",
     "build-deploy:android": "npm run build:android && npm run deploy:android",
     "build-deploy:web": "npm run build:web && firebase deploy",
     "eject": "expo eject",
@@ -55,5 +55,5 @@
     "eslint-config-custom": "*"
   },
   "private": true,
-  "version": "1.0.42"
+  "version": "1.0.43"
 }

@@ -23,7 +23,7 @@
         "serviceAccountKeyPath": "/home/will/Documents/loblolly/googleCloudKey/pc-api-6971641615449854156-40-242a27d263db.json"
       }
     },
-    "testing": {
+    "preview": {
       "extends": "production",
       "android": {
         "track": "internal",
