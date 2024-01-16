@@ -12,19 +12,35 @@
       "resizeMode": "cover",
       "backgroundColor": "#c6e9ed"
     },
-    "updates": { "fallbackToCacheTimeout": 0 },
-    "assetBundlePatterns": ["**/*"],
-    "ios": { "supportsTablet": true },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.willmac.reps"
+    },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptiveIcon.png",
         "backgroundColor": "#c6e9ed"
       },
-      "permissions": ["com.google.android.gms.permission.AD_ID"],
+      "permissions": [
+        "com.google.android.gms.permission.AD_ID"
+      ],
       "package": "com.willmac.reps",
       "versionCode": 47
     },
-    "web": { "bundler": "metro", "favicon": "./assets/favicon.png" },
-    "extra": { "eas": { "projectId": "d6d4b204-e9d3-466a-874c-b4401b303173" } }
+    "web": {
+      "bundler": "metro",
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "d6d4b204-e9d3-466a-874c-b4401b303173"
+      }
+    }
   }
 }
