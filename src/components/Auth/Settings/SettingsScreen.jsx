@@ -19,6 +19,7 @@ import Logout from "./parts/Logout";
 import ChangeEmail from "./parts/ChangeEmail";
 import API from "../../../controllers/UserSettingsApi.js";
 import { isMobile } from "../../../utils/checkPlatform";
+import Version from "./parts/Version";
 
 const { updateSettings } = API;
 
@@ -297,6 +298,9 @@ const SettingsScreen = ({ navigation, theme }) => {
                   </Button>
                 )}
               />
+            </List.Section>
+            <List.Section>
+              <Version />
             </List.Section>
           </View>
         </CardWithButton>
