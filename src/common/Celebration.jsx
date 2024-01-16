@@ -94,11 +94,11 @@ const Celebration = ({ style, theme, isVisible, setIsVisible }) => {
   }, []);
 
   return (
-    <Portal>
       <View
         style={{
           width: "100%",
           height: "100%",
+          position:'absolute',
           flex: 1,
           overflow: "hidden",
         }}
@@ -107,7 +107,6 @@ const Celebration = ({ style, theme, isVisible, setIsVisible }) => {
           <CelebrationItem key={v} theme={theme} style={style} />
         ))}
       </View>
-    </Portal>
   );
 };
 
