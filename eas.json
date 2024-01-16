@@ -26,6 +26,7 @@
       "extends": "production",
       "android": {
         "track": "internal",
+        "release_status": "draft",
         "serviceAccountKeyPath": "/home/will/Documents/loblolly/googleCloudKey/reps-app-7c3fe-889c75997e09.json"
       }
     }
