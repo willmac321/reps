@@ -43,7 +43,6 @@ const ExercisesList = ({
       {isVisible && (
         <Celebration
           setIsVisible={setIsVisible}
-          isVisible={isVisible}
           theme={theme}
         />
       )}

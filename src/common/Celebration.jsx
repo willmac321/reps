@@ -1,7 +1,8 @@
-import { useEffect, useRef } from "react";
+import { useLayoutEffect, useRef, useCallback } from "react";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Animated, View } from "react-native";
-import { Portal, withTheme } from "react-native-paper";
+import { withTheme } from "react-native-paper";
+import { useFocusEffect } from "@react-navigation/native";
 
 const CelebrationItem = ({ style, theme }) => {
   const isStarted = useRef(false);
@@ -48,27 +49,27 @@ const CelebrationItem = ({ style, theme }) => {
     outputRange: ["0deg", "360deg"],
   });
 
-  useEffect(() => {
-    if (!isStarted.current) {
-      isStarted.current = true;
-      rotateAround.start();
-      decay.start();
-      fadeOut.start();
-    }
-  }, [rotateAround, decay, fadeOut]);
+  useFocusEffect(
+    useCallback(() => {
+      if (!isStarted.current) {
+        isStarted.current = true;
+        rotateAround.start();
+        decay.start();
+        fadeOut.start();
+      }
+    }, [rotateAround, decay, fadeOut])
+  );
 
   return (
     <Animated.View
-      style={[
-        {
-          ...style,
-          position: "absolute",
-          bottom: 20,
-          left: "48%",
-          opacity: fade,
-          transform: celebration.getTranslateTransform(),
-        },
-      ]}
+      style={{
+        ...style,
+        position: "absolute",
+        bottom: 20,
+        left: "48%",
+        opacity: fade,
+        transform: celebration.getTranslateTransform(),
+      }}
     >
       <Animated.View
         style={{
@@ -88,25 +89,26 @@ const CelebrationItem = ({ style, theme }) => {
   );
 };
 
-const Celebration = ({ style, theme, isVisible, setIsVisible }) => {
-  useEffect(() => {
+const Celebration = ({ style, theme, setIsVisible }) => {
+  useLayoutEffect(() => {
     setTimeout(() => setIsVisible(false), 2500);
   }, []);
 
   return (
-      <View
-        style={{
-          width: "100%",
-          height: "100%",
-          position:'absolute',
-          flex: 1,
-          overflow: "hidden",
-        }}
-      >
-        {[...Array(50).keys()].map((v) => (
-          <CelebrationItem key={v} theme={theme} style={style} />
-        ))}
-      </View>
+    <View
+      style={{
+        width: "100%",
+        height: "100%",
+        position: "absolute",
+        flex: 1,
+        overflow: "hidden",
+        zIndex: 100,
+      }}
+    >
+      {[...Array(50).keys()].map((v) => (
+        <CelebrationItem key={v} theme={theme} style={style} />
+      ))}
+    </View>
   );
 };
 

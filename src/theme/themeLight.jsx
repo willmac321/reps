@@ -13,7 +13,7 @@ export const dropShadow = () => {
       shadowRadius: 4,
       shadowOpacity: 0.25,
     };
-  if (isAndroid()) return { elevation: 8 };
+  if (isAndroid()) return { elevation: 0 };
   return {
     boxSizing: 'border-box',
     boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
