@@ -1,8 +1,9 @@
-import { useLayoutEffect, useRef, useCallback } from "react";
+import { useLayoutEffect, useRef, useCallback, useContext } from "react";
+import debounce from "lodash/debounce";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Animated, View } from "react-native";
-import { withTheme } from "react-native-paper";
-import { useFocusEffect } from "@react-navigation/native";
+import { withTheme, Portal } from "react-native-paper";
+import StateContext from "../controllers/state";
 
 const CelebrationItem = ({ style, theme }) => {
   const isStarted = useRef(false);
@@ -49,7 +50,7 @@ const CelebrationItem = ({ style, theme }) => {
     outputRange: ["0deg", "360deg"],
   });
 
-  useFocusEffect(
+  useLayoutEffect(
     useCallback(() => {
       if (!isStarted.current) {
         isStarted.current = true;
@@ -89,26 +90,41 @@ const CelebrationItem = ({ style, theme }) => {
   );
 };
 
-const Celebration = ({ style, theme, setIsVisible }) => {
-  useLayoutEffect(() => {
-    setTimeout(() => setIsVisible(false), 2500);
-  }, []);
+const Celebration = ({ style, theme }) => {
+  const {
+    isCelebrationVisible: isVisible,
+    setIsCelebrationsVisible: setIsVisible,
+  } = useContext(StateContext);
+
+  useLayoutEffect(
+    useCallback(() => {
+      setTimeout(() => {
+        setIsVisible(false);
+      }, 2500);
+    }, [isVisible])
+  );
 
   return (
-    <View
-      style={{
-        width: "100%",
-        height: "100%",
-        position: "absolute",
-        flex: 1,
-        overflow: "hidden",
-        zIndex: 100,
-      }}
-    >
-      {[...Array(50).keys()].map((v) => (
-        <CelebrationItem key={v} theme={theme} style={style} />
-      ))}
-    </View>
+    <Portal theme={theme}>
+      {isVisible && (
+        <View
+          style={{
+            width: "100%",
+            height: "100%",
+            visibility: isVisible ? "visible" : "hidden",
+            flex: 1,
+            flexGrow: 1,
+            flexShrink: 0,
+            overflow: "hidden",
+            zIndex: 100,
+          }}
+        >
+          {[...Array(50).keys()].map((v) => (
+            <CelebrationItem key={v} theme={theme} style={style} />
+          ))}
+        </View>
+      )}
+    </Portal>
   );
 };
 

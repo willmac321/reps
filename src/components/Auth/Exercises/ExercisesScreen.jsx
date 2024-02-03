@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useState } from "react";
-import { Portal, withTheme } from "react-native-paper";
+import { withTheme } from "react-native-paper";
 import { useFocusEffect } from "@react-navigation/native";
 import { StateContext } from "../../../controllers/state";
 import Exercises from "./parts/Exercises";

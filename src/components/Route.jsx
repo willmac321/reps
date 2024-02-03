@@ -12,6 +12,7 @@ import LoadingScreenOverlay from "../template/LoadingScreenOverlay";
 import DeleteMeScreen from "./DeleteMe/DeleteMeScreen";
 import config from "../routes/routes";
 import NotFoundScreen from "./NotFoundScreen";
+import CelebrationOverlay from "../template/CelebrationOverlay";
 
 const Stack = createStackNavigator();
 
@@ -39,7 +40,10 @@ const Route = ({ theme }) => {
         linking={{ prefixes: prefixList, config }}
       >
         <StateContext.Consumer>
-          {({ user, isLoading }) => {
+          {({
+            user,
+            isLoading,
+          }) => {
             return (
               <View
                 style={{
@@ -48,6 +52,7 @@ const Route = ({ theme }) => {
                 }}
               >
                 <LoadingScreenOverlay isVisible={!!isLoading} theme={theme} />
+                <CelebrationOverlay />
                 <View
                   style={{
                     visibility: !isLoading ? "visible" : "hidden",

@@ -30,6 +30,7 @@ export const StateContextProvider = ({ children }) => {
     process.env.NODE_ENV === "development" && false
   );
   const [isLoading, setIsLoading] = React.useState(true);
+  const [isCelebrationVisible, setIsCelebrationVisible] = React.useState(false);
   const [justRegistered, setJustRegistered] = React.useState(false);
   const [user, setUser] = React.useState(null);
   const [theme, setTheme] = React.useState(themeLight);
@@ -310,12 +311,18 @@ export const StateContextProvider = ({ children }) => {
     }
   };
 
+  const setIsCelebrationsVisible = (value)=>{
+    setIsCelebrationVisible(value);
+  }
+
   return (
     <StateContext.Provider
       value={{
         debug,
         isLoading,
         setIsLoading: (v) => setIsLoading(v !== null ? v : !isLoading),
+        isCelebrationVisible,
+        setIsCelebrationsVisible,
         user,
         defaultUserDetails,
         userDetails,

@@ -1,11 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { Text, withTheme } from "react-native-paper";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { View } from "react-native";
 import NotifyModal from "../../../../template/NotifyModal";
 import ExercisesCommon from "../../../../common/ExercisesCommon";
-import Celebration from "../../../../common/Celebration";
-import {useLinkTo} from "@react-navigation/native";
+import { useLinkTo } from "@react-navigation/native";
+import StateContext from "../../../../controllers/state";
 
 const ExercisesList = ({
   setIsLoading,
@@ -15,13 +15,17 @@ const ExercisesList = ({
   setSelectedExercise = () => {},
   isDraggable = false,
 }) => {
-  const linkTo = useLinkTo()
+  const linkTo = useLinkTo();
   const [selected, setSelected] = React.useState(null);
   const [showCompletion, setShowCompletion] = React.useState(false);
-  const [isVisible, setIsVisible] = React.useState(false);
+
+  const {
+    isCelebrationVisible: isVisible,
+    setIsCelebrationsVisible: setIsVisible,
+  } = useContext(StateContext);
 
   const handleNew = () => {
-    linkTo('/auth/create/newexercises');
+    linkTo("/auth/create/newexercises");
   };
 
   useEffect(() => {
@@ -40,12 +44,6 @@ const ExercisesList = ({
         height: "100%",
       }}
     >
-      {isVisible && (
-        <Celebration
-          setIsVisible={setIsVisible}
-          theme={theme}
-        />
-      )}
       <ExercisesCommon
         setIsLoading={setIsLoading}
         navigation={navigation}
