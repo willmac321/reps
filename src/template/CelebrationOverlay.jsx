@@ -34,7 +34,7 @@ const CelebrationItem = ({ style, theme }) => {
   const decay = Animated.decay(celebration, {
     velocity: { x: negX * (0.5 * randX), y: -randY },
     deceleration: 0.9988,
-    useNativeDriver: true,
+    useNativeDriver: false,
     isInteraction: false,
   });
 
