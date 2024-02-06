@@ -17,8 +17,9 @@ const CelebrationItem = ({ style, theme }) => {
   const icons = ["horse", "thumbs-up", "dumbbell"];
 
   // animated ValueXY doesnt seem to work in this application
-  const celebrationX = useRef(new Animated.Value(negX * 20 * randX)).current;
-  const celebrationY = useRef(new Animated.Value(20 * randY)).current;
+  const celebration = useRef(
+    new Animated.ValueXY({ x: negX * 20 * randX, y: 20 * randY })
+  ).current;
 
   const rotated = useRef(new Animated.Value(2 * randY * 3.14)).current;
 
@@ -31,15 +32,8 @@ const CelebrationItem = ({ style, theme }) => {
     isInteraction: false,
   });
 
-  const decayX = Animated.decay(celebrationX, {
-    velocity: negX * (0.5 * randX),
-    deceleration: 0.9988,
-    useNativeDriver: true,
-    isInteraction: false,
-  });
-
-  const decayY = Animated.decay(celebrationY, {
-    velocity: -randY,
+  const decay = Animated.decay(celebration, {
+    velocity: { x: negX * (0.5 * randX), y: -randY },
     deceleration: 0.9988,
     useNativeDriver: true,
     isInteraction: false,
@@ -57,7 +51,7 @@ const CelebrationItem = ({ style, theme }) => {
     outputRange: ["0deg", "360deg"],
   });
 
-  const parallel = Animated.parallel([decayX, decayY, fadeOut, rotateAround]);
+  const parallel = Animated.parallel([decay, fadeOut, rotateAround]);
 
   useLayoutEffect(
     useCallback(() => {
@@ -65,7 +59,7 @@ const CelebrationItem = ({ style, theme }) => {
         isStarted.current = true;
         parallel.start();
       }
-    }, [rotateAround, decayX, decayY, fadeOut])
+    }, [rotateAround, decay, fadeOut])
   );
 
   return (
@@ -76,7 +70,7 @@ const CelebrationItem = ({ style, theme }) => {
         bottom: 20,
         left: "48%",
         opacity: fade,
-        transform: [{ translateX: celebrationX }, { translateY: celebrationY }],
+        transform: celebration.getTranslateTransform(),
       }}
     >
       <Animated.View
