@@ -1,11 +1,11 @@
 import { useLayoutEffect, useRef, useCallback, useContext } from "react";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { Animated, View } from "react-native";
+import { Animated, View, useWindowDimensions } from "react-native";
 import { withTheme, Portal } from "react-native-paper";
 import StateContext from "../controllers/state";
 import { debounce } from "lodash";
 
-const CelebrationItem = ({ style, theme }) => {
+const CelebrationItem = ({ style, theme, startX, startY }) => {
   const isStarted = useRef(false);
   const randIcon = Math.round(Math.random() * 3);
   const randX = (Math.random() + 0.1) % 1;
@@ -18,7 +18,10 @@ const CelebrationItem = ({ style, theme }) => {
 
   // animated ValueXY doesnt seem to work in this application
   const celebration = useRef(
-    new Animated.ValueXY({ x: negX * 20 * randX, y: 20 * randY })
+    new Animated.ValueXY({
+      x: startX + negX * 20 * randX,
+      y: startY + 20 * randY,
+    })
   ).current;
 
   const rotated = useRef(new Animated.Value(2 * randY * 3.14)).current;
@@ -67,8 +70,6 @@ const CelebrationItem = ({ style, theme }) => {
       style={{
         ...style,
         position: "absolute",
-        bottom: 20,
-        left: "48%",
         opacity: fade,
         transform: celebration.getTranslateTransform(),
       }}
@@ -96,6 +97,8 @@ const Celebration = ({ style, theme }) => {
     isCelebrationVisible: isVisible,
     setIsCelebrationsVisible: setIsVisible,
   } = useContext(StateContext);
+
+  const { height, width } = useWindowDimensions();
 
   const debounceCelebrate = useCallback(
     debounce(() => setIsVisible(false), 2500),
@@ -125,7 +128,13 @@ const Celebration = ({ style, theme }) => {
           }}
         >
           {[...Array(50).keys()].map((v) => (
-            <CelebrationItem key={v} theme={theme} style={style} />
+            <CelebrationItem
+              key={v}
+              theme={theme}
+              style={style}
+              startX={width / 2 - 16}
+              startY={height - 20}
+            />
           ))}
         </View>
       )}
