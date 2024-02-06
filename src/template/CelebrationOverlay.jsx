@@ -1,9 +1,9 @@
 import { useLayoutEffect, useRef, useCallback, useContext } from "react";
-import debounce from "lodash/debounce";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Animated, View } from "react-native";
 import { withTheme, Portal } from "react-native-paper";
 import StateContext from "../controllers/state";
+import { debounce } from "lodash";
 
 const CelebrationItem = ({ style, theme }) => {
   const isStarted = useRef(false);
@@ -16,9 +16,9 @@ const CelebrationItem = ({ style, theme }) => {
 
   const icons = ["horse", "thumbs-up", "dumbbell"];
 
-  const celebration = useRef(
-    new Animated.ValueXY({ x: negX * 20 * randX, y: 20 * randY })
-  ).current;
+  // animated ValueXY doesnt seem to work in this application
+  const celebrationX = useRef(new Animated.Value(negX * 20 * randX)).current;
+  const celebrationY = useRef(new Animated.Value(20 * randY)).current;
 
   const rotated = useRef(new Animated.Value(2 * randY * 3.14)).current;
 
@@ -31,10 +31,17 @@ const CelebrationItem = ({ style, theme }) => {
     isInteraction: false,
   });
 
-  const decay = Animated.decay(celebration, {
-    velocity: { x: negX * (0.5 * randX), y: -randY },
+  const decayX = Animated.decay(celebrationX, {
+    velocity: negX * (0.5 * randX),
     deceleration: 0.9988,
-    useNativeDriver: false,
+    useNativeDriver: true,
+    isInteraction: false,
+  });
+
+  const decayY = Animated.decay(celebrationY, {
+    velocity: -randY,
+    deceleration: 0.9988,
+    useNativeDriver: true,
     isInteraction: false,
   });
 
@@ -50,15 +57,15 @@ const CelebrationItem = ({ style, theme }) => {
     outputRange: ["0deg", "360deg"],
   });
 
+  const parallel = Animated.parallel([decayX, decayY, fadeOut, rotateAround]);
+
   useLayoutEffect(
     useCallback(() => {
       if (!isStarted.current) {
         isStarted.current = true;
-        rotateAround.start();
-        decay.start();
-        fadeOut.start();
+        parallel.start();
       }
-    }, [rotateAround, decay, fadeOut])
+    }, [rotateAround, decayX, decayY, fadeOut])
   );
 
   return (
@@ -69,7 +76,7 @@ const CelebrationItem = ({ style, theme }) => {
         bottom: 20,
         left: "48%",
         opacity: fade,
-        transform: celebration.getTranslateTransform(),
+        transform: [{ translateX: celebrationX }, { translateY: celebrationY }],
       }}
     >
       <Animated.View
@@ -96,11 +103,16 @@ const Celebration = ({ style, theme }) => {
     setIsCelebrationsVisible: setIsVisible,
   } = useContext(StateContext);
 
+  const debounceCelebrate = useCallback(
+    debounce(() => setIsVisible(false), 2500),
+    []
+  );
+
   useLayoutEffect(
     useCallback(() => {
-      setTimeout(() => {
-        setIsVisible(false);
-      }, 2500);
+      if (isVisible) {
+        debounceCelebrate();
+      }
     }, [isVisible])
   );
 
@@ -111,7 +123,6 @@ const Celebration = ({ style, theme }) => {
           style={{
             width: "100%",
             height: "100%",
-            visibility: isVisible ? "visible" : "hidden",
             flex: 1,
             flexGrow: 1,
             flexShrink: 0,
