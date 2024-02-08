@@ -105,6 +105,8 @@ const Celebration = ({ style, theme }) => {
     []
   );
 
+  setIsVisible(true);
+
   useLayoutEffect(
     useCallback(() => {
       if (isVisible) {
@@ -125,17 +127,25 @@ const Celebration = ({ style, theme }) => {
             flexShrink: 0,
             overflow: "hidden",
             zIndex: 100,
+            display: "absolute",
           }}
         >
-          {[...Array(50).keys()].map((v) => (
-            <CelebrationItem
-              key={v}
-              theme={theme}
-              style={style}
-              startX={width / 2 - 16}
-              startY={height - 20}
-            />
-          ))}
+          <Animated.View
+            style={{
+              width: "100%",
+              height: "100%",
+            }}
+          >
+            {[...Array(50).keys()].map((v) => (
+              <CelebrationItem
+                key={v}
+                theme={theme}
+                style={style}
+                startX={width / 2 - 16}
+                startY={height - 20}
+              />
+            ))}
+          </Animated.View>
         </View>
       )}
     </Portal>
