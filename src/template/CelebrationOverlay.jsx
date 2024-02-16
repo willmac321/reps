@@ -105,8 +105,6 @@ const Celebration = ({ style, theme }) => {
     []
   );
 
-  setIsVisible(true);
-
   useLayoutEffect(
     useCallback(() => {
       if (isVisible) {
